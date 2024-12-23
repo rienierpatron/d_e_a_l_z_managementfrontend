@@ -4,6 +4,6 @@
   /* Font family */
   --font-family-poppins: "Poppins";
   
-  /* Font size and line height combinations */
-  --font-32px: 32px/48px;    /* 32px font size with 48px line height */
+  /* Font size */
+  --font-32px: 32px;    /* 32px font size*/
 }

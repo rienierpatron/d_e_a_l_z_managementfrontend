@@ -5,7 +5,7 @@ import LoggedOutLayout from '../layouts/LoggedOutLayout';
 
 function DealzManagement({ Component, pageProps }) {
   // const loggedIn = isAuthenticated(); // Replace with real auth logic
-  const loggedIn = false;
+  const loggedIn = true;
 
   const Layout = loggedIn ? LoggedInLayout : LoggedOutLayout;
 

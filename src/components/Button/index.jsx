@@ -8,7 +8,7 @@ const Button = React.forwardRef(
       children,
       onClick,
       type = "button",
-      variant = "primary",
+      variant = "default",
       disabled = false,
       className = "",
       primary,
@@ -17,17 +17,18 @@ const Button = React.forwardRef(
       fullWidth = false,
       outlined,
       icon = null,
-      iconPosition = 'left',
+      iconPosition = "left",
       isLoading = false,
       ...props
     },
     ref
   ) => {
     const baseClasses =
-      "bg-white border px-6 py-4 flex items-center justify-center gap-2";
+      "border bg-white px-6 py-4 flex items-center justify-center gap-2";
 
     const variantClasses = {
-      primary: "bg-primary text-white border-primary hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-within:ring-primary",
+      primary:
+        "!bg-primary !text-white !border-primary hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-within:ring-primary",
     };
 
     const primaryOutlined = outlined && variant === "primary";
@@ -37,12 +38,12 @@ const Button = React.forwardRef(
       variantClasses[variant],
       className,
       {
-        "w-full": fullWidth,
-        "rounded-[32px]": isRound,
-        "border-0": borderless,
-        "pointer-events-none": disabled,
-        "bg-transparent": outlined,
-        "text-primary": primaryOutlined,
+        "!w-full": fullWidth,
+        "!rounded-[32px]": isRound,
+        "!border-0": borderless,
+        "!pointer-events-none": disabled,
+        "!bg-transparent": outlined,
+        "!text-primary": primaryOutlined,
       }
     );
 
@@ -55,11 +56,11 @@ const Button = React.forwardRef(
         {...props}
       >
         {icon && iconPosition === "left" && (
-         <Image src={icon} height={20} width={20}/>
+          <Image src={icon} height={20} width={20} />
         )}
         {children}
         {icon && iconPosition === "right" && (
-         <Image src={icon} height={20} width={20}/>
+          <Image src={icon} height={20} width={20} />
         )}
       </button>
     );

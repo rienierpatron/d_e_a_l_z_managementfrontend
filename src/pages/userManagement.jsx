@@ -35,6 +35,7 @@ export default function userManagement() {
       {
         header: "",
         accessorKey: "Checkbox",
+        headerSorting: false,
         headerWidth: "40px",
         Cell: ({ row: { original } }) => (
           <div style={{ display: original.status === 'Pending' ? 'inline-block' : 'none'}}>
@@ -48,7 +49,8 @@ export default function userManagement() {
       },
       {
         header: "User Type",
-        accessorKey: "user_type"
+        accessorKey: "user_type",
+        headerSorting: false
       },
       {
         header: "Email",
@@ -65,6 +67,7 @@ export default function userManagement() {
       {
         header: "Actions",
         accessorKey: "actions",
+        headerSorting: false,
         // Custom render function for the "Action" column
         Cell: ({ row: { original } }) => (
           <button

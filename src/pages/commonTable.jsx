@@ -163,6 +163,14 @@ const CommonTable = ({ columns, data, pageSize = 5, showFilters = true }) => {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  const handleSorting = (header) => {
+    // Check if sorting is enabled for this column
+    if (header.column.columnDef.headerSorting !== false) {
+      return header.column.getToggleSortingHandler();
+    }
+    return undefined; // If sorting is disabled for this column, return undefined
+  };
+
   return (
     <div>
       {showFilters && (
@@ -191,7 +199,7 @@ const CommonTable = ({ columns, data, pageSize = 5, showFilters = true }) => {
                       maxWidth: header.column.columnDef.headerWidth, 
                       width: header.column.columnDef.headerWidth,
                     }}
-                    onClick={header.column.getToggleSortingHandler()}
+                    onClick={handleSorting(header)}
                   >
                     {header.isPlaceholder ? null : header.column.columnDef.header}
                     {header.column.getIsSorted() === "asc"

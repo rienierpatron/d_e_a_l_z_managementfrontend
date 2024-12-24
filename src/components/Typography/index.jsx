@@ -8,6 +8,7 @@ const TYPOGRAPHY_STYLES = {
   heading: 'text-xl font-semibold text-midnight-blue', // 20px/28px
   body: 'text-base font-normal text-midnight-blue', // 16px/24px
   caption: 'text-sm font-normal text-dark-gray',  // 14px/20px
+  small: 'text-xs font-normal',  // 12px/16px
 };
 
 const Typography = ({ 

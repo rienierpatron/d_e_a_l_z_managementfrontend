@@ -21,7 +21,7 @@ const BackNavigation = ({ href, baseClassName, icon, text, className }) => {
         baseClassName
       )}
       onClick={handleBack}
-      icon={icon ? icon : "/arrow-left.svg"}
+      icon={icon ? icon : "/icons/arrow-left.svg"}
       borderless
     >
       <span

@@ -3,22 +3,17 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/index',
-        destination: '/',
+        source: "/index",
+        destination: "/",
         permanent: true,
       },
       {
-        source: '/login',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/signin',
-        destination: '/',
+        source: "/signin",
+        destination: "/",
         permanent: true,
       },
     ];
-  },
+  }
 };
 
 export default nextConfig;

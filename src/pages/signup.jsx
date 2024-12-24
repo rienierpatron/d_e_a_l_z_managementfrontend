@@ -24,7 +24,7 @@ export default function Signup() {
           {/* Logo in Top-Left Corner */}
           <div className="absolute top-6 left-2">
             <Image
-              src="/DEALZ_logo.svg" // Path to the logo in the public folder
+              src="/dealz-logo.svg" // Path to the logo in the public folder
               alt="DEALZ Logo"
               width={114}
               height={44}
@@ -187,10 +187,10 @@ export default function Signup() {
       </div>
 
       {/* Popup */}
-      <EmailConfirmationPopup
+      {/* <EmailConfirmationPopup
         isPopupOpen={isPopupOpen}
         togglePopup={togglePopup}
-      />
+      /> */}
     </div>
   );
 }

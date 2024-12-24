@@ -16,7 +16,7 @@ export default function Login() {
           {/* Logo at the top-left corner */}
           <div className="absolute top-6 left-2">
             <Image
-              src="/DEALZ_logo.svg"
+              src="/dealz-logo.svg"
               alt="DEALZ Logo"
               width={114}
               height={44}

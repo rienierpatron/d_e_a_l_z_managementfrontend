@@ -24,7 +24,7 @@ const Button = React.forwardRef(
     ref
   ) => {
     const baseClasses =
-      "border bg-white px-6 py-4 flex items-center justify-center gap-2";
+      "border bg-white px-6 py-4 flex items-center justify-center gap-2 cursor-pointer";
 
     const variantClasses = {
       primary:

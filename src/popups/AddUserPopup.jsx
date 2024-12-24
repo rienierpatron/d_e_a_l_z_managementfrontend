@@ -21,7 +21,14 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
     <Dialog
       show={isPopupOpen}
       onClose={togglePopup}
-      header="Add New User"
+      header={
+      <>
+        <Typography variant="title">Add New User</Typography>
+        <Typography variant="body" className="!text-dark-gray mt-[10px]">
+          Add a colleague to the Chaaat platform in one simple step
+        </Typography>
+      </>
+      }
       headerClassName="text-xl font-semibold mb-4"
       footer={
         <div className="flex flex-1 justify-between gap-4 mt-4">
@@ -29,7 +36,8 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
             onClick={togglePopup} // Close the popup
             icon="/icons/cross-icon.svg"
             iconPosition="left"
-            className="border"
+            variant="primary"
+            outlined
             fullWidth  
             isRound
           >
@@ -50,10 +58,6 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
       }
       footerClassName="border-t border-gray-200"
     >
-      <p className="text-sm text-gray-400 mb-4">
-        Add a colleague to the Chaaat platform in one simple step
-      </p>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* First Name Field */}
         <div>

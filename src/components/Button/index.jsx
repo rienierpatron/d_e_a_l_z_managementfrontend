@@ -28,7 +28,7 @@ const Button = React.forwardRef(
 
     const variantClasses = {
       primary:
-        "!bg-primary !text-white !border-primary hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-within:ring-primary",
+        "!bg-primary text-white !border-primary hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-within:ring-primary",
     };
 
     const primaryOutlined = outlined && variant === "primary";
@@ -57,11 +57,11 @@ const Button = React.forwardRef(
         {...props}
       >
         {icon && iconPosition === "left" && (
-          <Image src={icon} height={20} width={20} />
+          <Image alt="button-icon" src={icon} height={20} width={20} />
         )}
         {children}
         {icon && iconPosition === "right" && (
-          <Image src={icon} height={20} width={20} />
+          <Image alt="button-icon" src={icon} height={20} width={20} />
         )}
       </button>
     );

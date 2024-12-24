@@ -19,7 +19,7 @@ const FormInput = React.forwardRef(
     ref
   ) => {
     const baseClass =
-      "border border-light-gray h-16 px-6 py-3 text-base text-midnight-blue font-medium focus:outline-dark-gray placeholder:text-dark-gray placeholder:text-sm";
+      "border border-light-gray h-16 px-6 py-3 text-base text-midnight-blue font-medium focus:outline-dark-gray focus:border-none focus-visible:outline-dark-gray placeholder:text-dark-gray placeholder:text-sm";
 
     const classes = classNames(
       baseClass,
@@ -31,6 +31,7 @@ const FormInput = React.forwardRef(
       <div className="relative">
         {icon && (
           <Image
+            alt="input-icon"
             src={icon}
             width={20}
             height={20}
@@ -45,6 +46,9 @@ const FormInput = React.forwardRef(
           onChange={onChange}
           disabled={disabled}
           className={classes}
+          style={{
+            boxShadow: "none"
+          }}
           {...props}
         />
       </div>

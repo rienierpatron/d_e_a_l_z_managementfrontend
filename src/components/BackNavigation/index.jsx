@@ -17,7 +17,7 @@ const BackNavigation = ({ href, baseClassName, icon, text, className }) => {
   return (
     <Button
       className={classNames(
-        "flex items-center gap-2 font-semibold min-w-max !p-0 mb-[20px] bg-transparent",
+        "flex items-center gap-2 font-semibold min-w-max !p-0 mb-[20px] !bg-transparent",
         baseClassName
       )}
       onClick={handleBack}

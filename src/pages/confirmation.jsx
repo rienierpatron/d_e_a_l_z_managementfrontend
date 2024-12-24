@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Typography from "@/components/Typography";
 
 export default function Confiramtion() {
   return (
@@ -33,28 +34,27 @@ export default function Confiramtion() {
           style={{ background: "#F4F6FC" }}
         >
           <div className="w-full max-w-md p-6 text-center">
-            <h1 className="text-3xl text-black font-bold mb-4">
+            <Typography variant="title" className="text-gray-700 mb-[8px]">
               Please check your email
-            </h1>
-            <p className="text-gray-600 mb-6">
-              We just emailed a confirmation link. Click the link and you will
-              be signed in.
-            </p>
-            <p className="text-gray-600 mb-6">
+            </Typography>
+
+            <Typography variant="body" className="text-gray-700 mb-[32px] text-left">
+              We just emailed a confirmation link. Click the link and you will be signed in.
+            </Typography>
+
+            <Typography variant="caption" className="text-gray-700 text-left">
               Not your email?{" "}
-              <Link href="/login" className="text-blue-600 hover:underline">
+              <Link href="/login" className="text-blue-600 hover:underline uppercase">
                 Try again
               </Link>
-            </p>
-            <p className="text-gray-600">
+            </Typography>
+
+            <Typography variant="caption" className="text-gray-700 pt-[24px] text-left">
               Didn't receive an email? Wait a few more seconds or{" "}
-              <Link
-                href="mailto:support@dealz.asia"
-                className="text-blue-600 hover:underline"
-              >
+              <Link href="mailto:support@dealz.asia" className="text-blue-600 hover:underline uppercase">
                 Contact Us
               </Link>
-            </p>
+            </Typography>
           </div>
         </div>
       </div>

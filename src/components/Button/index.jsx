@@ -53,6 +53,7 @@ const Button = React.forwardRef(
         type={type}
         className={componentClass}
         disabled={disabled || isLoading}
+        onClick={onClick}
         {...props}
       >
         {icon && iconPosition === "left" && (

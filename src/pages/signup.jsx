@@ -6,9 +6,10 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import FormInput from "@/components/FormInput";
 import Button from "@/components/Button";
 import Typography from "@/components/Typography";
+import FormSelect from "@/components/FormSelect";
 
 export default function Signup() {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(true);
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -119,7 +120,7 @@ export default function Signup() {
                   id="last-name"
                   name="last-name"
                   required
-                  value={userData.firstName}
+                  value={userData.lastName}
                   onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
                   icon="/icons/user-icon.svg"
                   fullWidth
@@ -169,6 +170,9 @@ export default function Signup() {
                 <option value="ecommerce">E-commerce</option>
                 <option value="service">Service</option>
               </select>
+              <FormSelect>
+
+              </FormSelect>
             </div>
 
             {/* Email */}
@@ -237,6 +241,7 @@ export default function Signup() {
       <EmailConfirmationPopup
         isPopupOpen={isPopupOpen}
         togglePopup={togglePopup}
+        email="davidjohnson123@gmail.com"
       />
     </div>
   );

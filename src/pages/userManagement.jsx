@@ -4,7 +4,7 @@ import Image from "next/image";
 import AddUserPopup from "@/popups/AddUserPopup";
 
 export default function userManagement() {
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State to control popup visibility
+  const [isPopupOpen, setIsPopupOpen] = useState(true); // State to control popup visibility
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen); // Toggle the popup state

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import Dialog from "@/components/Dialog";
-import Button from "@/components/Button";
+import Dialog from "@/components/Common/Dialog";
+import Button from "@/components/Common/Button";
 
 export default function EmailConfirmationPopup({ isPopupOpen, togglePopup, email }) {
   return (

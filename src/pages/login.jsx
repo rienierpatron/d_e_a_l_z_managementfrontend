@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "next/image";
-import Typography from "@/components/Typography";
-import FormInput from "@/components/FormInput";
-import Button from "@/components/Button";
+import Typography from "@/components/Common/Typography";
+import FormInput from "@/components/Common/FormInput";
+import Button from "@/components/Common/Button";
 import Link from "next/link";
-import FormLabel from "@/components/FormLabel";
+import FormLabel from "@/components/Common/FormLabel";
 
 export default function Login() {
   const handleSubmit = (event) => {

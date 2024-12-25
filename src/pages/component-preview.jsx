@@ -1,14 +1,14 @@
-import BackNavigation from "@/components/BackNavigation";
-import Button from "@/components/Button";
-import Dialog from "@/components/Dialog";
-import FormFieldset from "@/components/FormFieldset";
-import FormInput from "@/components/FormInput";
-import FormLabel from "@/components/FormLabel";
-import FormRadio from "@/components/FormRadio";
-import FormSelect from "@/components/FormSelect";
-import FormTextArea from "@/components/FormTextArea";
-import PopoverMenu from "@/components/PopoverMenu";
-import Typography from "@/components/Typography";
+import BackNavigation from "@/components/Common/BackNavigation";
+import Button from "@/components/Common/Button";
+import Dialog from "@/components/Common/Dialog";
+import FormFieldset from "@/components/Common/FormFieldset";
+import FormInput from "@/components/Common/FormInput";
+import FormLabel from "@/components/Common/FormLabel";
+import FormRadio from "@/components/Common/FormRadio";
+import FormSelect from "@/components/Common/FormSelect";
+import FormTextArea from "@/components/Common/FormTextArea";
+import PopoverMenu from "@/components/Common/PopoverMenu";
+import Typography from "@/components/Common/Typography";
 import { useState } from "react";
 
 const ComponentPreview = () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Typography from "@/components/Typography";
+import Typography from "@/components/Common/Typography";
 
 export default function Confiramtion() {
   return (

@@ -1,6 +1,6 @@
 import React, { useState }  from "react";
 import CommonTable from "./commonTable";
-import Typography from "@/components/Typography";
+import Typography from "@/components/Common/Typography";
 
 export default function Calendar() {
   const data = React.useMemo(

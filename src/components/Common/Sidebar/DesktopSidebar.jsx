@@ -1,13 +1,13 @@
 import Image from "next/image";
-import SidbarUpgradeCta from "../SidbarUpgradeCta";
+import SidbarUpgradeCta from "../../SidbarUpgradeCta";
 import Button from "../Button";
 import classNames from "classnames";
-import IconAdd from "../Icons/IconAdd";
-import IconCategory from "../Icons/IconCategory";
-import IconCalendar from "../Icons/IconCalendar";
-import IconProfileTwoUser from "../Icons/IconProfileTwoUser";
-import IconChaaatLogo from "../Icons/IconChaaatLogo";
-import IconMessageQuestion from "../Icons/IconMessageQuestion";
+import IconAdd from "../../Icons/IconAdd";
+import IconCategory from "../../Icons/IconCategory";
+import IconCalendar from "../../Icons/IconCalendar";
+import IconProfileTwoUser from "../../Icons/IconProfileTwoUser";
+import IconChaaatLogo from "../../Icons/IconChaaatLogo";
+import IconMessageQuestion from "../../Icons/IconMessageQuestion";
 
 const navItems = [
   {

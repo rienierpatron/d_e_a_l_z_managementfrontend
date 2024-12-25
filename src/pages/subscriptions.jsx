@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Typography from "@/components/Typography";
-import Button from "@/components/Button";
+import Typography from "@/components/Common/Typography";
+import Button from "@/components/Common/Button";
 
 export default function Subscriptions() {
   return (

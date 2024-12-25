@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import EmailConfirmationPopup from "@/popups/EmailConfirmationPopup";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import FormInput from "@/components/FormInput";
-import Button from "@/components/Button";
-import Typography from "@/components/Typography";
-import FormSelect from "@/components/FormSelect";
-import FormFieldset from "@/components/FormFieldset";
-import FormLabel from "@/components/FormLabel";
+import FormInput from "@/components/Common/FormInput";
+import Button from "@/components/Common/Button";
+import Typography from "@/components/Common/Typography";
+import FormSelect from "@/components/Common/FormSelect";
+import FormFieldset from "@/components/Common/FormFieldset";
+import FormLabel from "@/components/Common/FormLabel";
 
 export default function Signup() {
   const [isPopupOpen, setIsPopupOpen] = useState(true);

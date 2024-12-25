@@ -1,10 +1,10 @@
 // AddUserPopup.js
 import React, { useState } from "react";
 import Image from "next/image";
-import Typography from "@/components/Typography";
-import FormInput from "@/components/FormInput";
-import Button from "@/components/Button";
-import Dialog from "@/components/Dialog";
+import Typography from "@/components/Common/Typography";
+import FormInput from "@/components/Common/FormInput";
+import Button from "@/components/Common/Button";
+import Dialog from "@/components/Common/Dialog";
 
 export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
   const [firstName, setFirstName] = useState(""); // State for first name input

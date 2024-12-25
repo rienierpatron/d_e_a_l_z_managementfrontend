@@ -1,5 +1,5 @@
-import Header from "@/components/Header";
-import CustomSidebar from "@/components/Sidebar";
+import Header from "@/components/Common/Header";
+import CustomSidebar from "@/components/Common/Sidebar";
 
 export default function LoggedInLayout({ children }) {
   return (

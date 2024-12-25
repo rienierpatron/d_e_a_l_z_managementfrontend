@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Typography from "../Typography";
+import Typography from "@/components/Common/Typography";
 
 const SidbarUpgradeCta = () => {
   return (

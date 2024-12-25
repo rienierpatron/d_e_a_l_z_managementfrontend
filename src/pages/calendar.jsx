@@ -1,5 +1,6 @@
 import React, { useState }  from "react";
 import CommonTable from "./commonTable";
+import Typography from "@/components/Typography";
 
 export default function Calendar() {
   const data = React.useMemo(
@@ -52,7 +53,9 @@ export default function Calendar() {
   return (
     <div className="w-full p-5">
       <div className="overflow-x-auto">
-        <h2 className="p-5 text-3xl border border-b-0 rounded-t-xl">DEALZ</h2>
+        <Typography variant="title" className="p-5 text-gray-700 border border-b-0 rounded-t-xl mb-[8px]">
+          DEALZ
+        </Typography>
         <CommonTable columns={columns} data={data} pageSize={8} showFilters={true} />
       </div>
     </div>

@@ -41,8 +41,8 @@ const FormInput = React.forwardRef(
         <input
           ref={ref}
           type={type}
-          value={value}
           placeholder={placeholder}
+          value={value}
           onChange={onChange}
           disabled={disabled}
           className={classes}

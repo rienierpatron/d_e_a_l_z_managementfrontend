@@ -2,9 +2,19 @@ import React, { useState }  from "react";
 import Image from "next/image";
 import Link from "next/link";
 import EmailConfirmationPopup from "@/popups/EmailConfirmationPopup";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import FormInput from "@/components/FormInput";
+import Button from "@/components/Button";
+import Typography from "@/components/Typography";
+import FormSelect from "@/components/FormSelect";
 
 export default function Signup() {
   const [isPopupOpen, setIsPopupOpen] = useState(true);
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    email: ""
+  });
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -14,6 +24,23 @@ export default function Signup() {
     event.preventDefault();
     const email = event.target.email.value;
     console.log("Submitted email:", email);
+  };
+
+  const handleGoogleSignInSuccess = (response) => {
+    // Parse the response to get user information
+    const { credential } = response;
+    const user = JSON.parse(atob(credential.split(".")[1]));
+    
+    // Set user data to state
+    setUserData({
+      firstName: user.given_name,
+      lastName: user.family_name,
+      email: user.email
+    });
+  };
+
+  const handleGoogleSignInFailure = (error) => {
+    console.error("Google Sign-In failed:", error);
   };
 
   return (
@@ -46,77 +73,89 @@ export default function Signup() {
 
         {/* Right Section */}
         <div
-          className="flex-1 flex items-center justify-center"
+          className="flex-1 flex py-8 items-center justify-center"
           style={{ background: "#F4F6FC" }}
         >
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-md p-6 rounded-lg"
+            className="w-full max-w-md py-8 px-4 rounded-lg"
           >
-            <h1 className="text-3xl font-bold text-black mb-4">Sign Up</h1>
-            <p className="text-gray-600 mb-6">Sign up to stay connected</p>
+            <Typography variant="title" className="text-gray-700 mb-[8px]">
+              Sign Up
+            </Typography>
+            <Typography variant="body" className="text-gray-700 mb-[32px]">
+              Sign up to stay connected!
+            </Typography>
 
             {/* First & Last Name */}
-            <div className="flex gap-4">
-              <div className="mb-4 flex-1">
-                <label
-                  htmlFor="first-name"
-                  className="block text-base font-medium text-gray-700"
-                >
-                  First Name
+            <div className="flex gap-4 mb-[24px]">
+              <div className="flex-1">
+                <label htmlFor="first-name">
+                  <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+                    First Name
+                  </Typography>
                 </label>
-                <input
+                <FormInput
                   type="text"
                   id="first-name"
                   name="first-name"
+                  placeholder="First name"
                   required
-                  placeholder="Enter your first name"
-                  className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  value={userData.firstName}
+                  onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+                  icon="/icons/user-icon.svg"
+                  fullWidth
+                  rounded
                 />
               </div>
-              <div className="mb-4 flex-1">
-                <label
-                  htmlFor="last-name"
-                  className="block text-base font-medium text-gray-700"
-                >
-                  Last Name
+              <div className="flex-1">
+                <label htmlFor="last-name">
+                  <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+                    Last Name
+                  </Typography>
                 </label>
-                <input
+                <FormInput
                   type="text"
+                  placeholder="Last name"
                   id="last-name"
                   name="last-name"
                   required
-                  placeholder="Enter your last name"
-                  className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  value={userData.lastName}
+                  onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+                  icon="/icons/user-icon.svg"
+                  fullWidth
+                  rounded
                 />
               </div>
             </div>
 
             {/* Company Name */}
-            <div className="mb-4">
-              <label
-                htmlFor="company-name"
-                className="block text-base font-medium text-gray-700"
-              >
-                Company Name
+            <div className="mb-[24px]">
+              <label htmlFor="company-name">
+                <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+                  Company Name
+                </Typography>
               </label>
-              <input
+              <FormInput
                 type="text"
+                placeholder="Company name"
                 id="company-name"
                 name="company-name"
                 required
-                placeholder="Enter your company name"
-                className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                value={userData.lastName}
+                onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+                icon="/icons/company-icon.svg"
+                fullWidth
+                rounded
               />
             </div>
 
             {/* Business Type Dropdown */}
-            <div className="mb-4">
-              <label
-                htmlFor="business-type"
-                className="block text-base font-medium text-gray-700"
-              >
-                Business Type
+            <div className="mb-[24px]">
+              <label htmlFor="business-type">
+                <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+                Business Name
+                </Typography>
               </label>
               <select
                 id="business-type"
@@ -131,56 +170,68 @@ export default function Signup() {
                 <option value="ecommerce">E-commerce</option>
                 <option value="service">Service</option>
               </select>
+              <FormSelect>
+
+              </FormSelect>
             </div>
 
             {/* Email */}
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-base font-medium text-gray-700"
-              >
+            <div className="mb-[40px]">
+              <label htmlFor="email">
+                <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
                 Email
+                </Typography>
               </label>
-              <input
-                type="email"
+              <FormInput
+                type="text"
+                placeholder="Email"
                 id="email"
                 name="email"
                 required
-                placeholder="Enter your email address"
-                className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                value={userData.email}
+                onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+                icon="/icons/email-icon.svg"
+                fullWidth
+                rounded
               />
             </div>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full py-2 bg-pink-500 text-white font-semibold rounded-3xl hover:bg-pink-600"
+            <Button
+              onClick={() => {
+                console.log("Google Sign-Up clicked");
+              }}
+              // className="bg-primary text-white border-0 focus:outline-none hover:bg-pink-500"
+              variant="primary"
+              fullWidth  
+              isRound
             >
               Sign Up
-            </button>
+            </Button>
 
             {/* Already Have Account */}
-            <p className="mt-4 text-sm text-center text-gray-600">
+            <Typography className="text-gray-700 mt-3 text-sm text-center">
               Already have an account?{" "}
-              <Link href="/login" className="text-blue-600 hover:underline">Log In</Link>
-            </p>
+              <Link href="/login" className="text-blue-600 uppercase hover:underline">Log In</Link>
+            </Typography>
 
             {/* Social Signup */}
-            <p className="text-gray-600 text-center py-6">Or Sign Up using</p>
-            <div className="mt-6">
-              <button
-                type="button"
-                className="w-full py-3 bg-white text-black rounded-3xl hover:bg-gray-100 flex items-center justify-center"
+            <Typography variant="caption" className="text-gray-700 py-10 text-center uppercase">
+              Or Sign Up using
+            </Typography>
+            <div className="">
+              <Button
+                onClick={() => {
+                  console.log("Google Sign-Up clicked");
+                }}
+                icon="/icons/google-icon.svg"  // Path to your Google logo icon
+                iconPosition="left"  // Icon on the left of the text
+                className="border-0 focus:outline-none"
+                fullWidth
+                isRound
               >
-                <Image
-                  src="/icons/google-icon.svg" // Path to the Google icon in the public folder
-                  alt="Google Icon"
-                  width={20}
-                  height={20}
-                  className="mr-2"
-                />
                 Google
-              </button>
+              </Button>
             </div>
           </form>
         </div>

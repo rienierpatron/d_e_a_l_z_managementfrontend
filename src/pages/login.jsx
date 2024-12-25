@@ -1,5 +1,9 @@
 import React from "react";
 import Image from "next/image";
+import Typography from "@/components/Typography";
+import FormInput from "@/components/FormInput";
+import Button from "@/components/Button";
+import Link from "next/link";
 
 export default function Login() {
   const handleSubmit = (event) => {
@@ -41,59 +45,68 @@ export default function Login() {
             onSubmit={handleSubmit}
             className="w-full max-w-md p-6 rounded-lg"
           >
-            <h1 className="text-3xl text-black font-bold mb-2">Login</h1>
-            <p className="text-gray-600 mb-6">
+            <Typography variant="title" className="text-gray-700 mb-[8px]">
+              Login
+            </Typography>
+            <Typography variant="body" className="text-gray-700 mb-[32px]">
               Enter details you used during your registration
-            </p>
-            <div className="mb-4 mt-4">
-              <label
-                htmlFor="email"
-                className="block text-base font-medium text-gray-700"
-              >
+            </Typography>
+            {/* Email */}
+            <div className="mb-[40px]">
+              <label htmlFor="email">
+                <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
                 Email
+                </Typography>
               </label>
-              <input
+              <FormInput
                 type="email"
+                placeholder="Email"
                 id="email"
                 name="email"
                 required
-                placeholder="Enter your email"
-                className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                icon="/icons/email-icon.svg"
+                fullWidth
+                rounded
               />
             </div>
-            <button
-              type="submit"
-              className="w-full py-2 bg-pink-500 text-white font-semibold rounded-3xl hover:bg-blue-700"
+
+            {/* Submit Button */}
+            <Button
+              onClick={() => {
+                console.log("Google Sign-Up clicked");
+              }}
+              // className="bg-primary text-white border-0 focus:outline-none hover:bg-pink-500"
+              variant="primary"
+              fullWidth  
+              isRound
             >
               Log In
-            </button>
+            </Button>
 
-            <p className="mt-4 text-sm text-center text-gray-600">
+            <Typography variant="caption" className="text-gray-700 pt-4 text-center">
               Don't have an account?{" "}
-              <button
-                type="button"
-                className="text-blue-600 hover:underline"
-              >
+              <Link href="/signup" className="text-blue-600 hover:underline uppercase">
                 Sign Up
-              </button>
-            </p>
+              </Link>
+            </Typography>
 
-            <p className="text-gray-600 text-center py-12">Or Log In using</p>
+            <Typography variant="caption" className="text-gray-700 py-10 text-center uppercase">
+              Or Log In using
+            </Typography>
 
-            <div className="mt-6">
-              <button
-                type="button"
-                className="w-full py-3 bg-white text-black rounded-3xl hover:bg-gray-100 flex items-center justify-center"
+            <div className="">
+              <Button
+                onClick={() => {
+                  console.log("Google Sign-Up clicked");
+                }}
+                icon="/icons/google-icon.svg"  // Path to your Google logo icon
+                iconPosition="left"  // Icon on the left of the text
+                className="border-0 focus:outline-none text-gray-600"
+                fullWidth  
+                isRound
               >
-                <Image
-                  src="/icons/google-icon.svg"
-                  alt="Google Icon"
-                  width={20}
-                  height={20}
-                  className="mr-2"
-                />
                 Google
-              </button>
+              </Button>
             </div>
           </form>
         </div>

@@ -163,6 +163,14 @@ const CommonTable = ({ columns, data, pageSize = 5, showFilters = true }) => {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  const handleSorting = (header) => {
+    // Check if sorting is enabled for this column
+    if (header.column.columnDef.headerSorting !== false) {
+      return header.column.getToggleSortingHandler();
+    }
+    return undefined; // If sorting is disabled for this column, return undefined
+  };
+
   return (
     <div>
       {showFilters && (
@@ -179,15 +187,19 @@ const CommonTable = ({ columns, data, pageSize = 5, showFilters = true }) => {
         </div>
       )}
       <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse border border-gray-200">
+        <table className="min-w-full table-fixed border-collapse border border-gray-200 w-full">
           <thead className="bg-gradient-to-r from-blue-50 to-pink-100">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-4 py-4 text-left text-sm font-medium text-gray-600 cursor-pointer w-1/12"
-                    onClick={header.column.getToggleSortingHandler()}
+                    className="px-4 py-4 text-left text-sm font-medium text-gray-600 cursor-pointer"
+                    style={{ 
+                      maxWidth: header.column.columnDef.headerWidth, 
+                      width: header.column.columnDef.headerWidth,
+                    }}
+                    onClick={handleSorting(header)}
                   >
                     {header.isPlaceholder ? null : header.column.columnDef.header}
                     {header.column.getIsSorted() === "asc"
@@ -203,25 +215,31 @@ const CommonTable = ({ columns, data, pageSize = 5, showFilters = true }) => {
           <tbody>
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id} className="even:bg-blue-50 odd:bg-white">
-                {row.getVisibleCells().map((cell) =>
-                  cell.column.columnDef.accessorKey === "status" ? (
+                {row.getVisibleCells().map((cell) => {
+                  const { column } = cell;
+
+                  // Check if the column has a custom cell renderer (e.g., for actions)
+                  const cellContent = column.columnDef.Cell
+                    ? column.columnDef.Cell({ row: { original: row.original }, cell })
+                    : cell.getValue();
+
+                  // Determine the styling based on the column
+                  const statusClass = column.columnDef.accessorKey === "status" ? getStatusClass(cell.getValue()) : "";
+                  
+                  return (
                     <td
                       key={cell.id}
-                      className={`px-4 py-4 text-sm w-1/12 ${getStatusClass(
-                        cell.getValue()
-                      )}`}
+                      className={`px-4 py-4 text-sm ${statusClass}`}
+                      style={{ 
+                        maxWidth: cell.column.columnDef.headerWidth, 
+                        width: cell.column.columnDef.headerWidth,
+                        display: cell.column.columnDef.headerWidth ? "inline-block" : "" 
+                      }}
                     >
-                      {cell.renderValue()}
+                      {cellContent}
                     </td>
-                  ) : (
-                    <td
-                      key={cell.id}
-                      className="px-4 py-4 text-sm text-gray-700 w-1/12"
-                    >
-                      {cell.renderValue()}
-                    </td>
-                  )
-                )}
+                  );
+                })}
               </tr>
             ))}
           </tbody>

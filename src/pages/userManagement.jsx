@@ -17,7 +17,7 @@ export default function userManagement() {
   const data = React.useMemo(
     () => [
       { name: "Alice", user_type: "Admin", email: "alice@abc.com", last_seen: "John Doe", status: 'Active' },
-      { name: "Bob", user_type: "Admin", email: "bob@abc.com", last_seen: "John Doe", status: 'Inactive' },
+      { name: "Bob", user_type: "Admin", email: "bob@abc.com", last_seen: "John Doe", status: 'Pending' },
       { name: "Charlie", user_type: "Admin", email: "charlie@abc.com", last_seen: "Will Smith", status: 'Active' },
       { name: "David", user_type: "Admin", email: "david@abc.com", last_seen: "Will Smith", status: 'Inactive' },
       { name: "David", user_type: "Admin", email: "david1@abc.com", last_seen: "Will Smith", status: 'Active' },
@@ -33,12 +33,24 @@ export default function userManagement() {
   const columns = React.useMemo(
     () => [
       {
+        header: "",
+        accessorKey: "Checkbox",
+        headerSorting: false,
+        headerWidth: "40px",
+        Cell: ({ row: { original } }) => (
+          <div style={{ display: original.status === 'Pending' ? 'inline-block' : 'none'}}>
+            <input type="checkbox" />
+          </div>
+        ),
+      },
+      {
         header: "Name",
         accessorKey: "name"
       },
       {
         header: "User Type",
-        accessorKey: "user_type"
+        accessorKey: "user_type",
+        headerSorting: false
       },
       {
         header: "Email",
@@ -51,6 +63,24 @@ export default function userManagement() {
       {
         header: "Status",
         accessorKey: "status"
+      },
+      {
+        header: "Actions",
+        accessorKey: "actions",
+        headerSorting: false,
+        // Custom render function for the "Action" column
+        Cell: ({ row: { original } }) => (
+          <button
+            onClick={() => handleDeleteUser(row.original.email)} // Trigger delete on click
+            className="text-red-600 hover:text-red-800"
+          >
+            <Image
+              src="/icons/trash-icon.svg" 
+              width={20}
+              height={20}
+            />
+          </button>
+        ),
       },
     ],
     []

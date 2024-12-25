@@ -5,7 +5,7 @@ export default function LoggedInLayout({ children }) {
   return (
     <div className="min-h-screen flex">
       <CustomSidebar />
-      <main className="ml-[115px] bg-white flex flex-col w-full">
+      <main className="ml-[115px] bg-white flex flex-col w-main">
         <Header />
         {children}
       </main>

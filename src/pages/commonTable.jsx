@@ -1,207 +1,225 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   getPaginationRowModel,
-  getFilteredRowModel
+  getFilteredRowModel,
 } from "@tanstack/react-table";
+import { PAGINATION } from "@/lib/constants";
+import IconArrowLeft from "@/components/Icons/IconArrowLeft";
+import IconArrowRight from "@/components/Icons/IconArrowRight";
+import classNames from "classnames";
 
-// Column Filter Component
-const ColumnFilter = ({ column }) => {
-  const isStatusColumn = column.columnDef.header === "Status";
+const PaginationControls = ({ table, onPageChange, onPageSizeChange }) => {
+  const currentPage = table.getState().pagination.pageIndex + 1; // pageIndex starts from 0
+  const totalPages = table.getPageCount();
+
+  const getPaginationRange = () => {
+    const range = [];
+    const showLeftEllipsis = currentPage > 3;
+    const showRightEllipsis = currentPage < totalPages - 2;
+
+    // Always include the first page
+    range.push(1);
+
+    // Add left ellipsis if needed
+    if (showLeftEllipsis) range.push("...");
+
+    // Add the current page range
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+
+    // Add right ellipsis if needed
+    if (showRightEllipsis) range.push("...");
+
+    // Always include the last page
+    if (totalPages > 1) range.push(totalPages);
+
+    return range;
+  };
+
+  const pages = getPaginationRange();
 
   return (
-    <div className="flex flex-1 items-center gap-2 relative">
-      {column.columnDef.filterIcon && (
-        <img
-          src={column.columnDef.filterIcon}
-          alt="Filter Icon"
-          className="w-5 h-5 absolute left-5"
-        />
-      )}
-      {isStatusColumn ? (
-        <select
-          value={column.getFilterValue() || ""}
-          onChange={(e) => column.setFilterValue(e.target.value)}
-          className="pl-11 pr-4 py-3 border border-gray-300 rounded-3xl text-sm w-full"
+    <div className="flex items-center justify-between mt-4">
+      <div className="flex items-center">
+        {/* Previous Button */}
+        <button
+          className="rounded-full h-12 w-12 px-3 py-1 bg-light-blue hover:bg-gray-200 disabled:opacity-50 mx-1"
+          onClick={() => {
+            table.previousPage();
+            if (typeof onPageChange === "function") {
+              onPageChange(currentPage - 1);
+            }
+          }}
+          disabled={!table.getCanPreviousPage()}
         >
-          <option value="">Status</option>
-          <option value="Draft">Draft</option>
-          <option value="Pending Review">Pending Review</option>
-          <option value="Approved & Scheduled">Approved & Scheduled</option>
-          <option value="Close">Close</option>
-        </select>
-      ) : (
+          <IconArrowLeft className="text-midnight-blue" />
+        </button>
+
+        {/* Page Buttons */}
+        {pages.map((page, index) => (
+          <React.Fragment key={index}>
+            {page === "..." ? (
+              <span className="px-3 py-1 text-gray-500">...</span>
+            ) : (
+              <button
+                className={`px-3 py-1 rounded-full h-12 w-12 text-base font-medium ${
+                  currentPage === page
+                    ? "bg-primary text-white"
+                    : "bg-white border text-midnight-blue hover:bg-primary hover:text-white"
+                } mx-1`}
+                onClick={() => {
+                  table.setPageIndex(page - 1);
+                  if (typeof onPageChange === "function") {
+                    onPageChange(page);
+                  }
+                }}
+              >
+                {page}
+              </button>
+            )}
+          </React.Fragment>
+        ))}
+
+        {/* Next Button */}
+        <button
+          className="rounded-full h-12 w-12 px-3 py-1 bg-light-blue hover:bg-gray-200 disabled:opacity-50 mx-1"
+          onClick={() => {
+            table.nextPage();
+            if (typeof onPageChange === "function") {
+              onPageChange(currentPage + 1);
+            }
+          }}
+          disabled={!table.getCanNextPage()}
+        >
+          <IconArrowRight className="text-midnight-blue" />
+        </button>
+      </div>
+      {/* Pagination Info */}
+      {/* <div className="text-sm text-gray-600">
+        Page {currentPage} of {totalPages}
+      </div> */}
+
+      <div className="flex items-center gap-2">
+        {/* <span className="text-sm text-gray-600">Go to page:</span>
         <input
-          value={column.getFilterValue() || ""}
-          onChange={(e) => column.setFilterValue(e.target.value)}
-          placeholder={column.columnDef.header}
-          className="pl-12 pr-4 py-3 border border-gray-300 rounded-3xl text-sm w-full"
-        />
-      )}
+          type="number"
+          className="w-16 border border-gray-300 rounded-md text-sm px-2 py-1"
+          value={table.getState().pagination.pageIndex + 1}
+          onChange={(e) => {
+            const page = e.target.value ? Number(e.target.value) - 1 : 0;
+            table.setPageIndex(page);
+          }}
+        /> */}
+        <select
+          className="border rounded-md text-sm py-1 focus:outline-dark-gray focus:border-none focus-visible:outline-dark-gray"
+          value={table.getState().pagination.pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number(e.target.value));
+            if (typeof onPageSizeChange === "function") {
+              onPageSizeChange(Number(e.target.value));
+            }
+          }}
+          style={{
+            boxShadow: "none",
+          }}
+        >
+          {PAGINATION.PAGE_SIZES.map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 };
 
-// Pagination Controls
-const PaginationControls = ({ table }) => (
-  <div className="flex items-center justify-between mt-4">
-    <div>
-      <button
-        className="px-3 py-1 border border-gray-300 rounded-md bg-gray-100 text-sm font-medium text-gray-600 hover:bg-gray-200 disabled:opacity-50"
-        onClick={() => table.setPageIndex(0)}
-        disabled={!table.getCanPreviousPage()}
-      >
-        {"<<"}
-      </button>
-      <button
-        className="px-3 py-1 border border-gray-300 rounded-md bg-gray-100 text-sm font-medium text-gray-600 hover:bg-gray-200 disabled:opacity-50 mx-1"
-        onClick={() => table.previousPage()}
-        disabled={!table.getCanPreviousPage()}
-      >
-        {"<"}
-      </button>
-      {Array.from({ length: table.getPageCount() }, (_, i) => (
-        <button
-          key={i}
-          className={`px-3 py-1 rounded-md text-sm font-medium ${
-            table.getState().pagination.pageIndex === i
-              ? "bg-pink-500 text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          } mx-1`}
-          onClick={() => table.setPageIndex(i)}
-        >
-          {i + 1}
-        </button>
-      ))}
-      <button
-        className="px-3 py-1 border border-gray-300 rounded-md bg-gray-100 text-sm font-medium text-gray-600 hover:bg-gray-200 disabled:opacity-50 mx-1"
-        onClick={() => table.nextPage()}
-        disabled={!table.getCanNextPage()}
-      >
-        {">"}
-      </button>
-      <button
-        className="px-3 py-1 border border-gray-300 rounded-md bg-gray-100 text-sm font-medium text-gray-600 hover:bg-gray-200 disabled:opacity-50"
-        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-        disabled={!table.getCanNextPage()}
-      >
-        {">>"}
-      </button>
-    </div>
-    <div className="text-sm text-gray-600">
-      Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-    </div>
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-gray-600">Go to page:</span>
-      <input
-        type="number"
-        className="w-16 border border-gray-300 rounded-md text-sm px-2 py-1"
-        value={table.getState().pagination.pageIndex + 1}
-        onChange={(e) => {
-          const page = e.target.value ? Number(e.target.value) - 1 : 0;
-          table.setPageIndex(page);
-        }}
-      />
-      <select
-        className="border border-gray-300 rounded-md text-sm px-2 py-1"
-        value={table.getState().pagination.pageSize}
-        onChange={(e) => {
-          table.setPageSize(Number(e.target.value));
-        }}
-      >
-        {[5, 10, 20, 50].map((pageSize) => (
-          <option key={pageSize} value={pageSize}>
-            Show {pageSize}
-          </option>
-        ))}
-      </select>
-    </div>
-  </div>
-);
-
-// Row Style Helper
-const getStatusClass = (status) => {
-  switch (status) {
-    case "Draft":
-      return "text-green";
-    case "Pending Review":
-      return "text-purple";
-    case "Approved & Scheduled":
-      return "text-orange";
-    case "Closed":
-      return "text-blue-500";
-    case "Needs Revising":
-      return "text-red";
-    case "Active":
-      return "text-blue-500"
-    case "Inactive":
-      return "text-gray-500"
-    default:
-      return "";
-  }
-};
-
-const CommonTable = ({ columns, data, pageSize = 5, showFilters = true }) => {
+const CommonTable = ({
+  columns,
+  data,
+  pageSize = 2,
+  order,
+  orderBy,
+  paginationRequired = true,
+  onPageChange,
+  onPageSizeChange,
+  onSortChange,
+  sortingServerSide = false,
+  rowClickable = false,
+  onRowClick,
+}) => {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize,
   });
-  const [filters, setFilters] = useState([]);
 
   const table = useReactTable({
     data,
     columns,
-    state: { sorting, pagination, filters },
+    state: { sorting, pagination },
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    manualSorting: sortingServerSide,
   });
 
   const handleSorting = (header) => {
     // Check if sorting is enabled for this column
     if (header.column.columnDef.headerSorting !== false) {
-      return header.column.getToggleSortingHandler();
+      const isDescending = !sorting.length || sorting.find((ele) => ele.desc);
+      if (isDescending) {
+        setSorting([{ id: header.id, desc: false }]); // asc
+      } else {
+        setSorting([{ id: header.id, desc: true }]); // desc
+      }
+      if (typeof onSortChange === "function") {
+        onSortChange(header.id, isDescending ? "asc" : "desc");
+      }
     }
-    return undefined; // If sorting is disabled for this column, return undefined
   };
+
+  // To set default sorting
+  useEffect(() => {
+    if (order && orderBy) {
+      setSorting([
+        {
+          id: orderBy,
+          desc: order === "asc" ? true : false,
+        },
+      ]);
+    }
+  }, [order, orderBy]);
 
   return (
     <div>
-      {showFilters && (
-        <div className="pb-4 border-l border-r">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <div key={headerGroup.id} className="flex justify-between space-x-4">
-              {headerGroup.headers.map((header) => (
-                <div key={header.id} className="flex flex-1 w-full px-5">
-                  <ColumnFilter column={header.column} />
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-fixed border-collapse border border-gray-200 w-full">
-          <thead className="bg-gradient-to-r from-blue-50 to-pink-100">
+      <div className="overflow-x-auto h-full scrollbar-hide">
+        <table className="min-w-full table-fixed border-collapse border border-light-gray">
+          <thead className="bg-greadient-table-head">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-4 py-4 text-left text-sm font-medium text-gray-600 cursor-pointer"
-                    style={{ 
-                      maxWidth: header.column.columnDef.headerWidth, 
+                    className="whitespace-nowrap px-4 py-4 text-left text-sm font-medium text-dark-gray cursor-pointer border border-l-0 border-r-0 border-[#CDD5E0]"
+                    style={{
+                      maxWidth: header.column.columnDef.headerWidth,
                       width: header.column.columnDef.headerWidth,
                     }}
-                    onClick={handleSorting(header)}
+                    onClick={() => handleSorting(header)}
                   >
-                    {header.isPlaceholder ? null : header.column.columnDef.header}
+                    {header.isPlaceholder
+                      ? null
+                      : header.column.columnDef.header}
                     {header.column.getIsSorted() === "asc"
                       ? " 🔼"
                       : header.column.getIsSorted() === "desc"
@@ -214,26 +232,38 @@ const CommonTable = ({ columns, data, pageSize = 5, showFilters = true }) => {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="even:bg-blue-50 odd:bg-white">
+              <tr
+                key={row.id}
+                className={classNames("even:bg-blue-50 odd:bg-white", {
+                  "cursor-pointer": rowClickable,
+                })}
+                onClick={() => {
+                  if (rowClickable && typeof onRowClick === "function") {
+                    onRowClick(row);
+                  }
+                }}
+              >
                 {row.getVisibleCells().map((cell) => {
                   const { column } = cell;
 
                   // Check if the column has a custom cell renderer (e.g., for actions)
                   const cellContent = column.columnDef.Cell
-                    ? column.columnDef.Cell({ row: { original: row.original }, cell })
+                    ? column.columnDef.Cell({
+                        row: { original: row.original },
+                        cell,
+                      })
                     : cell.getValue();
 
-                  // Determine the styling based on the column
-                  const statusClass = column.columnDef.accessorKey === "status" ? getStatusClass(cell.getValue()) : "";
-                  
                   return (
                     <td
                       key={cell.id}
-                      className={`px-4 py-4 text-sm ${statusClass}`}
-                      style={{ 
-                        maxWidth: cell.column.columnDef.headerWidth, 
+                      className={`px-4 whitespace-normal py-4 text-base font-medium text-midnight-blue`}
+                      style={{
+                        maxWidth: cell.column.columnDef.headerWidth,
                         width: cell.column.columnDef.headerWidth,
-                        display: cell.column.columnDef.headerWidth ? "inline-block" : "" 
+                        display: cell.column.columnDef.headerWidth
+                          ? "inline-block"
+                          : "",
                       }}
                     >
                       {cellContent}
@@ -245,7 +275,13 @@ const CommonTable = ({ columns, data, pageSize = 5, showFilters = true }) => {
           </tbody>
         </table>
       </div>
-      <PaginationControls table={table} />
+      {paginationRequired && (
+        <PaginationControls
+          table={table}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
+        />
+      )}
     </div>
   );
 };

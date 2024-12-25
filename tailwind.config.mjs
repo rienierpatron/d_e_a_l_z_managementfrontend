@@ -47,11 +47,15 @@ export default {
       },
       backgroundImage: {
         'gradient-primary': 'linear-gradient(104deg, #4177F4 11.43%, #F945B1 82.92%)',
+        'greadient-table-head': 'linear-gradient(104deg, rgba(65, 119, 244, 0.08) 11.43%, rgba(249, 69, 177, 0.08) 82.92%);'
       },
       boxShadow: {
         'custom-purple': '0px 4px 24px 0px rgba(155, 97, 220, 0.40)',
         'custom-black': '0px 6px 24px 0px rgba(0, 0, 0, 0.04)'
       },
+      width: {
+        main: "calc(100% - 115px)"
+      }
     },
   },
   plugins: [

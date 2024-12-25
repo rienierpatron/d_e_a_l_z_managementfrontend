@@ -2,30 +2,36 @@ import Image from "next/image";
 import SidbarUpgradeCta from "../SidbarUpgradeCta";
 import Button from "../Button";
 import classNames from "classnames";
+import IconAdd from "../Icons/IconAdd";
+import IconCategory from "../Icons/IconCategory";
+import IconCalendar from "../Icons/IconCalendar";
+import IconProfileTwoUser from "../Icons/IconProfileTwoUser";
+import IconChaaatLogo from "../Icons/IconChaaatLogo";
+import IconMessageQuestion from "../Icons/IconMessageQuestion";
 
 const navItems = [
   {
-    icon: "/icons/category-icon.svg",
+    icon: <IconCategory width={24} height={24}/>,
     path: "/dashboard",
     label: "Dashboard",
   },
   {
-    icon: "/icons/add.svg",
+    icon: <IconAdd width={24} height={24}/>,
     path: "/dashboard",
     label: "Create DEALZ",
   },
   {
-    icon: "/icons/calendar-icon.svg",
+    icon: <IconCalendar width={24} height={24}/>,
     path: "/dashboard",
     label: "Calendar",
   },
   {
-    icon: "/icons/profile-user-icon.svg",
+    icon: <IconProfileTwoUser width={24} height={24}/>,
     path: "/dashboard",
     label: "Referral",
   },
   {
-    icon: "/icons/chaaat-icon.svg",
+    icon: <IconChaaatLogo />,
     path: "/dashboard",
     label: "Retarget",
   },
@@ -46,7 +52,8 @@ const DesktopSidebar = () => {
                 key={index}
               >
                 <div className="flex items-center justify-center gap-2 flex-col">
-                  <Image src={item.icon} width={24} height={24} />
+                  {/* <Image src={item.icon} width={24} height={24} /> */}
+                  {item.icon}
                   <span className="text-xs font-medium">{item.label}</span>
                 </div>
               </li>
@@ -58,7 +65,7 @@ const DesktopSidebar = () => {
       <ul className="flex flex-col gap-8 justify-center items-center">
         <li className="cursor-pointer">
           <div className="flex items-center justify-center">
-            <Image src="/icons/message-question.svg" width={24} height={24} />
+            <IconMessageQuestion className="hover:text-primary"/>
           </div>
         </li>
         <li className="cursor-pointer">

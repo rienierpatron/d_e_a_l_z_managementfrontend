@@ -19,7 +19,7 @@ const FormInput = React.forwardRef(
     ref
   ) => {
     const baseClass =
-      "border border-light-gray h-16 px-6 py-3 text-base text-midnight-blue font-medium focus:outline-dark-gray focus:border-none focus-visible:outline-dark-gray placeholder:text-dark-gray placeholder:text-sm";
+      "border border-light-gray h-16 px-6 py-3 text-base text-midnight-blue font-medium focus:outline-dark-gray focus:border-none focus-visible:outline-dark-gray placeholder:text-dark-gray placeholder:text-sm placeholder:font-normal";
 
     const classes = classNames(
       baseClass,

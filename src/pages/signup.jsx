@@ -1,4 +1,4 @@
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import EmailConfirmationPopup from "@/popups/EmailConfirmationPopup";
@@ -7,13 +7,15 @@ import FormInput from "@/components/FormInput";
 import Button from "@/components/Button";
 import Typography from "@/components/Typography";
 import FormSelect from "@/components/FormSelect";
+import FormFieldset from "@/components/FormFieldset";
+import FormLabel from "@/components/FormLabel";
 
 export default function Signup() {
   const [isPopupOpen, setIsPopupOpen] = useState(true);
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
-    email: ""
+    email: "",
   });
 
   const togglePopup = () => {
@@ -30,12 +32,12 @@ export default function Signup() {
     // Parse the response to get user information
     const { credential } = response;
     const user = JSON.parse(atob(credential.split(".")[1]));
-    
+
     // Set user data to state
     setUserData({
       firstName: user.given_name,
       lastName: user.family_name,
-      email: user.email
+      email: user.email,
     });
   };
 
@@ -43,13 +45,18 @@ export default function Signup() {
     console.error("Google Sign-In failed:", error);
   };
 
+  const businessTypeOptions = [
+    { label: "Hotels", value: "hotels" },
+    { label: "Service", value: "service" },
+  ];
+
   return (
     <div className="w-full">
-      <div className="flex h-screen">
+      <div className="flex h-full md:h-screen">
         {/* Left Section */}
-        <div className="flex-1 bg-white relative">
+        <div className="flex-1 bg-white relative hidden md:block">
           {/* Logo in Top-Left Corner */}
-          <div className="absolute top-6 left-2">
+          <div className="absolute top-10 left-10">
             <Image
               src="/dealz-logo.svg" // Path to the logo in the public folder
               alt="DEALZ Logo"
@@ -72,128 +79,109 @@ export default function Signup() {
         </div>
 
         {/* Right Section */}
-        <div
-          className="flex-1 flex py-8 items-center justify-center"
-          style={{ background: "#F4F6FC" }}
-        >
+        <div className="flex-1 flex py-8 items-center justify-center bg-background-blue">
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-md py-8 px-4 rounded-lg"
+            className="w-full max-w-md py-8 px-4 h-full flex flex-col justify-center overflow-auto scrollbar-hide md:block"
           >
-            <Typography variant="title" className="text-gray-700 mb-[8px]">
+            <Typography variant="title" className="mb-[8px] text-center md:text-left">
               Sign Up
             </Typography>
-            <Typography variant="body" className="text-gray-700 mb-[32px]">
+            <Typography variant="body" className="!text-dark-gray mb-[32px] text-center md:text-left">
               Sign up to stay connected!
             </Typography>
-
-            {/* First & Last Name */}
-            <div className="flex gap-4 mb-[24px]">
-              <div className="flex-1">
-                <label htmlFor="first-name">
-                  <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+            <div className="flex flex-col gap-6">
+              <div className="flex gap-4 flex-col md:flex-row">
+                <FormFieldset className="!mb-0">
+                  <FormLabel htmlFor="first-name" className="uppercase">
                     First Name
-                  </Typography>
-                </label>
-                <FormInput
-                  type="text"
-                  id="first-name"
-                  name="first-name"
-                  placeholder="First name"
-                  required
-                  value={userData.firstName}
-                  onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
-                  icon="/icons/user-icon.svg"
-                  fullWidth
-                  rounded
-                />
-              </div>
-              <div className="flex-1">
-                <label htmlFor="last-name">
-                  <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+                  </FormLabel>
+                  <FormInput
+                    type="text"
+                    id="first-name"
+                    name="first-name"
+                    placeholder="First name"
+                    required
+                    value={userData.firstName}
+                    onChange={(e) =>
+                      setUserData({ ...userData, firstName: e.target.value })
+                    }
+                    icon="/icons/user-icon.svg"
+                    fullWidth
+                    rounded
+                  />
+                </FormFieldset>
+                <FormFieldset className="!mb-0">
+                  <FormLabel htmlFor="last-name" className="uppercase">
                     Last Name
-                  </Typography>
-                </label>
+                  </FormLabel>
+                  <FormInput
+                    type="text"
+                    placeholder="Last name"
+                    id="last-name"
+                    name="last-name"
+                    required
+                    value={userData.lastName}
+                    onChange={(e) =>
+                      setUserData({ ...userData, firstName: e.target.value })
+                    }
+                    icon="/icons/user-icon.svg"
+                    fullWidth
+                    rounded
+                  />
+                </FormFieldset>
+              </div>
+              <FormFieldset className="!mb-0">
+                <FormLabel htmlFor="company-name" className="uppercase">
+                  Company Name
+                </FormLabel>
                 <FormInput
                   type="text"
-                  placeholder="Last name"
-                  id="last-name"
-                  name="last-name"
+                  placeholder="Enter your company name"
+                  id="company-name"
+                  name="company-name"
                   required
                   value={userData.lastName}
-                  onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
-                  icon="/icons/user-icon.svg"
+                  onChange={(e) =>
+                    setUserData({ ...userData, firstName: e.target.value })
+                  }
+                  icon="/icons/company-icon.svg"
                   fullWidth
                   rounded
                 />
-              </div>
-            </div>
-
-            {/* Company Name */}
-            <div className="mb-[24px]">
-              <label htmlFor="company-name">
-                <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
-                  Company Name
-                </Typography>
-              </label>
-              <FormInput
-                type="text"
-                placeholder="Company name"
-                id="company-name"
-                name="company-name"
-                required
-                value={userData.lastName}
-                onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
-                icon="/icons/company-icon.svg"
-                fullWidth
-                rounded
-              />
-            </div>
-
-            {/* Business Type Dropdown */}
-            <div className="mb-[24px]">
-              <label htmlFor="business-type">
-                <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
-                Business Name
-                </Typography>
-              </label>
-              <select
-                id="business-type"
-                name="business-type"
-                required
-                className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              >
-                <option value="" disabled selected>
-                  Select Business Type
-                </option>
-                <option value="retail">Retail</option>
-                <option value="ecommerce">E-commerce</option>
-                <option value="service">Service</option>
-              </select>
-              <FormSelect>
-
-              </FormSelect>
-            </div>
-
-            {/* Email */}
-            <div className="mb-[40px]">
-              <label htmlFor="email">
-                <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
-                Email
-                </Typography>
-              </label>
-              <FormInput
-                type="text"
-                placeholder="Email"
-                id="email"
-                name="email"
-                required
-                value={userData.email}
-                onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
-                icon="/icons/email-icon.svg"
-                fullWidth
-                rounded
-              />
+              </FormFieldset>
+              <FormFieldset className="!mb-0">
+                <FormLabel htmlFor="business-type" className="uppercase">
+                  Business Type
+                </FormLabel>
+                <FormSelect
+                  id="business-type"
+                  name="business-type"
+                  placeHolder=" Select Business Type"
+                  options={businessTypeOptions}
+                  rounded
+                  icon="/icons/company-icon.svg"
+                />
+              </FormFieldset>
+              <FormFieldset className="!mb-0">
+                <FormLabel htmlFor="email" className="uppercase">
+                  Email
+                </FormLabel>
+                <FormInput
+                  type="text"
+                  placeholder="Enter your email"
+                  id="email"
+                  name="email"
+                  required
+                  value={userData.email}
+                  onChange={(e) =>
+                    setUserData({ ...userData, firstName: e.target.value })
+                  }
+                  icon="/icons/email-icon.svg"
+                  fullWidth
+                  rounded
+                />
+              </FormFieldset>
             </div>
 
             {/* Submit Button */}
@@ -201,22 +189,23 @@ export default function Signup() {
               onClick={() => {
                 console.log("Google Sign-Up clicked");
               }}
-              // className="bg-primary text-white border-0 focus:outline-none hover:bg-pink-500"
+              className="font-bold mt-10"
               variant="primary"
               fullWidth  
               isRound
+              type="submit"
             >
               Sign Up
             </Button>
 
             {/* Already Have Account */}
-            <Typography className="text-gray-700 mt-3 text-sm text-center">
+            <Typography variant="caption" className="font-normal text-center mt-4">
               Already have an account?{" "}
-              <Link href="/login" className="text-blue-600 uppercase hover:underline">Log In</Link>
+              <Link href="/login" className="text-secondary uppercase underline">Log In</Link>
             </Typography>
 
             {/* Social Signup */}
-            <Typography variant="caption" className="text-gray-700 py-10 text-center uppercase">
+            <Typography variant="caption" className="py-10 text-center uppercase">
               Or Sign Up using
             </Typography>
             <div className="">
@@ -224,9 +213,8 @@ export default function Signup() {
                 onClick={() => {
                   console.log("Google Sign-Up clicked");
                 }}
-                icon="/icons/google-icon.svg"  // Path to your Google logo icon
-                iconPosition="left"  // Icon on the left of the text
-                className="border-0 focus:outline-none"
+                icon="/icons/google-icon.svg"
+                className="border-0 focus:outline-none text-midnight-blue"
                 fullWidth
                 isRound
               >

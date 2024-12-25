@@ -4,6 +4,7 @@ import Typography from "@/components/Typography";
 import FormInput from "@/components/FormInput";
 import Button from "@/components/Button";
 import Link from "next/link";
+import FormLabel from "@/components/FormLabel";
 
 export default function Login() {
   const handleSubmit = (event) => {
@@ -13,12 +14,12 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex h-screen">
+    <div className="w-full h-screen">
+      <div className="flex h-full md:h-screen">
         {/* Left Box */}
-        <div className="flex-1 flex items-center justify-center text-white relative">
+        <div className="flex-1 items-center justify-center text-white relative hidden md:flex">
           {/* Logo at the top-left corner */}
-          <div className="absolute top-6 left-2">
+          <div className="absolute top-10 left-10">
             <Image
               src="/dealz-logo.svg"
               alt="DEALZ Logo"
@@ -37,30 +38,30 @@ export default function Login() {
         </div>
 
         {/* Right Box */}
-        <div
-          className="flex-1 flex items-center justify-center text-white"
-          style={{ background: "#F4F6FC" }}
-        >
+        <div className="flex-1 flex items-center justify-center text-white bg-background-blue">
           <form
             onSubmit={handleSubmit}
             className="w-full max-w-md p-6 rounded-lg"
           >
-            <Typography variant="title" className="text-gray-700 mb-[8px]">
+            <Typography
+              variant="title"
+              className="mb-[8px] text-center md:text-left"
+            >
               Login
             </Typography>
-            <Typography variant="body" className="text-gray-700 mb-[32px]">
+            <Typography
+              variant="body"
+              className="!text-dark-gray mb-[32px] text-center md:text-left"
+            >
               Enter details you used during your registration
             </Typography>
-            {/* Email */}
             <div className="mb-[40px]">
-              <label htmlFor="email">
-                <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+              <FormLabel htmlFor="email" className="uppercase">
                 Email
-                </Typography>
-              </label>
+              </FormLabel>
               <FormInput
                 type="email"
-                placeholder="Email"
+                placeholder="Enter your email"
                 id="email"
                 name="email"
                 required
@@ -75,42 +76,49 @@ export default function Login() {
               onClick={() => {
                 console.log("Google Sign-Up clicked");
               }}
-              // className="bg-primary text-white border-0 focus:outline-none hover:bg-pink-500"
               variant="primary"
-              fullWidth  
+              className="font-bold"
+              fullWidth
               isRound
+              type="submit"
             >
               Log In
             </Button>
 
-            <Typography variant="caption" className="text-gray-700 pt-4 text-center">
+            <Typography
+              variant="caption"
+              className="font-normal pt-4 text-center"
+            >
               Don't have an account?{" "}
-              <Link href="/signup" className="text-blue-600 hover:underline uppercase">
+              <Link
+                href="/signup"
+                className="text-secondary underline uppercase"
+              >
                 Sign Up
               </Link>
             </Typography>
-
-            <Typography variant="caption" className="text-gray-700 py-10 text-center uppercase">
+            <Typography
+              variant="caption"
+              className="py-10 text-center uppercase"
+            >
               Or Log In using
             </Typography>
 
-            <div className="">
-              <Button
-                onClick={() => {
-                  console.log("Google Sign-Up clicked");
-                }}
-                icon="/icons/google-icon.svg"  // Path to your Google logo icon
-                iconPosition="left"  // Icon on the left of the text
-                className="border-0 focus:outline-none text-gray-600"
-                fullWidth  
-                isRound
-              >
-                Google
-              </Button>
-            </div>
+            <Button
+              onClick={() => {
+                console.log("Google Sign-Up clicked");
+              }}
+              icon="/icons/google-icon.svg" // Path to your Google logo icon
+              iconPosition="left" // Icon on the left of the text
+              className="border-0 focus:outline-none text-midnight-blue"
+              fullWidth
+              isRound
+            >
+              Google
+            </Button>
           </form>
         </div>
       </div>
     </div>
   );
-};
+}

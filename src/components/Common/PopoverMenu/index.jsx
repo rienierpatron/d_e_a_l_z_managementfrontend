@@ -43,6 +43,7 @@ export default function PopoverMenu({
   children,
   placement = "auto",
   menuItems,
+  customContent,
   className,
   menuItemWrapperClassName,
   menuItemClassName,
@@ -64,35 +65,39 @@ export default function PopoverMenu({
         }
       }}
       content={
-        <div
-          className={classNames(
-            "min-w-[100px] py-2 bg-white border border-light-gray rounded-[8px]",
-            menuItemWrapperClassName
-          )}
-        >
-          {menuItems &&
-            menuItems.length &&
-            menuItems.map((item, index) => {
-              return (
-                <MenuItem
-                  key={index}
-                  label={item.label}
-                  icon={item?.icon}
-                  menuItemClassName={menuItemClassName}
-                  menuItemClassIconClassName={menuItemClassIconClassName}
-                  menuItemTextClassName={menuItemTextClassName}
-                  onClick={() => {
-                    if (typeof onClose === "function") {
-                      onClose();
-                    }
-                    if (typeof item?.onClick === "function") {
-                      item.onClick(item);
-                    }
-                  }}
-                />
-              );
-            })}
-        </div>
+        customContent ? (
+          customContent
+        ) : (
+          <div
+            className={classNames(
+              "min-w-[100px] py-2 bg-white border border-light-gray rounded-[8px]",
+              menuItemWrapperClassName
+            )}
+          >
+            {menuItems &&
+              menuItems.length &&
+              menuItems.map((item, index) => {
+                return (
+                  <MenuItem
+                    key={index}
+                    label={item.label}
+                    icon={item?.icon}
+                    menuItemClassName={menuItemClassName}
+                    menuItemClassIconClassName={menuItemClassIconClassName}
+                    menuItemTextClassName={menuItemTextClassName}
+                    onClick={() => {
+                      if (typeof onClose === "function") {
+                        onClose();
+                      }
+                      if (typeof item?.onClick === "function") {
+                        item.onClick(item);
+                      }
+                    }}
+                  />
+                );
+              })}
+          </div>
+        )
       }
     >
       {children}

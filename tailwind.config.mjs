@@ -16,6 +16,7 @@ export default {
         white: "var(--color-white)",
         black: "var(--color-black)",
         primary: "var(--color-primary)",
+        "primary-40": "var(--color-primary-40)",
         secondary: "var(--color-secondary)",
         purple: "var(--color-purple)",
         red: "var(--color-red)",
@@ -46,28 +47,32 @@ export default {
         "3xl": "1536px",
       },
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(104deg, #4177F4 11.43%, #F945B1 82.92%)',
-        'greadient-table-head': 'linear-gradient(104deg, rgba(65, 119, 244, 0.08) 11.43%, rgba(249, 69, 177, 0.08) 82.92%);'
+        "gradient-primary":
+          "linear-gradient(104deg, #4177F4 11.43%, #F945B1 82.92%)",
+        "greadient-table-head":
+          "linear-gradient(104deg, rgba(65, 119, 244, 0.08) 11.43%, rgba(249, 69, 177, 0.08) 82.92%);",
       },
       boxShadow: {
-        'custom-purple': '0px 4px 24px 0px rgba(155, 97, 220, 0.40)',
-        'custom-black': '0px 6px 24px 0px rgba(0, 0, 0, 0.04)'
+        "custom-label-info": "0px -1px 12px 0px rgba(0, 0, 0, 0.05)",
+        "custom-primary": "0px 8px 20px 0px rgba(249, 69, 177, 0.20);",
+        "custom-purple": "0px 4px 24px 0px rgba(155, 97, 220, 0.40)",
+        "custom-black": "0px 6px 24px 0px rgba(0, 0, 0, 0.04)",
       },
       width: {
-        main: "calc(100% - 115px)"
-      }
+        main: "calc(100% - 115px)",
+      },
     },
   },
   plugins: [
     flowbite.plugin(),
     function ({ addUtilities }) {
       addUtilities({
-        '.scrollbar-hide': {
-          '-ms-overflow-style': 'none', /* IE and Edge */
-          'scrollbar-width': 'none', /* Firefox */
+        ".scrollbar-hide": {
+          "-ms-overflow-style": "none" /* IE and Edge */,
+          "scrollbar-width": "none" /* Firefox */,
         },
-        '.scrollbar-hide::-webkit-scrollbar': {
-          display: 'none', /* Chrome, Safari, Edge */
+        ".scrollbar-hide::-webkit-scrollbar": {
+          display: "none" /* Chrome, Safari, Edge */,
         },
       });
     },

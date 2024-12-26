@@ -1,11 +1,16 @@
+import { useRouter } from "next/router";
 import Button from "../Button";
 import Typography from "../Typography";
+import { ROUTES_HEADING_MAPPER } from "@/lib/routes";
 
 const Header = () => {
+  const router = useRouter();
+  const { pathname } = router;
+
   return (
     <header className="h-[104px] bg-background-blue py-6 px-10 flex items-center justify-between">
       <div className="flex gap-4 items-center">
-        <Typography variant="title">Dashboard</Typography>
+        <Typography variant="title">{ROUTES_HEADING_MAPPER[pathname]}</Typography>
         <Button
           className="border-none uppercase bg-gradient-primary text-base font-bold text-white shadow-custom-purple"
           isRound

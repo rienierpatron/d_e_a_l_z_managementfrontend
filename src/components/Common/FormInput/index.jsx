@@ -30,13 +30,13 @@ const FormInput = React.forwardRef(
     return (
       <div className="relative">
         {icon && (
-          <Image
-            alt="input-icon"
-            src={icon}
-            width={20}
-            height={20}
-            className="absolute top-1/2 left-6 transform -translate-y-1/2"
-          />
+          <div className="absolute top-1/2 left-6 transform -translate-y-1/2">
+            {typeof icon === "string" ? (
+              <Image alt="input-icon" src={icon} width={20} height={20} />
+            ) : (
+              icon
+            )}
+          </div>
         )}
         <input
           ref={ref}
@@ -47,7 +47,7 @@ const FormInput = React.forwardRef(
           disabled={disabled}
           className={classes}
           style={{
-            boxShadow: "none"
+            boxShadow: "none",
           }}
           {...props}
         />

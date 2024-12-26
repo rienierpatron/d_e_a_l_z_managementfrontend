@@ -1,5 +1,5 @@
 import React, { useState }  from "react";
-import CommonTable from "./commonTable";
+import CommonTable from "./CommonTable";
 import Typography from "@/components/Common/Typography";
 
 export default function Calendar() {

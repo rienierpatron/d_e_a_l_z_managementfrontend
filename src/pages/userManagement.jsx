@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CommonTable from "./commonTable";
+import CommonTable from "@/components/Common/CommonTable";
 import Image from "next/image";
 import AddUserPopup from "@/popups/AddUserPopup";
 

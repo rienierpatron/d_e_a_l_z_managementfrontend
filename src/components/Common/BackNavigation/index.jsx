@@ -3,7 +3,14 @@ import classNames from "classnames";
 import Button from "../Button";
 import { useRouter } from "next/router";
 
-const BackNavigation = ({ href, baseClassName, icon, text, className }) => {
+const BackNavigation = ({
+  href,
+  baseClassName,
+  icon,
+  text,
+  className,
+  onClick,
+}) => {
   const router = useRouter();
 
   const handleBack = () => {
@@ -20,7 +27,13 @@ const BackNavigation = ({ href, baseClassName, icon, text, className }) => {
         "flex items-center gap-2 font-semibold min-w-max !p-0 mb-[20px] !bg-transparent",
         baseClassName
       )}
-      onClick={handleBack}
+      onClick={() => {
+        if (typeof onClick === "function") {
+          onClick()
+        } else {
+          handleBack()
+        }
+      }}
       icon={icon ? icon : "/icons/arrow-left.svg"}
       borderless
     >

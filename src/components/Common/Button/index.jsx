@@ -56,13 +56,21 @@ const Button = React.forwardRef(
         onClick={onClick}
         {...props}
       >
-        {icon && iconPosition === "left" && (
-          <Image alt="button-icon" src={icon} height={20} width={20} />
-        )}
+        {icon &&
+          iconPosition === "left" &&
+          (typeof icon === "string" ? (
+            <Image alt="button-icon" src={icon} height={20} width={20} />
+          ) : (
+            icon
+          ))}
         {children}
-        {icon && iconPosition === "right" && (
-          <Image alt="button-icon" src={icon} height={20} width={20} />
-        )}
+        {icon &&
+          iconPosition === "right" &&
+          (typeof icon === "string" ? (
+            <Image alt="button-icon" src={icon} height={20} width={20} />
+          ) : (
+            icon
+          ))}
       </button>
     );
   }

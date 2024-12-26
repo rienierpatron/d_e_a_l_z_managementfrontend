@@ -1,6 +1,7 @@
 import '../styles/index.css'; // Tailwind CSS
 import LoggedInLayout from '../layouts/LoggedInLayout';
 import LoggedOutLayout from '../layouts/LoggedOutLayout';
+import DocumentHead from '@/components/Common/DocumentHead';
 // import { isAuthenticated } from '../utils/auth'; // Mock auth helper
 
 function DealzManagement({ Component, pageProps }) {
@@ -11,6 +12,7 @@ function DealzManagement({ Component, pageProps }) {
 
   return (
     <Layout>
+      <DocumentHead />
       <Component {...pageProps} />
     </Layout>
   );

@@ -9,6 +9,7 @@ const FormRadio = ({
   required,
   label,
   labelClassName,
+  info,
   ...props
 }) => {
   return (
@@ -25,8 +26,9 @@ const FormRadio = ({
       {label && (
         <FormLabel
           htmlFor={id}
-          className={classNames("!mb-0", labelClassName)}
+          className={classNames("!mb-0 cursor-pointer", labelClassName)}
           required={required}
+          info={info}
         >
           {label}
         </FormLabel>

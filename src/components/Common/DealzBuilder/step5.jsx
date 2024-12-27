@@ -24,7 +24,7 @@ const DealzBuilderStep5 = ({ formData, setFormData }) => {
   };
 
   return (
-    <div className="w-[579px] mt-8">
+    <div className="mt-8">
       <div className="flex items-center justify-between">
         <BackNavigation
           text="Preview the DEALZ"

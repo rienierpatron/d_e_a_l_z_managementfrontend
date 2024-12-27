@@ -16,6 +16,7 @@ export default {
         white: "var(--color-white)",
         black: "var(--color-black)",
         primary: "var(--color-primary)",
+        "dark-primary": "var(--color-dark-primary)",
         "primary-40": "var(--color-primary-40)",
         secondary: "var(--color-secondary)",
         purple: "var(--color-purple)",
@@ -49,7 +50,7 @@ export default {
       backgroundImage: {
         "gradient-primary":
           "linear-gradient(104deg, #4177F4 11.43%, #F945B1 82.92%)",
-        "greadient-table-head":
+        "gradient-table-head":
           "linear-gradient(104deg, rgba(65, 119, 244, 0.08) 11.43%, rgba(249, 69, 177, 0.08) 82.92%);",
       },
       boxShadow: {

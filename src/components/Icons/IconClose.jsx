@@ -13,7 +13,7 @@ export default function IconClose({ className, ...props }) {
     >
       <path
         d="M3 9L9 3M3 3L9 9"
-        stroke="#02021E"
+        fill="#02021E"
         stroke-width="1.5"
         stroke-linecap="round"
         stroke-linejoin="round"

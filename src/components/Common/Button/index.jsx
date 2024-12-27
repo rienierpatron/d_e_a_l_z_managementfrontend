@@ -28,7 +28,7 @@ const Button = React.forwardRef(
 
     const variantClasses = {
       primary:
-        "!bg-primary text-white !border-primary hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-within:ring-primary",
+        "!bg-primary text-white !border-primary hover:!bg-dark-primary focus:outline-none focus-visible:ring-2 focus-within:ring-primary",
     };
 
     const primaryOutlined = outlined && variant === "primary";
@@ -42,8 +42,9 @@ const Button = React.forwardRef(
         "!rounded-[32px]": isRound,
         "!border-0": borderless,
         "!pointer-events-none": disabled,
-        "!bg-transparent": outlined,
-        "!text-primary": primaryOutlined,
+        "!bg-transparent hover:!bg-transparent": outlined,
+        "!text-primary hover:!text-dark-primary hover:!border-dark-primary":
+          primaryOutlined,
       }
     );
 

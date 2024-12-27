@@ -204,7 +204,7 @@ const CommonTable = ({
     <div>
       <div className="overflow-x-auto h-full scrollbar-hide">
         <table className="min-w-full table-fixed border-collapse border border-light-gray">
-          <thead className="bg-greadient-table-head">
+          <thead className="bg-gradient-table-head">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (

@@ -4,16 +4,10 @@ import Typography from "@/components/Common/Typography";
 import FormTextArea from "@/components/Common/FormTextArea";
 import Button from "@/components/Common/Button";
 import IconDollar from "@/components/Icons/IconDollar";
-import IconPercentage from "@/components/Icons/IconPercentage";
-import FilePicker from "@/components/Common/FilePicker";
-import IconUploadFile from "@/components/Icons/IconUploadFile";
-import IconDownload from "@/components/Icons/IconDownload";
 import FormRadio from "@/components/Common/FormRadio";
-import Image from "next/image";
-import IconClose from "@/components/Icons/IconClose";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
-import BackNavigation from "../BackNavigation";
-import FormInput from "../FormInput";
+import BackNavigation from "@/components/Common/BackNavigation";
+import FormInput from "@/components/Common/FormInput";
 
 const DealzBuilderStep2 = ({ formData, setFormData }) => {
   const handlBack = () => {
@@ -70,6 +64,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
               className="bg-light-blue"
               icon="/icons/tag-2-icon.svg"
               fullWidth
+              placeholder="Enter title"
               rounded
             />
           </FormFieldset>
@@ -79,6 +74,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
               className="bg-light-blue"
               icon={<IconDollar />}
               fullWidth
+              placeholder="Dollar"
               rounded
             />
           </FormFieldset>

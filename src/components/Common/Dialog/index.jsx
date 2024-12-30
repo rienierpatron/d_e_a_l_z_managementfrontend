@@ -1,5 +1,4 @@
 import { Modal } from "flowbite-react";
-import Typography from "../Typography";
 import classNames from "classnames";
 
 const Dialog = ({
@@ -11,13 +10,14 @@ const Dialog = ({
   onClose,
   children,
   className,
+  contentClassName
 }) => {
   return (
     <Modal show={show} onClose={onClose} className={className}>
       <Modal.Header className={classNames("border-none", headerClassName)}>
         {header}
       </Modal.Header>
-      <Modal.Body>{children}</Modal.Body>
+      <Modal.Body className={contentClassName}>{children}</Modal.Body>
       {footer && (
         <Modal.Footer className={classNames("border-none", footerClassName)}>
           {footer}

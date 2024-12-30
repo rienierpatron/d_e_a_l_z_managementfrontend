@@ -1,4 +1,4 @@
-import DealzBuilder from "@/components/Common/DealzBuilder";
+import DealzBuilder from "@/components/DealzBuilder";
 
 const CreateDealz = () => {
   return <DealzBuilder />;

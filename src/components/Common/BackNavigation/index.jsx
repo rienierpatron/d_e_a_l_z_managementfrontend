@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import Button from "../Button";
+import Button from "@/components/Common/Button";
 import { useRouter } from "next/router";
 
 const BackNavigation = ({

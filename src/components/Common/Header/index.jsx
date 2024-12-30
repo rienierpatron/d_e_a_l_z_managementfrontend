@@ -3,6 +3,7 @@ import Button from "@/components/Common/Button";
 import Typography from "@/components/Common/Typography";
 import { ROUTES_HEADING_MAPPER } from "@/lib/routes";
 import IconStar from "@/components/Icons/IconStar";
+import ManagePreference from "@/components/ManagePreference";
 
 const Header = () => {
   const router = useRouter();
@@ -23,9 +24,7 @@ const Header = () => {
         </Button>
       </div>
       <div className="flex gap-4 items-center">
-        <Button className="border-none shadow-custom-black font-medium" isRound>
-          Manage Preferences
-        </Button>
+        <ManagePreference />
         <Button
           className="border-none relative shadow-custom-black !p-[14px]"
           isRound

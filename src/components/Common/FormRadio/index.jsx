@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { Radio } from "flowbite-react";
-import FormLabel from "../FormLabel";
+import FormLabel from "@/components/common/FormLabel";
 
 const FormRadio = ({
   id,

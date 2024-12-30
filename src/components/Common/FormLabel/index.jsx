@@ -12,7 +12,7 @@ const FormLabel = ({ children, required, className, info, ...props }) => {
         "text-sm text-dark-gray mb-[12px] flex gap-[6px]"
       )}
     >
-      <div>
+      <div className="w-full">
         {children}
         {required && <span className="text-red ml-[6px]">*</span>}
       </div>

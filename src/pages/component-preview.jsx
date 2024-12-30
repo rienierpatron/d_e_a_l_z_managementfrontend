@@ -5,7 +5,7 @@ import FormFieldset from "@/components/Common/FormFieldset";
 import FormInput from "@/components/Common/FormInput";
 import FormLabel from "@/components/Common/FormLabel";
 import FormRadio from "@/components/Common/FormRadio";
-import FormSelect from "@/components/Common/FormSelect";
+import FormSelect from "@/components/Common/FormSelectSimple";
 import FormTextArea from "@/components/Common/FormTextArea";
 import PopoverMenu from "@/components/Common/PopoverMenu";
 import Typography from "@/components/Common/Typography";

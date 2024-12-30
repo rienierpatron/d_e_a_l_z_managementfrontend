@@ -1,4 +1,4 @@
-import DesktopSidebar from "./DesktopSidebar";
+import DesktopSidebar from "@/components/Common/Sidebar/DesktopSidebar";
 
 const CustomSidebar = () => {
   return <DesktopSidebar />;

@@ -6,9 +6,10 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import FormInput from "@/components/Common/FormInput";
 import Button from "@/components/Common/Button";
 import Typography from "@/components/Common/Typography";
-import FormSelect from "@/components/Common/FormSelect";
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
+import { BUSINESS_TYPE_OPTIONS } from "@/lib/constants";
+import FormSelect from "@/components/Common/FormSelect";
 
 export default function Signup() {
   const [isPopupOpen, setIsPopupOpen] = useState(true);
@@ -44,11 +45,6 @@ export default function Signup() {
   const handleGoogleSignInFailure = (error) => {
     console.error("Google Sign-In failed:", error);
   };
-
-  const businessTypeOptions = [
-    { label: "Hotels", value: "hotels" },
-    { label: "Service", value: "service" },
-  ];
 
   return (
     <div className="w-full">
@@ -157,8 +153,8 @@ export default function Signup() {
                 <FormSelect
                   id="business-type"
                   name="business-type"
-                  placeHolder=" Select Business Type"
-                  options={businessTypeOptions}
+                  placeholder="Select Business Type"
+                  options={BUSINESS_TYPE_OPTIONS}
                   rounded
                   icon="/icons/company-icon.svg"
                 />

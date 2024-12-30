@@ -7,7 +7,7 @@ import IconProfileTwoUser from "@/components/Icons/IconProfileTwoUser";
 export const NAV_ITEMS = [
   {
     icon: <IconCategory width={24} height={24} />,
-    path: "/",
+    path: "/dashboard",
     label: "Dashboard",
   },
   {

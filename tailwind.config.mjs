@@ -19,6 +19,7 @@ export default {
         "dark-primary": "var(--color-dark-primary)",
         "primary-40": "var(--color-primary-40)",
         secondary: "var(--color-secondary)",
+        "secondary-60": "var(--color-secondary-60)",
         purple: "var(--color-purple)",
         red: "var(--color-red)",
         "red-40": "var(--color-red-40)",

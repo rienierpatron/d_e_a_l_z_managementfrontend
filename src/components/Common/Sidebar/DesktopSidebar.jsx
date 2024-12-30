@@ -10,7 +10,7 @@ import { NAV_ITEMS } from "@/lib/routes";
 const DesktopSidebar = () => {
 
   return (
-    <nav className="w-[115px] h-full bg-white border border-l-0 border-t-0 border-b-0 border-light-gray fixed px-3 py-6 flex flex-col justify-between z-[999]">
+    <nav className="w-[115px] h-full bg-white border border-l-0 border-t-0 border-b-0 border-light-gray fixed px-3 py-6 flex flex-col justify-between z-10">
       <div className="flex flex-col gap-12 justify-center items-center">
         <Image src="/dealz-logo.svg" width={67} height={26} />
         <ul className="flex flex-col gap-8">

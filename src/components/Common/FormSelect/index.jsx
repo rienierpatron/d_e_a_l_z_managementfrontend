@@ -11,6 +11,8 @@ const FormSelect = React.forwardRef(
       className,
       customStyles: userStyles,
       icon,
+      controlStyle,
+      optionStyle,
       ...props
     },
     ref
@@ -30,13 +32,15 @@ const FormSelect = React.forwardRef(
         },
         color: "#02021E",
         fontSize: "16px",
-        fontWeight: 400,
+        fontWeight: 500,
         paddingLeft: icon ? "50px" : undefined,
+        ...controlStyle,
       }),
       placeholder: (provided) => ({
         ...provided,
         color: "#646B75", // --color-dark-gray
         fontSize: "14px",
+        fontWeight: 400,
       }),
       option: (provided, state) => ({
         ...provided,
@@ -47,6 +51,7 @@ const FormSelect = React.forwardRef(
         "&:hover": {
           backgroundColor: "#EFF0F4",
         },
+        ...optionStyle,
       }),
       menuPortal: (provided) => ({
         ...provided,

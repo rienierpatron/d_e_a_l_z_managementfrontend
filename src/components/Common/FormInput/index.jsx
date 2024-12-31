@@ -14,6 +14,7 @@ const FormInput = React.forwardRef(
       fullWidth = false,
       rounded = false,
       icon = null,
+      iconClassName,
       ...props
     },
     ref
@@ -23,14 +24,19 @@ const FormInput = React.forwardRef(
 
     const classes = classNames(
       baseClass,
-      { "w-full": fullWidth, "rounded-[32px]": rounded, "pl-[52px]": icon },
+      { "rounded-[32px]": rounded, "pl-[52px]": icon },
       className
     );
 
     return (
-      <div className="relative">
+      <div className={classNames("relative", { "w-full": fullWidth })}>
         {icon && (
-          <div className="absolute top-1/2 left-6 transform -translate-y-1/2">
+          <div
+            className={classNames(
+              "absolute top-1/2 left-6 transform -translate-y-1/2",
+              iconClassName
+            )}
+          >
             {typeof icon === "string" ? (
               <Image alt="input-icon" src={icon} width={20} height={20} />
             ) : (

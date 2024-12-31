@@ -15,7 +15,7 @@ const CustomDatePicker = ({
   ...props
 }) => {
   const defaultInputClass = classNames(
-    "bg-white py-6 text-lg text-midnight-blue font-medium border focus:outline-dark-gray focus:border-none focus-visible:outline-dark-gray placeholder:text-dark-gray placeholder:text-sm placeholder:font-normal",
+    "bg-white py-6 text-lg text-midnight-blue font-medium border border-light-gray focus:outline-dark-gray focus:border-none focus-visible:outline-dark-gray placeholder:text-dark-gray placeholder:text-sm placeholder:font-normal",
     inputClassName
   );
 

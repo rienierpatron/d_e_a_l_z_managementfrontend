@@ -1,3 +1,7 @@
+/**
+ * External dependencies
+ */
+
 import classNames from "classnames";
 import { Popover } from "flowbite-react";
 import Image from "next/image";
@@ -18,7 +22,7 @@ const MenuItem = ({
         menuItemClassName
       )}
     >
-      {icon && (
+      {icon && typeof icon === "string" ? (
         <Image
           src={icon}
           alt="menu-item-icon"
@@ -26,6 +30,8 @@ const MenuItem = ({
           width={16}
           className={classNames("flex-shrink-0", menuItemClassIconClassName)}
         />
+      ) : (
+        <div className="flex-shrink-0">{icon}</div>
       )}
       <span
         className={classNames(

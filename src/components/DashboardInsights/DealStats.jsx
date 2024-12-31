@@ -1,4 +1,11 @@
+/**
+ * External dependencies
+ */
 import classNames from "classnames";
+
+/**
+ * Internal dependencies
+ */
 import Typography from "@/components/Common/Typography";
 import FormSelect from "@/components/Common/FormSelect";
 
@@ -13,7 +20,7 @@ const DealzStats = ({
   metricUnit,
 }) => {
   return (
-    <div className="border border-light-gray rounded-2xl px-6 py-8 flex flex-col gap-4 w-full">
+    <div className="border border-light-gray rounded-2xl px-6 py-8 flex flex-col gap-4 w-full justify-between">
       <div className={classNames("flex flex-col gap-4", filterWrapperClassName)}>
         <div
           className={classNames(

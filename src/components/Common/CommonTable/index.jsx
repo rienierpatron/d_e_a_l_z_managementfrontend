@@ -1,3 +1,7 @@
+/**
+ * External dependencies
+ */
+
 import React, { useEffect, useState } from "react";
 import {
   useReactTable,
@@ -6,10 +10,14 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
+import classNames from "classnames";
+
+/**
+ * Internal dependencies
+ */
 import { PAGINATION } from "@/lib/constants";
 import IconArrowLeft from "@/components/Icons/IconArrowLeft";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
-import classNames from "classnames";
 
 const PaginationControls = ({ table, onPageChange, onPageSizeChange }) => {
   const currentPage = table.getState().pagination.pageIndex + 1; // pageIndex starts from 0
@@ -45,7 +53,7 @@ const PaginationControls = ({ table, onPageChange, onPageSizeChange }) => {
   const pages = getPaginationRange();
 
   return (
-    <div className="flex items-center justify-between mt-4">
+    <div className="flex items-center justify-between mt-4 flex-row-reverse">
       <div className="flex items-center">
         {/* Previous Button */}
         <button
@@ -153,6 +161,8 @@ const CommonTable = ({
   sortingServerSide = false,
   rowClickable = false,
   onRowClick,
+  tableWrapperClassName,
+  tableClassName
 }) => {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
@@ -202,8 +212,8 @@ const CommonTable = ({
 
   return (
     <div>
-      <div className="overflow-x-auto h-full scrollbar-hide">
-        <table className="min-w-full table-fixed border-collapse border border-light-gray">
+      <div className={classNames("overflow-x-auto h-full scrollbar-hide", tableWrapperClassName)}>
+        <table className={classNames("min-w-full table-fixed border-collapse border border-light-gray", tableClassName)}>
           <thead className="bg-gradient-table-head">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>

@@ -4,7 +4,6 @@ import IconAdd from "@/components/Icons/IconAdd";
 import IconColoredCoupon from "@/components/Icons/IconColoredCoupon";
 import IconCouponWide from "@/components/Icons/IconCouponWide";
 import { useRouter } from "next/router";
-import Image from "next/image";
 
 const RemainingDealz = ({ totalDealz, remainingDealz }) => {
   const router = useRouter();
@@ -25,7 +24,7 @@ const RemainingDealz = ({ totalDealz, remainingDealz }) => {
   const organizedDeals = organizeDeals(totalDealz, remainingDealz);
 
   return (
-    <div className="border border-light-gray rounded-2xl px-6 py-8 flex flex-col gap-6 w-full">
+    <div className="border border-light-gray rounded-2xl px-6 py-8 flex flex-col gap-6 w-full relative">
       <div className="flex items-center justify-between">
         <Typography className="uppercase font-medium" variant="caption">
           Deal Remaining
@@ -44,7 +43,7 @@ const RemainingDealz = ({ totalDealz, remainingDealz }) => {
       </div>
       <Button
         variant="primary"
-        className="px-4 py-[10px] w-max"
+        className="px-4 py-[10px] w-max z-10"
         outlined
         icon={<IconAdd />}
         isRound
@@ -52,7 +51,7 @@ const RemainingDealz = ({ totalDealz, remainingDealz }) => {
       >
         Create Deal
       </Button>
-      <Image src="/images/coupon.svg" width={100} height={100} objectFit="contain"/>
+      <div className="bg-[url('/images/remaining-dealz-coupon.png')] absolute -bottom-[5px] bg-right bg-no-repeat right-0 h-[100px] w-full"></div>
     </div>
   );
 };

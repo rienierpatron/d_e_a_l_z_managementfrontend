@@ -1,7 +1,13 @@
+/**
+ * External dependencies
+ */
 import Image from "next/image";
 import Link from "next/link";
 import classNames from "classnames";
 
+/**
+ * Internal dependencies
+ */
 import SidbarUpgradeCta from "@/components/SidbarUpgradeCta";
 import Button from "@/components/Common/Button";
 import IconMessageQuestion from "@/components/Icons/IconMessageQuestion";

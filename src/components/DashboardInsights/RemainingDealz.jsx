@@ -1,9 +1,16 @@
+/**
+ * External dependencies
+ */
+import { useRouter } from "next/router";
+
+/**
+ * Internal dependencies
+ */
 import Typography from "@/components/Common/Typography";
 import Button from "@/components/Common/Button";
 import IconAdd from "@/components/Icons/IconAdd";
 import IconColoredCoupon from "@/components/Icons/IconColoredCoupon";
 import IconCouponWide from "@/components/Icons/IconCouponWide";
-import { useRouter } from "next/router";
 
 const RemainingDealz = ({ totalDealz, remainingDealz }) => {
   const router = useRouter();

@@ -1,20 +1,63 @@
-import React, { useState }  from "react";
+/**
+ * External dependencies
+ */
+import React, { useState } from "react";
+
+/**
+ * Internal dependencies
+ */
 import CommonTable from "@/components/Common/CommonTable";
-import Typography from "@/components/Common/Typography";
+import BackNavigation from "@/components/Common/BackNavigation";
+import DealzStatusRenderer from "@/components/DealzStatusRenderer";
+import { PAGINATION } from "@/lib/constants";
+import DealzFilter from "@/components/DealzFilter";
+import IconChart from "@/components/Icons/IconChart";
+import IconCalendar from "@/components/Icons/IconCalendar";
+import IconProfileCircle from "@/components/Icons/IconProfileCircle";
 
 export default function Calendar() {
   const data = React.useMemo(
     () => [
-      { dealz_title: "Alice", slot_details: "29th Dec, Morning", validity: "25th Dec - 4th Jan", created_by: "John Doe", status: 'Draft' },
-      { dealz_title: "Bob", slot_details: "31st Dec, Morning", validity: "31st Dec - 5th Jan", created_by: "John Doe", status: 'Pending Review' },
-      { dealz_title: "Charlie", slot_details: "5th Jan, Evening", validity: "4th Jan - 10th Jan", created_by: "Will Smith", status: 'Approved & Scheduled' },
-      { dealz_title: "David", slot_details: "5th Dec, Morning", validity: "5th Dec - 15th Dec", created_by: "Will Smith", status: 'Closed' },
-      { dealz_title: "David", slot_details: "10th Jan, Evening", validity: "9th Jan - 18th Jan", created_by: "Will Smith", status: 'Needs Revising' },
-      { dealz_title: "Alice", slot_details: "29th Dec, Morning", validity: "25th Dec - 4th Jan", created_by: "John Doe", status: 'Draft' },
-      { dealz_title: "Bob", slot_details: "31st Dec, Morning", validity: "31st Dec - 5th Jan", created_by: "John Doe", status: 'Pending Review' },
-      { dealz_title: "Charlie", slot_details: "5th Jan, Evening", validity: "4th Jan - 10th Jan", created_by: "Will Smith", status: 'Approved & Scheduled' },
-      { dealz_title: "David", slot_details: "5th Dec, Morning", validity: "5th Dec - 15th Dec", created_by: "Will Smith", status: 'Closed' },
-      { dealz_title: "David", slot_details: "10th Jan, Evening", validity: "9th Jan - 18th Jan", created_by: "Will Smith", status: 'Needs Revising' },
+      {
+        dealz_title: "Alice",
+        start_date: "22 Nov, 2024",
+        end_date: "25 Nov, 2024",
+        duration: "3 days",
+        created_by: "John Doe",
+        status: "draft",
+      },
+      {
+        dealz_title: "Bob",
+        start_date: "22 Nov, 2024",
+        end_date: "25 Nov, 2024",
+        duration: "3 days",
+        created_by: "John Doe",
+        status: "pending",
+      },
+      {
+        dealz_title: "Charlie",
+        start_date: "22 Nov, 2024",
+        end_date: "25 Nov, 2024",
+        duration: "3 days",
+        created_by: "John Doe",
+        status: "approved",
+      },
+      {
+        dealz_title: "David",
+        start_date: "22 Nov, 2024",
+        end_date: "25 Nov, 2024",
+        duration: "3 days",
+        created_by: "John Doe",
+        status: "revision",
+      },
+      {
+        dealz_title: "David",
+        start_date: "22 Nov, 2024",
+        end_date: "25 Nov, 2024",
+        duration: "3 days",
+        created_by: "John Doe",
+        status: "closed",
+      },
     ],
     []
   );
@@ -22,42 +65,102 @@ export default function Calendar() {
   const columns = React.useMemo(
     () => [
       {
-        header: "DEALZ Title",
+        header: "DEALZ NAME",
         accessorKey: "dealz_title",
-        filterIcon: "/icons/tag-icon.svg"
       },
       {
-        header: "Slot",
-        accessorKey: "slot_details",
-        filterIcon: "/icons/slot-icon.svg"
+        header: "START DATE",
+        accessorKey: "start_date",
       },
       {
-        header: "Validity",
-        accessorKey: "validity",
-        filterIcon: "/icons/calendar-icon.svg"
+        header: "END DATE",
+        accessorKey: "end_date",
       },
       {
-        header: "Created by",
+        header: "DURATION",
+        accessorKey: "duration",
+      },
+      {
+        header: "CREATED BY",
         accessorKey: "created_by",
-        filterIcon: "/icons/created-by-icon.svg"
       },
       {
-        header: "Status",
+        header: "STATUS",
         accessorKey: "status",
-        filterIcon: "/icons/chart-icon.svg"
+        Cell: ({ row: { original } }) => {
+          return <DealzStatusRenderer status={original.status} />;
+        },
       },
     ],
     []
   );
 
+  const handleApply = (filterState) => {
+    console.log("Filter applied:", filterState);
+  };
+
+  const filterFields = [
+    {
+      id: "deal_title",
+      type: "input",
+      placeholder: "DEAL TITLE",
+      icon: "/icons/tag-2-icon.svg",
+      className: "!pl-10 py-3 !h-auto !w-full",
+      iconClassName: "!left-3",
+      fullWidth: true
+    },
+    {
+      id: "start_date",
+      type: "datePicker",
+      placeholder: "START DATE",
+      inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
+      className: "w-full",
+    },
+    {
+      id: "end_date",
+      type: "datePicker",
+      placeholder: "END DATE",
+      inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
+      className: "w-full",
+    },
+    {
+      id: "created_by",
+      type: "select",
+      placeholder: "CREATED BY",
+      icon: <IconProfileCircle />,
+      options: [],
+      controlStyle: { paddingLeft: "40px" },
+    },
+    {
+      id: "status",
+      type: "select",
+      placeholder: "STATUS",
+      icon: <IconChart />,
+      options: [
+        { label: "Draft", value: "draft" },
+        { label: "Closed", value: "closed" },
+      ],
+      controlStyle: { paddingLeft: "40px" },
+    },
+  ];
+
   return (
-    <div className="w-full p-5">
-      <div className="overflow-x-auto">
-        <Typography variant="title" className="p-5 text-gray-700 border border-b-0 rounded-t-xl mb-[8px]">
-          DEALZ
-        </Typography>
-        <CommonTable columns={columns} data={data} pageSize={8} showFilters={true} />
+    <div className="w-full px-10 py-8">
+      <div className="rounded-tl-2xl rounded-tr-2xl border border-light-blue p-6 flex flex-col gap-6">
+        <BackNavigation
+          text="DEALZ"
+          baseClassName="!mb-0 w-max"
+          className="text-2xl font-semibold"
+        />
+        <DealzFilter fields={filterFields} onApply={handleApply} />
       </div>
+      <CommonTable
+        columns={columns}
+        data={data}
+        pageSize={PAGINATION.DEFAULT_PAGE_SIZE}
+        paginationRequired={true}
+        sortingServerSide={true}
+      />
     </div>
   );
-};
+}

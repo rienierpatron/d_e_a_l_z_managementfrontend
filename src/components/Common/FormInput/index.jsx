@@ -24,7 +24,7 @@ const FormInput = React.forwardRef(
 
     const classes = classNames(
       baseClass,
-      { "rounded-[32px]": rounded, "pl-[52px]": icon },
+      { "!w-full": fullWidth, "rounded-[32px]": rounded, "pl-[52px]": icon },
       className
     );
 

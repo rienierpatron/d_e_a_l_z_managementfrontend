@@ -20,16 +20,16 @@ import IconEye from "@/components/Icons/IconEye";
 import IconTrash from "@/components/Icons/IconTrash";
 import IconArrowLeft from "@/components/Icons/IconArrowLeft";
 import { PAGINATION } from "@/lib/constants";
-import FormInput from "@/components/Common/FormInput";
-import CustomDatePicker from "@/components/Common/DatePicker";
-import FormSelect from "@/components/Common/FormSelect";
 import IconChart from "@/components/Icons/IconChart";
 import IconCalendar from "@/components/Icons/IconCalendar";
+import DealzFilter from "@/components/DealzFilter";
+import EditDealConfirmationDialog from "@/components/EditDealConfirmationDialog";
 
 const MyDealz = () => {
   const router = useRouter();
   const { query } = router;
   const viewAllDealz = (query?.show && query.show === "all-dealz") || false;
+  const [showEditWarningDialog, setShowEditWarningDialog] = useState(false);
 
   const [showPopover, setShowPopover] = useState(false);
 
@@ -37,7 +37,7 @@ const MyDealz = () => {
     {
       icon: <IconEdit width={16} height={16} />,
       label: "Edit",
-      onClick: () => console.log("Edit clicked"),
+      onClick: () => setShowEditWarningDialog(true),
     },
     {
       icon: <IconEye width={16} height={16} />,
@@ -150,6 +150,51 @@ const MyDealz = () => {
     columns.splice(2, 2);
   }
 
+  const filterFields = [
+    {
+      id: "deal_title",
+      type: "input",
+      placeholder: "DEAL TITLE",
+      icon: "/icons/tag-2-icon.svg",
+      className: "!pl-10 py-3 !h-auto !w-full",
+      iconClassName: "!left-3",
+      fullWidth: true,
+    },
+    {
+      id: "start_date",
+      type: "datePicker",
+      placeholder: "START DATE",
+      inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
+      className: "w-full",
+    },
+    {
+      id: "end_date",
+      type: "datePicker",
+      placeholder: "END DATE",
+      inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
+      className: "w-full",
+    },
+    {
+      id: "duration",
+      type: "select",
+      placeholder: "DURATION",
+      icon: <IconCalendar />,
+      options: [],
+      controlStyle: { paddingLeft: "40px" },
+    },
+    {
+      id: "status",
+      type: "select",
+      placeholder: "STATUS",
+      icon: <IconChart />,
+      options: [
+        { label: "Draft", value: "draft" },
+        { label: "Closed", value: "closed" },
+      ],
+      controlStyle: { paddingLeft: "40px" },
+    },
+  ];
+
   return (
     <div className={classNames({ "mt-8": !viewAllDealz })}>
       <div className="rounded-tl-2xl rounded-tr-2xl border border-light-blue p-6 flex flex-col gap-6">
@@ -186,62 +231,11 @@ const MyDealz = () => {
           )}
         </div>
         {viewAllDealz && (
-          <div className="flex items-center gap-6">
-            <FormInput
-              icon="/icons/tag-2-icon.svg"
-              placeholder="DEAL TITLE"
-              rounded
-              className="!pl-10 py-3 !h-auto"
-              iconClassName="!left-3"
-              fullWidth
-            />
-            <CustomDatePicker
-              id="start-date"
-              placeholder="Start date"
-              inputClassName="!rounded-[32px] !pl-10 !py-3 !h-[50px]"
-              onChange={(value) => {}}
-              className="w-full"
-            />
-            <CustomDatePicker
-              id="end-date"
-              placeholder="End date"
-              inputClassName="!rounded-[32px] !pl-10 !py-3 !h-[50px]"
-              className="w-full"
-            />
-            <FormSelect
-              id="status"
-              name="status"
-              options={[]}
-              rounded
-              icon={<IconCalendar />}
-              height="50px"
-              controlStyle={{
-                paddingLeft: "40px",
-              }}
-            />
-            <FormSelect
-              id="status"
-              name="status"
-              options={[]}
-              rounded
-              icon={<IconChart />}
-              placeholder="Status"
-              height="50px"
-              controlStyle={{
-                paddingLeft: "40px",
-              }}
-            />
-            <Button
-              variant="primary"
-              isRound
-              outlined
-              icon={<IconArrowRight />}
-              iconPosition="right"
-              className="!px-6 !py-3"
-            >
-              Apply
-            </Button>
-          </div>
+          <DealzFilter
+            fields={filterFields}
+            onApply={() => {}}
+            className="grid-cols-6 !gap-2"
+          />
         )}
       </div>
       <CommonTable
@@ -253,6 +247,11 @@ const MyDealz = () => {
         onPageSizeChange={(pageSize) => {}}
         onSortChange={(orderBy, order) => {}}
         sortingServerSide={false}
+      />
+      <EditDealConfirmationDialog
+        open={showEditWarningDialog}
+        onClose={() => setShowEditWarningDialog(false)}
+        onSubmit={() => {}}
       />
     </div>
   );

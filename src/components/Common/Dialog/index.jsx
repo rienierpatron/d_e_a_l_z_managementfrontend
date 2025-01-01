@@ -10,10 +10,11 @@ const Dialog = ({
   onClose,
   children,
   className,
-  contentClassName
+  contentClassName,
+  size
 }) => {
   return (
-    <Modal show={show} onClose={onClose} className={className}>
+    <Modal show={show} onClose={onClose} className={className} size={size}>
       <Modal.Header className={classNames("border-none", headerClassName)}>
         {header}
       </Modal.Header>

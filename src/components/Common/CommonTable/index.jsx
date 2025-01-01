@@ -162,7 +162,7 @@ const CommonTable = ({
   rowClickable = false,
   onRowClick,
   tableWrapperClassName,
-  tableClassName
+  tableClassName,
 }) => {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
@@ -212,8 +212,18 @@ const CommonTable = ({
 
   return (
     <div>
-      <div className={classNames("overflow-x-auto h-full scrollbar-hide", tableWrapperClassName)}>
-        <table className={classNames("min-w-full table-fixed border-collapse border border-light-gray", tableClassName)}>
+      <div
+        className={classNames(
+          "overflow-x-auto h-full scrollbar-hide",
+          tableWrapperClassName
+        )}
+      >
+        <table
+          className={classNames(
+            "min-w-full table-fixed border-collapse border border-light-gray",
+            tableClassName
+          )}
+        >
           <thead className="bg-gradient-table-head">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -227,14 +237,18 @@ const CommonTable = ({
                     }}
                     onClick={() => handleSorting(header)}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : header.column.columnDef.header}
-                    {header.column.getIsSorted() === "asc"
-                      ? " 🔼"
-                      : header.column.getIsSorted() === "desc"
-                      ? " 🔽"
-                      : ""}
+                    <div className="flex items-center gap-1">
+                      {header.isPlaceholder
+                        ? null
+                        : header.column.columnDef.header}{" "}
+                      {header.column.getIsSorted() === "asc" ? (
+                        <IconArrowLeft className="rotate-90" />
+                      ) : header.column.getIsSorted() === "desc" ? (
+                        <IconArrowLeft className="-rotate-90" />
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </th>
                 ))}
               </tr>

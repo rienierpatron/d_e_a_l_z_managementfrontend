@@ -1,4 +1,5 @@
 import Header from "@/components/Common/Header";
+import HotBar from "@/components/Common/HotBar";
 import CustomSidebar from "@/components/Common/Sidebar";
 
 export default function LoggedInLayout({ children }) {
@@ -6,6 +7,7 @@ export default function LoggedInLayout({ children }) {
     <div className="min-h-screen flex">
       <CustomSidebar />
       <main className="ml-[115px] bg-white flex flex-col w-main">
+        <HotBar/>
         <Header />
         {children}
       </main>

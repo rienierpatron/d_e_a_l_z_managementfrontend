@@ -14,6 +14,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         white: "var(--color-white)",
+        "white-20": "var(--color-white-20)",
         black: "var(--color-black)",
         primary: "var(--color-primary)",
         "dark-primary": "var(--color-dark-primary)",

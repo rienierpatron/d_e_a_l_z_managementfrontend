@@ -1,5 +1,11 @@
+/**
+ * External dependencies
+ */
 import { useState } from "react";
 
+/**
+ * Internal dependencies
+ */
 import Button from "@/components/Common/Button";
 import Dialog from "@/components/Common/Dialog";
 import Typography from "@/components/Common/Typography";

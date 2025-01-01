@@ -1,3 +1,6 @@
+/**
+ * Internal dependencies
+ */
 import IconAdd from "@/components/Icons/IconAdd";
 import IconCalendar from "@/components/Icons/IconCalendar";
 import IconCategory from "@/components/Icons/IconCategory";
@@ -17,7 +20,7 @@ export const NAV_ITEMS = [
   },
   {
     icon: <IconCalendar width={24} height={24} />,
-    path: "/",
+    path: "/calendar",
     label: "Calendar",
   },
   {
@@ -33,8 +36,10 @@ export const NAV_ITEMS = [
 ];
 
 export const ROUTES_HEADING_MAPPER = {
-    '/login': 'Login',
-    '/signup': 'Sign Up',
-    '/dashboard': "Dashboard",
-    '/dealz/create': "Create DEALZ"
-}
+  "/login": "Login",
+  "/signup": "Sign Up",
+  "/dashboard": "Dashboard",
+  "/dealz/create": "Create DEALZ",
+  "/calendar": "Calendar",
+  "/subscriptions": "Subscriptions",
+};

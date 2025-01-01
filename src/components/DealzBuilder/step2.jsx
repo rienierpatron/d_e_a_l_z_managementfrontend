@@ -1,3 +1,6 @@
+/**
+ * Internal dependencies
+ */
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
 import Typography from "@/components/Common/Typography";

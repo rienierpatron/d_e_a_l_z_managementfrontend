@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import React, { useRef } from "react";
 
 const FilePicker = ({ onFileSelect, children, className }) => {

@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import Image from "next/image";
 import React, { useEffect, useRef } from "react";
 import Select from "react-select";

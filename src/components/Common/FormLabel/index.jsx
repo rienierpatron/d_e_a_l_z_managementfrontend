@@ -1,7 +1,14 @@
+/**
+ * External dependencies
+ */
 import React from "react";
 import classNames from "classnames";
-import IconInfoOutlined from "@/components/Icons/IconInfoOutlined";
 import { Popover } from "flowbite-react";
+
+/**
+ * Internal dependencies
+ */
+import IconInfoOutlined from "@/components/Icons/IconInfoOutlined";
 
 const FormLabel = ({ children, required, className, info, ...props }) => {
   return (

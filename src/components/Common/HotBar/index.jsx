@@ -27,7 +27,11 @@ const HotBar = () => {
     return null;
   }
 
-  return <div className="sticky top-0 z-20 w-full">{hotbarConent}</div>;
+  return (
+    <div id="dealz-hotbar" className="sticky top-0 z-20 w-full max-h-[60px]">
+      {hotbarConent}
+    </div>
+  );
 };
 
 export default HotBar;

@@ -1,3 +1,6 @@
+/**
+ * Internal dependencies
+ */
 import Typography from "@/components/Common/Typography";
 import Button from "@/components/Common/Button";
 import IconArrowRight from "@/components/Icons/IconArrowRight";

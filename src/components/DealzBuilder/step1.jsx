@@ -1,3 +1,11 @@
+/**
+ * External dependencies
+ */
+import Image from "next/image";
+
+/**
+ * Internal dependencies
+ */
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
 import Typography from "@/components/Common/Typography";
@@ -9,7 +17,6 @@ import FilePicker from "@/components/Common/FilePicker";
 import IconUploadFile from "@/components/Icons/IconUploadFile";
 import IconDownload from "@/components/Icons/IconDownload";
 import FormRadio from "@/components/Common/FormRadio";
-import Image from "next/image";
 import IconClose from "@/components/Icons/IconClose";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
 

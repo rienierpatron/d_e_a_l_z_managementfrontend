@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import { Modal } from "flowbite-react";
 import classNames from "classnames";
 

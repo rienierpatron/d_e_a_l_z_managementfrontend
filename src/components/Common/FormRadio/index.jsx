@@ -1,5 +1,12 @@
+/**
+ * External dependencies
+ */
 import classNames from "classnames";
 import { Radio } from "flowbite-react";
+
+/**
+ * Internal dependencies
+ */
 import FormLabel from "@/components/common/FormLabel";
 
 const FormRadio = ({

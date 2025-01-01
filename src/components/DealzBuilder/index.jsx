@@ -1,6 +1,12 @@
+/**
+ * External dependencies
+ */
 import { useState } from "react";
 import classNames from "classnames";
 
+/**
+ * Internal dependencies
+ */
 import Typography from "@/components/Common/Typography";
 import MobilePreview from "@/components/MobilePreview";
 import DealzBuilderStep1 from "@/components/DealzBuilder/step1";

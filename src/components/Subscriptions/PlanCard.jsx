@@ -5,7 +5,7 @@ import Button from "@/components/Common/Button";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
 import Typography from "@/components/Common/Typography";
 import IconStar from "@/components/Icons/IconStar";
-import IconCrown from "../Icons/IconCrown";
+import IconCrown from "@/components/Icons/IconCrown";
 import classNames from "classnames";
 
 const PlanCard = ({

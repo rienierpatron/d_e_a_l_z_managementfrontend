@@ -1,10 +1,16 @@
+/**
+ * External dependencies
+ */
+import classNames from "classnames";
+/**
+ * Internal dependencies
+ */
 import Typography from "@/components/Common/Typography";
 import Button from "@/components/Common/Button";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
 import BackNavigation from "@/components/Common/BackNavigation";
 import IconStar from "@/components/Icons/IconStar";
 import IconCrown from "@/components/Icons/IconCrown";
-import classNames from "classnames";
 import CustomDatePicker from "@/components/Common/DatePicker";
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";

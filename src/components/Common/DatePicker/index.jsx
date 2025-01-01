@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import { Datepicker } from "flowbite-react";
 import classNames from "classnames";
 import { useEffect } from "react";

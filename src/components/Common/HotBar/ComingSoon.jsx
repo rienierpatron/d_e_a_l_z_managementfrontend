@@ -1,5 +1,8 @@
+/**
+ * Internal dependencies
+ */
 import IconStar2 from "@/components/Icons/IconStart2";
-import Typography from "../Typography";
+import Typography from "@/components/Common/Typography";
 
 const ComingSoon = () => {
   return (

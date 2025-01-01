@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import Image from "next/image";
 
 /**
@@ -5,7 +8,7 @@ import Image from "next/image";
  */
 import Button from "@/components/Common/Button";
 import Dialog from "@/components/Common/Dialog";
-import Typography from "../Common/Typography";
+import Typography from "@/components/Common/Typography";
 
 const EditDealConfirmationDialog = ({ open, onSubmit, onClose }) => {
   return (

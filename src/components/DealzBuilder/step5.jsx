@@ -1,8 +1,15 @@
+/**
+ * External dependencies
+ */
+import Image from "next/image";
+
+/**
+ * Internal dependencies
+ */
 import BackNavigation from "@/components/Common/BackNavigation";
 import Button from "@/components/Common/Button";
 import IconCloseOutlined from "@/components/Icons/IconCloseOutlined";
 import Typography from "@/components/Common/Typography";
-import Image from "next/image";
 import IconCoupon from "@/components/Icons/IconCoupon";
 import IconDollar from "@/components/Icons/IconDollar";
 import IconSave from "@/components/Icons/IconSave";

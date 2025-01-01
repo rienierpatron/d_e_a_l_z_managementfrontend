@@ -1,4 +1,11 @@
+/**
+ * External dependencies
+ */
 import Image from "next/image";
+
+/**
+ * Internal dependencies
+ */
 import Typography from "@/components/Common/Typography";
 import IconAdd from "@/components/Icons/IconAdd";
 

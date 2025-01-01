@@ -1,7 +1,14 @@
+/**
+ * External dependencies
+ */
 import React from "react";
 import classNames from "classnames";
-import Button from "@/components/Common/Button";
 import { useRouter } from "next/router";
+
+/**
+ * Internal dependencies
+ */
+import Button from "@/components/Common/Button";
 
 const BackNavigation = ({
   href,

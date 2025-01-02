@@ -20,41 +20,41 @@ export default function Calendar() {
     () => [
       {
         dealz_title: "Alice",
+        slot_date: "23rd Nov, Morning",
         start_date: "22 Nov, 2024",
         end_date: "25 Nov, 2024",
-        duration: "3 days",
         created_by: "John Doe",
         status: "draft",
       },
       {
         dealz_title: "Bob",
+        slot_date: "22nd Nov, Morning",
         start_date: "22 Nov, 2024",
         end_date: "25 Nov, 2024",
-        duration: "3 days",
         created_by: "John Doe",
         status: "pending",
       },
       {
         dealz_title: "Charlie",
+        slot_date: "23rd Nov, Evening",
         start_date: "22 Nov, 2024",
         end_date: "25 Nov, 2024",
-        duration: "3 days",
         created_by: "John Doe",
         status: "approved",
       },
       {
         dealz_title: "David",
+        slot_date: "24th Nov, Evening",
         start_date: "22 Nov, 2024",
         end_date: "25 Nov, 2024",
-        duration: "3 days",
         created_by: "John Doe",
         status: "revision",
       },
       {
         dealz_title: "David",
+        slot_date: "23rd Nov, Morning",
         start_date: "22 Nov, 2024",
         end_date: "25 Nov, 2024",
-        duration: "3 days",
         created_by: "John Doe",
         status: "closed",
       },
@@ -69,16 +69,15 @@ export default function Calendar() {
         accessorKey: "dealz_title",
       },
       {
-        header: "START DATE",
+        header: "SLOT DATE",
+        accessorKey: "slot_date",
+      },
+      {
+        header: "VALIDITY",
         accessorKey: "start_date",
-      },
-      {
-        header: "END DATE",
-        accessorKey: "end_date",
-      },
-      {
-        header: "DURATION",
-        accessorKey: "duration",
+        Cell: ({ row: { original } }) => {
+          return original.start_date + '-' + original.end_date;
+        }
       },
       {
         header: "CREATED BY",
@@ -110,16 +109,18 @@ export default function Calendar() {
       fullWidth: true
     },
     {
+      id: "slot_date",
+      type: "input",
+      placeholder: "SLOT DATE",
+      icon: "/icons/slot-icon.svg",
+      className: "!pl-10 py-3 !h-auto !w-full",
+      iconClassName: "!left-3",
+      fullWidth: true
+    },
+    {
       id: "start_date",
       type: "datePicker",
       placeholder: "START DATE",
-      inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
-      className: "w-full",
-    },
-    {
-      id: "end_date",
-      type: "datePicker",
-      placeholder: "END DATE",
       inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
       className: "w-full",
     },

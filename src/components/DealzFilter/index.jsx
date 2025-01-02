@@ -72,7 +72,7 @@ const DealzFilter = ({ fields, onApply, className }) => {
   };
 
   return (
-    <div className={classNames("grid grid-cols-4 gap-5", className)}>
+    <div className={classNames("flex gap-5", className)}>
       {fields.map((field) => renderField(field))}
       <Button
         variant="primary"

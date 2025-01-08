@@ -13,4 +13,5 @@ export const helper = {
   notEmpty: generalHelper.notEmpty,
   cmpStr: generalHelper.compareString,
   cmpBool: generalHelper.compareBoolean,
+  validateEmail: generalHelper.validateEmail
 };

@@ -16,6 +16,10 @@ export default function Login() {
       email: "",
     });
   
+  const [errors, setErrors] = useState({
+    email: false,
+  });
+  
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };
@@ -30,10 +34,12 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { email } = userData;
+    const newErrors = { email: !userData.email || !helper.validateEmail(userData.email)};
+
+    setErrors(newErrors);
 
     // Check if any field is empty
     if (!email) {
-      console.log("Please fill in all fields."); 
       return;
     }
     
@@ -110,6 +116,7 @@ export default function Login() {
                 icon="/icons/email-icon.svg"
                 fullWidth
                 rounded
+                isError={errors.email}
               />
             </div>
 

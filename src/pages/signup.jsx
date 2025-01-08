@@ -23,6 +23,14 @@ export default function Signup() {
     businessType: "",
   });
 
+  const [errors, setErrors] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    companyName: false,
+    businessType: false,
+  });
+
   const [authType, setAuthType] = useState("email");
   const [socialPayload, setSocialPayload] = useState(null);
 
@@ -43,9 +51,18 @@ export default function Signup() {
     const { firstName, lastName, email, companyName, businessType } = userData;
 
     // Check if any field is empty
-    if (!firstName || !lastName || !email || !companyName || !businessType) {
-      console.log("Please fill in all fields.");
-      return;
+    const newErrors = {
+      firstName: !userData.firstName,
+      lastName: !userData.lastName,
+      email: !userData.email || !helper.validateEmail(userData.email),
+      companyName: !userData.companyName,
+      businessType: !userData.businessType,
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).includes(true)) {
+      return;  // Don't proceed with submission if there are errors
     }
     
     let data;
@@ -187,6 +204,7 @@ export default function Signup() {
                       icon="/icons/user-icon.svg"
                       fullWidth
                       rounded
+                      isError={errors.firstName}
                     />
                   </FormFieldset>
                   <FormFieldset className="!mb-0">
@@ -206,6 +224,7 @@ export default function Signup() {
                       icon="/icons/user-icon.svg"
                       fullWidth
                       rounded
+                      isError={errors.lastName}
                     />
                   </FormFieldset>
                 </div>
@@ -226,6 +245,7 @@ export default function Signup() {
                     icon="/icons/company-icon.svg"
                     fullWidth
                     rounded
+                    isError={errors.companyName}
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
@@ -242,6 +262,7 @@ export default function Signup() {
                     }
                     rounded
                     icon="/icons/company-icon.svg"
+                    isError={errors.businessType}
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
@@ -261,6 +282,7 @@ export default function Signup() {
                     icon="/icons/email-icon.svg"
                     fullWidth
                     rounded
+                    isError={errors.email}
                   />
                 </FormFieldset>
               </div>

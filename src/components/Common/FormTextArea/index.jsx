@@ -6,7 +6,10 @@ import classNames from "classnames";
 import Image from "next/image";
 
 const FormTextArea = React.forwardRef(
-  ({ className, icon = null, iconClassName, ...props }, ref) => {
+  (
+    { className, icon = null, iconClassName, isError = false, ...props },
+    ref
+  ) => {
     return (
       <div className="relative">
         {icon && (
@@ -25,7 +28,7 @@ const FormTextArea = React.forwardRef(
           ref={ref}
           className={classNames(
             "rounded-2xl resize-none border border-light-gray min-h-[100px] w-full px-6 py-3 text-base text-midnight-blue font-medium focus:outline-dark-gray focus:border-none focus-visible:outline-dark-gray placeholder:text-dark-gray placeholder:text-sm",
-            { "pl-[52px]": icon },
+            { "pl-[52px]": icon, "border !border-red": isError },
             className
           )}
           style={{

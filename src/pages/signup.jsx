@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import EmailConfirmationPopup from "@/popups/EmailConfirmationPopup";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { api } from "@/api";
 import FormInput from "@/components/Common/FormInput";
 import Button from "@/components/Common/Button";
 import Typography from "@/components/Common/Typography";
@@ -10,23 +11,82 @@ import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
 import { BUSINESS_TYPE_OPTIONS } from "@/lib/constants";
 import FormSelect from "@/components/Common/FormSelect";
+import { helper } from "@/helpers";
 
 export default function Signup() {
-  const [isPopupOpen, setIsPopupOpen] = useState(true);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    companyName: "",
+    businessType: "",
   });
+
+  const [authType, setAuthType] = useState("email");
+  const [socialPayload, setSocialPayload] = useState(null);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    (async () => {
+      // Get CSRF TOKEN
+      await api.auth.getCsrfToken();
+    })();
+  }, []);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const email = event.target.email.value;
-    console.log("Submitted email:", email);
+
+    const { firstName, lastName, email, companyName, businessType } = userData;
+
+    // Check if any field is empty
+    if (!firstName || !lastName || !email || !companyName || !businessType) {
+      console.log("Please fill in all fields.");
+      return;
+    }
+    
+    let data;
+    
+    if (authType === "email") {
+      data = {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        company_name: companyName,
+        business_type: businessType,
+        auth_type: "email"
+      };
+    } else if (authType === "google") {
+      data = {
+        auth_type: "google",
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        company_name: companyName,
+        business_type: businessType,
+        token: socialPayload.profileObj.id,
+        social_payload: socialPayload, // Include all the google social payload data
+      };
+    }
+
+    try {
+      const response = await api.auth.register(data);
+      if (response && helper.cmpStr(response.status, 'ok')) {
+        if (authType === "email") {
+          setIsPopupOpen(!isPopupOpen);
+        }
+        else {
+          const accessToken = response.data.access_token;
+          if (accessToken) helper.cookie.setAccessToken(accessToken);
+          window.location.href = "/dashboard"
+        }
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
   };
 
   const handleGoogleSignInSuccess = (response) => {
@@ -40,6 +100,26 @@ export default function Signup() {
       lastName: user.family_name,
       email: user.email,
     });
+
+    // Create a social payload for Google registration
+    const googlePayload = {
+      profileObj: {
+        id: user.sub, // Google user ID
+        email: user.email,
+        verified_email: user.email_verified,
+        name: user.name,
+        given_name: user.given_name,
+        family_name: user.family_name,
+        picture: user.picture,
+        locale: user.locale,
+        hd: user.hd, // Hosted domain (if available)
+      },
+      tokenId: credential 
+    };
+
+    // Set social payload and switch to google auth type
+    setSocialPayload(googlePayload);
+    setAuthType("google"); // Switch to Google authentication type
   };
 
   const handleGoogleSignInFailure = (error) => {
@@ -47,185 +127,204 @@ export default function Signup() {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex h-full md:h-screen">
-        {/* Left Section */}
-        <div className="flex-1 bg-white relative hidden md:block">
-          {/* Logo in Top-Left Corner */}
-          <div className="absolute top-10 left-10">
-            <Image
-              src="/dealz-logo.svg" // Path to the logo in the public folder
-              alt="DEALZ Logo"
-              width={114}
-              height={44}
-              className="rounded-lg"
-            />
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+      <div className="w-full">
+        <div className="flex h-full md:h-screen">
+          {/* Left Section */}
+          <div className="flex-1 bg-white relative hidden md:block">
+            {/* Logo in Top-Left Corner */}
+            <div className="absolute top-10 left-10">
+              <Image
+                src="/dealz-logo.svg" // Path to the logo in the public folder
+                alt="DEALZ Logo"
+                width={114}
+                height={44}
+                className="rounded-lg"
+              />
+            </div>
+
+            {/* Centered Image */}
+            <div className="flex items-center justify-center h-full">
+              <Image
+                src="/images/onboarding/signup.svg" // Path to the image in the public folder
+                alt="Signup"
+                width={667}
+                height={570}
+                className="rounded-lg"
+              />
+            </div>
           </div>
 
-          {/* Centered Image */}
-          <div className="flex items-center justify-center h-full">
-            <Image
-              src="/images/onboarding/signup.svg" // Path to the image in the public folder
-              alt="Signup"
-              width={667}
-              height={570}
-              className="rounded-lg"
-            />
-          </div>
-        </div>
+          {/* Right Section */}
+          <div className="flex-1 flex py-8 items-center justify-center bg-background-blue">
+            <form
+              onSubmit={handleSubmit}
+              className="w-full max-w-md py-8 px-4 h-full flex flex-col justify-center overflow-auto scrollbar-hide md:block"
+            >
+              <Typography variant="title" className="mb-[8px] text-center md:text-left">
+                Sign Up
+              </Typography>
+              <Typography variant="body" className="!text-dark-gray mb-[32px] text-center md:text-left">
+                Sign up to stay connected!
+              </Typography>
 
-        {/* Right Section */}
-        <div className="flex-1 flex py-8 items-center justify-center bg-background-blue">
-          <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-md py-8 px-4 h-full flex flex-col justify-center overflow-auto scrollbar-hide md:block"
-          >
-            <Typography variant="title" className="mb-[8px] text-center md:text-left">
-              Sign Up
-            </Typography>
-            <Typography variant="body" className="!text-dark-gray mb-[32px] text-center md:text-left">
-              Sign up to stay connected!
-            </Typography>
-            <div className="flex flex-col gap-6">
-              <div className="flex gap-4 flex-col md:flex-row">
+              <div className="flex flex-col gap-6">
+                <div className="flex gap-4 flex-col md:flex-row">
+                  <FormFieldset className="!mb-0">
+                    <FormLabel htmlFor="first-name" className="uppercase">
+                      First Name
+                    </FormLabel>
+                    <FormInput
+                      type="text"
+                      id="first-name"
+                      name="first-name"
+                      placeholder="First name"
+                      required
+                      value={userData.firstName}
+                      onChange={(e) =>
+                        setUserData({ ...userData, firstName: e.target.value })
+                      }
+                      icon="/icons/user-icon.svg"
+                      fullWidth
+                      rounded
+                    />
+                  </FormFieldset>
+                  <FormFieldset className="!mb-0">
+                    <FormLabel htmlFor="last-name" className="uppercase">
+                      Last Name
+                    </FormLabel>
+                    <FormInput
+                      type="text"
+                      placeholder="Last name"
+                      id="last-name"
+                      name="last-name"
+                      required
+                      value={userData.lastName}
+                      onChange={(e) =>
+                        setUserData({ ...userData, lastName: e.target.value })
+                      }
+                      icon="/icons/user-icon.svg"
+                      fullWidth
+                      rounded
+                    />
+                  </FormFieldset>
+                </div>
                 <FormFieldset className="!mb-0">
-                  <FormLabel htmlFor="first-name" className="uppercase">
-                    First Name
+                  <FormLabel htmlFor="company-name" className="uppercase">
+                    Company Name
                   </FormLabel>
                   <FormInput
                     type="text"
-                    id="first-name"
-                    name="first-name"
-                    placeholder="First name"
+                    placeholder="Enter your company name"
+                    id="company-name"
+                    name="company-name"
                     required
-                    value={userData.firstName}
+                    value={userData.companyName}
                     onChange={(e) =>
-                      setUserData({ ...userData, firstName: e.target.value })
+                      setUserData({ ...userData, companyName: e.target.value })
                     }
-                    icon="/icons/user-icon.svg"
+                    icon="/icons/company-icon.svg"
                     fullWidth
                     rounded
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
-                  <FormLabel htmlFor="last-name" className="uppercase">
-                    Last Name
+                  <FormLabel htmlFor="business-type" className="uppercase">
+                    Business Type
+                  </FormLabel>
+                  <FormSelect
+                    id="business-type"
+                    name="business-type"
+                    placeholder="Select Business Type"
+                    options={BUSINESS_TYPE_OPTIONS}
+                    onChange={(selectedOption) =>
+                      setUserData({ ...userData, businessType: selectedOption.value })
+                    }
+                    rounded
+                    icon="/icons/company-icon.svg"
+                  />
+                </FormFieldset>
+                <FormFieldset className="!mb-0">
+                  <FormLabel htmlFor="email" className="uppercase">
+                    Email
                   </FormLabel>
                   <FormInput
                     type="text"
-                    placeholder="Last name"
-                    id="last-name"
-                    name="last-name"
+                    placeholder="Enter your email"
+                    id="email"
+                    name="email"
                     required
-                    value={userData.lastName}
+                    value={userData.email}
                     onChange={(e) =>
-                      setUserData({ ...userData, firstName: e.target.value })
+                      setUserData({ ...userData, email: e.target.value })
                     }
-                    icon="/icons/user-icon.svg"
+                    icon="/icons/email-icon.svg"
                     fullWidth
                     rounded
                   />
                 </FormFieldset>
               </div>
-              <FormFieldset className="!mb-0">
-                <FormLabel htmlFor="company-name" className="uppercase">
-                  Company Name
-                </FormLabel>
-                <FormInput
-                  type="text"
-                  placeholder="Enter your company name"
-                  id="company-name"
-                  name="company-name"
-                  required
-                  value={userData.lastName}
-                  onChange={(e) =>
-                    setUserData({ ...userData, firstName: e.target.value })
-                  }
-                  icon="/icons/company-icon.svg"
-                  fullWidth
-                  rounded
-                />
-              </FormFieldset>
-              <FormFieldset className="!mb-0">
-                <FormLabel htmlFor="business-type" className="uppercase">
-                  Business Type
-                </FormLabel>
-                <FormSelect
-                  id="business-type"
-                  name="business-type"
-                  placeholder="Select Business Type"
-                  options={BUSINESS_TYPE_OPTIONS}
-                  rounded
-                  icon="/icons/company-icon.svg"
-                />
-              </FormFieldset>
-              <FormFieldset className="!mb-0">
-                <FormLabel htmlFor="email" className="uppercase">
-                  Email
-                </FormLabel>
-                <FormInput
-                  type="text"
-                  placeholder="Enter your email"
-                  id="email"
-                  name="email"
-                  required
-                  value={userData.email}
-                  onChange={(e) =>
-                    setUserData({ ...userData, firstName: e.target.value })
-                  }
-                  icon="/icons/email-icon.svg"
-                  fullWidth
-                  rounded
-                />
-              </FormFieldset>
-            </div>
 
-            {/* Submit Button */}
-            <Button
-              onClick={() => {
-                console.log("Google Sign-Up clicked");
-              }}
-              className="font-bold mt-10"
-              variant="primary"
-              fullWidth  
-              isRound
-              type="submit"
-            >
-              Sign Up
-            </Button>
-
-            {/* Already Have Account */}
-            <Typography variant="caption" className="font-normal text-center mt-4">
-              Already have an account?{" "}
-              <Link href="/login" className="text-secondary uppercase underline">Log In</Link>
-            </Typography>
-
-            {/* Social Signup */}
-            <Typography variant="caption" className="py-10 text-center uppercase">
-              Or Sign Up using
-            </Typography>
-            <div className="">
+              {/* Submit Button */}
               <Button
-                onClick={() => {
-                  console.log("Google Sign-Up clicked");
-                }}
-                icon="/icons/google-icon.svg"
-                className="border-0 focus:outline-none text-midnight-blue"
-                fullWidth
+                onClick={handleSubmit}
+                className="font-bold mt-10"
+                variant="primary"
+                fullWidth  
                 isRound
+                type="submit"
               >
-                Google
+                Sign Up
               </Button>
-            </div>
-          </form>
-        </div>
-      </div>
 
-      {/* Popup */}
-      {/* <EmailConfirmationPopup
-        isPopupOpen={isPopupOpen}
-        togglePopup={togglePopup}
-      /> */}
-    </div>
+              {/* Already Have Account */}
+              <Typography variant="caption" className="font-normal text-center mt-4">
+                Already have an account?{" "}
+                <Link href="/login" className="text-secondary uppercase underline">Log In</Link>
+              </Typography>
+
+              {/* Social Signup */}
+              <Typography variant="caption" className="py-10 text-center uppercase">
+                Or Sign Up using
+              </Typography>
+              <div className="">
+                <GoogleLogin
+                  onSuccess={handleGoogleSignInSuccess}
+                  onError={handleGoogleSignInFailure}
+                  className="w-full border-0 focus:outline-none text-midnight-blue"
+                >
+                  <Button
+                    icon="/icons/google-icon.svg"
+                    className="border-0 focus:outline-none text-midnight-blue"
+                    fullWidth
+                    isRound
+                  >
+                    Google
+                  </Button>
+                </GoogleLogin>
+                {/* <GoogleLogin
+                  onSuccess={handleGoogleSignInSuccess}
+                  onError={handleGoogleSignInFailure}
+                  render={(renderProps) => (
+                    <button
+                      {...renderProps}
+                      className="google-login-button" // Apply custom class
+                    >
+                      <FaGoogle size={18} /> with Google
+                    </button>
+                  )}
+                /> */}
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* Popup */}
+        <EmailConfirmationPopup
+          isPopupOpen={isPopupOpen}
+          togglePopup={togglePopup}
+        />
+      </div>
+    </GoogleOAuthProvider>
   );
 }

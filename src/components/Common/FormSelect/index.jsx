@@ -16,6 +16,7 @@ const FormSelect = React.forwardRef(
       icon,
       controlStyle,
       optionStyle,
+      onChange,
       ...props
     },
     ref
@@ -88,6 +89,7 @@ const FormSelect = React.forwardRef(
           styles={mergedStyles}
           captureMenuScroll={false}
           className={className}
+          onChange={onChange}
           menuPortalTarget={
             typeof window !== "undefined" ? document.body : null
           }

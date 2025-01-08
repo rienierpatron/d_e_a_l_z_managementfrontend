@@ -78,7 +78,7 @@ export const SUBSCRIPTIONS = {
     },
     {
       priceText: "HKD$2499",
-      dealDescription: "DEALZ of the week slot (Reaches free users)",
+      dealDescription: "DEALZ of the Week Banner Image Slots",
       availabilityNote: "*This product will be available in next month",
     },
     {

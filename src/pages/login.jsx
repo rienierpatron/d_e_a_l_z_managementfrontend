@@ -1,16 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Typography from "@/components/Common/Typography";
 import FormInput from "@/components/Common/FormInput";
+import { api } from "@/api";
+import { helper } from "@/helpers";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import CustomGoogleLogin from "@/components/GoogleSignIn";
 import Button from "@/components/Common/Button";
 import Link from "next/link";
 import FormLabel from "@/components/Common/FormLabel";
+import EmailConfirmationPopup from "@/popups/EmailConfirmationPopup";
 
 export default function Login() {
-  const handleSubmit = (event) => {
+  const [userData, setUserData] = useState({
+      email: "",
+    });
+  
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
+  useEffect(() => {
+    // Get CSRF TOKEN
+    (async () => {
+      await api.auth.getCsrfToken();
+    })();
+  }, []);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const email = event.target.email.value;
+    const { email } = userData;
+
+    // Check if any field is empty
+    if (!email) {
+      console.log("Please fill in all fields."); 
+      return;
+    }
+    
     console.log("Submitted email:", email);
+
+    const auth_type = 'email'
+    const data = { email: email };
+
+    try {
+      const response = await api.auth.loginEmail(data, auth_type);
+      if (response && helper.cmpStr(response.status, 'ok')) {
+        window.location.href = '/confirmation'
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
   };
 
   return (
@@ -64,6 +103,9 @@ export default function Login() {
                 placeholder="Enter your email"
                 id="email"
                 name="email"
+                onChange={(e) =>
+                  setUserData({ ...userData, email: e.target.value })
+                }
                 required
                 icon="/icons/email-icon.svg"
                 fullWidth
@@ -73,9 +115,7 @@ export default function Login() {
 
             {/* Submit Button */}
             <Button
-              onClick={() => {
-                console.log("Google Sign-Up clicked");
-              }}
+              onClick={handleSubmit}
               variant="primary"
               className="font-bold"
               fullWidth
@@ -104,18 +144,9 @@ export default function Login() {
               Or Log In using
             </Typography>
 
-            <Button
-              onClick={() => {
-                console.log("Google Sign-Up clicked");
-              }}
-              icon="/icons/google-icon.svg" // Path to your Google logo icon
-              iconPosition="left" // Icon on the left of the text
-              className="border-0 focus:outline-none text-midnight-blue"
-              fullWidth
-              isRound
-            >
-              Google
-            </Button>
+            <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+              <CustomGoogleLogin />
+            </GoogleOAuthProvider>
           </form>
         </div>
       </div>

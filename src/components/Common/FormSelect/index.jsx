@@ -16,6 +16,7 @@ const FormSelect = React.forwardRef(
       icon,
       controlStyle,
       optionStyle,
+      isError = false,
       ...props
     },
     ref
@@ -27,11 +28,15 @@ const FormSelect = React.forwardRef(
         ...provided,
         backgroundColor: state.isDisabled ? "#FFFFFF" : "#FFFFFF",
         height: height ? height : provided.height,
-        borderColor: "#EFF0F4",
+        borderColor: isError ? "var(--color-red)" : "#EFF0F4",
         borderRadius: rounded && borderRadius,
-        boxShadow: state.isFocused ? "0 0 0 2px #646B75" : "none", // Add a custom box shadow when focused
+        boxShadow: state.isFocused
+          ? isError
+            ? "0 0 0 1px var(--color-red)"
+            : "0 0 0 2px #646B75"
+          : "none", // Add a custom box shadow when focused
         "&:hover": {
-          borderColor: "#EFF0F4", // Set the border color on hover
+          borderColor: isError ? "var(--color-red)" : "#EFF0F4", // Set the border color on hover
         },
         color: "#02021E",
         fontSize: "16px",

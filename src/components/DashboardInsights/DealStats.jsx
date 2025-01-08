@@ -30,7 +30,7 @@ const DealzStats = ({
         >
           {icon}
         </div>
-        <FormSelect
+        {/* <FormSelect
           options={[{ label: "DEC, 2024", value: "DEC, 2024" }]}
           rounded
           height="48px"
@@ -38,7 +38,7 @@ const DealzStats = ({
             paddingLeft: "16px",
             paddingRight: "16px",
           }}
-        />
+        /> */}
       </div>
       <div className="flex items-center justify-between">
         <Typography

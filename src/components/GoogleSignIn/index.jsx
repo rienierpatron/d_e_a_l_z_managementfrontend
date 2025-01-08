@@ -87,7 +87,7 @@ const CustomGoogleLogin = () => {
         fullWidth
         isRound
       >
-        Sign in with Google
+        Google
       </Button>
     </div>
   );

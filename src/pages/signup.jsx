@@ -302,18 +302,6 @@ export default function Signup() {
                     Google
                   </Button>
                 </GoogleLogin>
-                {/* <GoogleLogin
-                  onSuccess={handleGoogleSignInSuccess}
-                  onError={handleGoogleSignInFailure}
-                  render={(renderProps) => (
-                    <button
-                      {...renderProps}
-                      className="google-login-button" // Apply custom class
-                    >
-                      <FaGoogle size={18} /> with Google
-                    </button>
-                  )}
-                /> */}
               </div>
             </form>
           </div>

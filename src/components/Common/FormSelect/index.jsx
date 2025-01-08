@@ -16,6 +16,7 @@ const FormSelect = React.forwardRef(
       icon,
       controlStyle,
       optionStyle,
+      onChange,
       isError = false,
       ...props
     },

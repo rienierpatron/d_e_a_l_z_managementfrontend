@@ -4,6 +4,7 @@
 import React from "react";
 import classNames from "classnames";
 import Image from "next/image";
+import { Spinner } from "flowbite-react";
 
 const Button = React.forwardRef(
   (
@@ -22,6 +23,7 @@ const Button = React.forwardRef(
       icon = null,
       iconPosition = "left",
       isLoading = false,
+      spinnerFill = '',
       ...props
     },
     ref
@@ -60,21 +62,33 @@ const Button = React.forwardRef(
         onClick={onClick}
         {...props}
       >
-        {icon &&
-          iconPosition === "left" &&
-          (typeof icon === "string" ? (
-            <Image alt="button-icon" src={icon} height={20} width={20} />
-          ) : (
-            icon
-          ))}
-        {children}
-        {icon &&
-          iconPosition === "right" &&
-          (typeof icon === "string" ? (
-            <Image alt="button-icon" src={icon} height={20} width={20} />
-          ) : (
-            icon
-          ))}
+        {!isLoading ? (
+          <>
+            {icon &&
+              iconPosition === "left" &&
+              (typeof icon === "string" ? (
+                <Image alt="button-icon" src={icon} height={20} width={20} />
+              ) : (
+                icon
+              ))}
+            {children}
+            {icon &&
+              iconPosition === "right" &&
+              (typeof icon === "string" ? (
+                <Image alt="button-icon" src={icon} height={20} width={20} />
+              ) : (
+                icon
+              ))}
+          </>
+        ) : (
+          <>
+            {children}
+            <Spinner
+              size="md"
+              className={variant === "primary" ? "fill-primary" : spinnerFill}
+            />
+          </>
+        )}
       </button>
     );
   }

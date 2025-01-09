@@ -1,4 +1,10 @@
 /**
+ * External dependencies
+ */
+import { useRouter } from "next/router";
+import { useState } from "react";
+import classNames from "classnames";
+/**
  * Internal dependencies
  */
 import Button from "@/components/Common/Button";
@@ -6,7 +12,8 @@ import IconArrowRight from "@/components/Icons/IconArrowRight";
 import Typography from "@/components/Common/Typography";
 import IconStar from "@/components/Icons/IconStar";
 import IconCrown from "@/components/Icons/IconCrown";
-import classNames from "classnames";
+import { helper } from "@/helpers";
+import { getPaymentLink } from "@/api/subscriptions";
 
 const PlanCard = ({
   planTitle,
@@ -16,9 +23,14 @@ const PlanCard = ({
   priceOldAmount,
   pricePeriod,
   benefits,
+  stripeProductPriceId,
+  disabled
 }) => {
   const currentPlan = "Pro";
+  const router = useRouter();
   const isActivePlan = currentPlan === planTitle;
+  const [loading, setLoading] = useState(false)
+
   const className = classNames(
     "relative max-w-[393px] border rounded-2xl p-[24px] pt-[56px] w-full text-center flex flex-col gap-8 items-center flex-wrap",
     {
@@ -26,12 +38,36 @@ const PlanCard = ({
         isActivePlan,
     }
   );
+
   const activePlanStyle = {
     background:
       "linear-gradient(to right, white, white), linear-gradient(to bottom, #4177F4 11.43%, #F945B1 82.92%)",
     backgroundClip: "padding-box, border-box",
     backgroundOrigin: "padding-box, border-box",
   };
+
+  const handleChoosePlan = async () => {
+    try {
+      setLoading(true)
+      const response = await getPaymentLink({
+        stripeProductPriceId: stripeProductPriceId,
+      });
+      if (
+        response &&
+        helper.cmpStr(response.status, "ok") &&
+        helper.notEmpty(response.data.stripe_payment_link_url)
+      ) {
+        setLoading(false)
+        router.push(response.data.stripe_payment_link_url);
+      }
+    } catch (error) {
+      setLoading(false)
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
+    }
+  };
+
   return (
     <div
       className={className}
@@ -90,6 +126,9 @@ const PlanCard = ({
         isRound
         icon={<IconArrowRight />}
         iconPosition="right"
+        onClick={handleChoosePlan}
+        isLoading={loading}
+        disabled={disabled || loading}
       >
         Choose Plan
       </Button>

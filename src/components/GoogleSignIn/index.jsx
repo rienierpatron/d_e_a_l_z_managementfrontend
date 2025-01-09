@@ -40,20 +40,10 @@ const CustomGoogleLogin = ({ onLoginSuccess }) => {
             },
           };
 
-          console.log(data);
-
           if (onLoginSuccess && typeof onLoginSuccess === "function") {
-            onLoginSuccess(userInfo)
+            onLoginSuccess(data);
           }
 
-          // Send the data to the backend for authentication
-          // const response = await api.auth.loginEmail(data, auth_type);
-          // if (response.status === "ok") {
-          //   console.log("Login success:", response);
-          //   window.location.href = '/dashboard'
-          // } else {
-          //   console.error("Login failed:", response);
-          // }
         } catch (error) {
           console.error("Error fetching user info:", error);
         }

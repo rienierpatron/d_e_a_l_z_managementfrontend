@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import EmailConfirmationPopup from "@/popups/EmailConfirmationPopup";
@@ -46,26 +46,26 @@ export default function Signup() {
     })();
   }, []);
 
+  const validateForm = useCallback(() => {
+    const { firstName, lastName, email, companyName, businessType } = userData;
+    const newErrors = {
+      firstName: !firstName,
+      lastName: !lastName,
+      email: !email || !helper.validateEmail(email),
+      companyName: !companyName,
+      businessType: !businessType,
+    };
+    setErrors(newErrors);
+    return Object.values(newErrors).every(value => !value);
+  }, [userData]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!validateForm()) return;
+
     const { firstName, lastName, email, companyName, businessType } = userData;
 
-    // Check if any field is empty
-    const newErrors = {
-      firstName: !userData.firstName,
-      lastName: !userData.lastName,
-      email: !userData.email || !helper.validateEmail(userData.email),
-      companyName: !userData.companyName,
-      businessType: !userData.businessType,
-    };
-
-    setErrors(newErrors);
-
-    if (Object.values(newErrors).includes(true)) {
-      return;  // Don't proceed with submission if there are errors
-    }
-    
     let data;
     
     if (authType === "email") {
@@ -79,78 +79,44 @@ export default function Signup() {
       };
     } else if (authType === "google") {
       data = {
-        auth_type: "google",
+        auth_type: authType,
         first_name: firstName,
         last_name: lastName,
         email: email,
         company_name: companyName,
         business_type: businessType,
-        token: socialPayload.profileObj.id,
-        social_payload: socialPayload, // Include all the google social payload data
+        token: socialPayload.social_payload.profileObj.id,
+        social_payload: socialPayload.social_payload, // Include all the google social payload data
       };
     }
 
-    try {
-      const response = await api.auth.register(data);
-      if (response && helper.cmpStr(response.status, 'ok')) {
-        if (authType === "email") {
-          setIsPopupOpen(!isPopupOpen);
-        }
-        else {
-          const accessToken = response.data.access_token;
-          if (accessToken) helper.cookie.setAccessToken(accessToken);
-          window.location.href = "/dashboard"
-        }
+    const response = await api.auth.register(data, false);
+    if (response && helper.cmpStr(response.status, 'ok')) {
+      if (authType === "email") {
+        setIsPopupOpen(!isPopupOpen);
+      } else {
+        const accessToken = response.data.access_token;
+        if (accessToken) helper.cookie.setAccessToken(accessToken);
+        window.location.href = "/dashboard"
       }
-    } catch (error) {
+    } else {
       console.error("Error during registration:", error);
     }
   };
 
-  const handleGoogleSignInSuccess = (response) => {
-    // Parse the response to get user information
-    const { credential } = response;
-    const user = JSON.parse(atob(credential.split(".")[1]));
-
+  const onGoogleSignupSuccess = (response) => {
+    const userInfo = response.social_payload.profileObj;
     // Set user data to state
     setUserData({
-      firstName: user.given_name,
-      lastName: user.family_name,
-      email: user.email,
+      ...userData,
+      firstName: userInfo.given_name,
+      lastName: userInfo.family_name,
+      email: userInfo.email,
     });
 
-    // Create a social payload for Google registration
-    const googlePayload = {
-      profileObj: {
-        id: user.sub, // Google user ID
-        email: user.email,
-        verified_email: user.email_verified,
-        name: user.name,
-        given_name: user.given_name,
-        family_name: user.family_name,
-        picture: user.picture,
-        locale: user.locale,
-        hd: user.hd, // Hosted domain (if available)
-      },
-      tokenId: credential 
-    };
-
     // Set social payload and switch to google auth type
-    setSocialPayload(googlePayload);
-    setAuthType("google"); // Switch to Google authentication type
-  };
-
-  const handleGoogleSignInFailure = (error) => {
-    console.error("Google Sign-In failed:", error);
-  };
-
-  const onGoogleSignupSuccess = (response) => {
-    setUserData({
-      ...userData,
-      firstName: response.given_name,
-      lastName: response.family_name,
-      email: response.email,
-    })
+    setSocialPayload(response);
+    setAuthType("google");
   }
 
   return (
@@ -299,7 +265,6 @@ export default function Signup() {
 
               {/* Submit Button */}
               <Button
-                onClick={handleSubmit}
                 className="font-bold mt-10"
                 variant="primary"
                 fullWidth  
@@ -319,22 +284,6 @@ export default function Signup() {
               <Typography variant="caption" className="py-10 text-center uppercase">
                 Or Sign Up using
               </Typography>
-              <div className="">
-                <GoogleLogin
-                  onSuccess={handleGoogleSignInSuccess}
-                  onError={handleGoogleSignInFailure}
-                  className="w-full border-0 focus:outline-none text-midnight-blue"
-                >
-                  <Button
-                    icon="/icons/google-icon.svg"
-                    className="border-0 focus:outline-none text-midnight-blue"
-                    fullWidth
-                    isRound
-                  >
-                    Google
-                  </Button>
-                </GoogleLogin>
-              </div>
               <CustomGoogleLogin onLoginSuccess={onGoogleSignupSuccess}/>
             </form>
           </div>

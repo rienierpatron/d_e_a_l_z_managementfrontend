@@ -16,7 +16,7 @@ export async function getCsrfToken() {
   });
 }
 
-export async function register(data) {
+export async function register(data, showMessage) {
   const response = await Axios({
     url: `${config.apiUrl}/auth/register`,
     withCredentials: true,
@@ -29,7 +29,7 @@ export async function register(data) {
     data,
   });
 
-  return helper.api.handleApiResponse(response);
+  return helper.api.handleApiResponse(response, showMessage);
 }
 
 /**
@@ -38,7 +38,7 @@ export async function register(data) {
  * @param {boolean} [showMessage=true]
  * @returns {Promise<{data: {}, status: string}>}
  */
-export async function verifyUserEmail(data) {
+export async function verifyUserEmail(data, showMessage) {
   const response = await Axios({
     url: `${config.apiUrl}/auth/register/verify`,
     method: 'post',
@@ -48,7 +48,7 @@ export async function verifyUserEmail(data) {
     },
     data,
   });
-  return helper.api.handleApiResponse(response);
+  return helper.api.handleApiResponse(response, showMessage);
 }
 
 /**

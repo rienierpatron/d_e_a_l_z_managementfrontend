@@ -54,9 +54,22 @@ export default function Login() {
         window.location.href = '/confirmation'
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.log("Error during registration:", error);
     }
   };
+
+  const onGoogleSignInSuccess = async (payload) => {
+    const auth_type = "google";
+
+    // Send the data to the backend for authentication
+      const response = await api.auth.loginEmail(data, auth_type);
+      if (response.status === "ok") {
+        console.log("Login success:", response);
+        window.location.href = '/dashboard'
+      } else {
+        console.error("Login failed:", response);
+      }
+  }
 
   return (
     <div className="w-full h-screen">
@@ -152,7 +165,7 @@ export default function Login() {
             </Typography>
 
             <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-              <CustomGoogleLogin />
+              <CustomGoogleLogin onLoginSuccess={onGoogleSignInSuccess} />
             </GoogleOAuthProvider>
           </form>
         </div>

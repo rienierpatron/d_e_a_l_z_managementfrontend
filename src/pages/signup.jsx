@@ -12,6 +12,7 @@ import FormLabel from "@/components/Common/FormLabel";
 import { BUSINESS_TYPE_OPTIONS } from "@/lib/constants";
 import FormSelect from "@/components/Common/FormSelect";
 import { helper } from "@/helpers";
+import CustomGoogleLogin from "@/components/GoogleSignIn";
 
 export default function Signup() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -142,6 +143,15 @@ export default function Signup() {
   const handleGoogleSignInFailure = (error) => {
     console.error("Google Sign-In failed:", error);
   };
+
+  const onGoogleSignupSuccess = (response) => {
+    setUserData({
+      ...userData,
+      firstName: response.given_name,
+      lastName: response.family_name,
+      email: response.email,
+    })
+  }
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
@@ -325,6 +335,7 @@ export default function Signup() {
                   </Button>
                 </GoogleLogin>
               </div>
+              <CustomGoogleLogin onLoginSuccess={onGoogleSignupSuccess}/>
             </form>
           </div>
         </div>

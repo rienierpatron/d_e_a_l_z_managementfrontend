@@ -78,7 +78,7 @@ export async function loginEmail(data, auth_type) {
  * @param {boolean} [showMessage=true]
  * @returns {Promise<{data: {}, status: string}>}
  */
-export async function verifyLoginEmail(data) {
+export async function verifyLoginEmail(data, showMessage) {
   const response = await Axios({
     url: `${config.apiUrl}/auth/login/verify`,
     method: 'post',
@@ -88,5 +88,5 @@ export async function verifyLoginEmail(data) {
     },
     data,
   });
-  return helper.api.handleApiResponse(response);
+  return helper.api.handleApiResponse(response, showMessage);
 }

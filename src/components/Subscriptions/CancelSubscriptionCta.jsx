@@ -9,8 +9,9 @@ import { useRouter } from "next/router";
 import Button from "@/components/Common/Button";
 import { helper } from "@/helpers";
 import { getCustomerPortalLink } from "@/api/subscriptions";
+import { isEmpty } from "@/helpers/general";
 
-const CancelSubscriptionCta = () => {
+const CancelSubscriptionCta = ({ currentSubscription }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,6 +32,10 @@ const CancelSubscriptionCta = () => {
       });
     }
   };
+
+  if (isEmpty(currentSubscription?.subscription)) {
+    return null
+  }
 
   return (
     <Button

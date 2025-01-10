@@ -49,6 +49,7 @@ export default function Subscriptions() {
       const showMessage = false;
       const res = await getSubscriptionDetails(showMessage);
       if (res && helper.cmpStr(res.status, "ok")) {
+        setCurrentSubscription(res.data);
       }
     } catch (error) {
       return helper.general.alert("error", {
@@ -76,7 +77,7 @@ export default function Subscriptions() {
           </Typography>
         </div>
         <div className="flex gap-2">
-          <CancelSubscriptionCta />
+          <CancelSubscriptionCta currentSubscription={currentSubscription} />
           <Button
             icon="/icons/call-icon.svg"
             variant="primary"
@@ -108,6 +109,7 @@ export default function Subscriptions() {
                     plan.planTitle.toLowerCase()
                 )?.stripe_product_price_id
               }
+              currentSubscription={currentSubscription}
             />
           );
         })}
@@ -123,6 +125,7 @@ export default function Subscriptions() {
                   priceText={item.priceText}
                   dealDescription={item.dealDescription}
                   availabilityNote={item.availabilityNote}
+                  stripeProductPriceId={item.stripe_product_price_id}
                 />
               );
             })}

@@ -24,12 +24,14 @@ const PlanCard = ({
   pricePeriod,
   benefits,
   stripeProductPriceId,
-  disabled
+  disabled,
+  currentSubscription,
 }) => {
-  const currentPlan = "Pro";
+  const currentPlan =
+    currentSubscription?.subscription?.subscription_name || "";
   const router = useRouter();
-  const isActivePlan = currentPlan === planTitle;
-  const [loading, setLoading] = useState(false)
+  const isActivePlan = currentPlan?.toLowerCase() === planTitle?.toLowerCase();
+  const [loading, setLoading] = useState(false);
 
   const className = classNames(
     "relative max-w-[393px] border rounded-2xl p-[24px] pt-[56px] w-full text-center flex flex-col gap-8 items-center flex-wrap",
@@ -48,7 +50,7 @@ const PlanCard = ({
 
   const handleChoosePlan = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await getPaymentLink({
         stripeProductPriceId: stripeProductPriceId,
       });
@@ -57,11 +59,11 @@ const PlanCard = ({
         helper.cmpStr(response.status, "ok") &&
         helper.notEmpty(response.data.stripe_payment_link_url)
       ) {
-        setLoading(false)
+        setLoading(false);
         router.push(response.data.stripe_payment_link_url);
       }
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       return helper.general.alert("error", {
         message: "Something went wrong.",
       });

@@ -58,7 +58,10 @@ export async function getSubscriptionDetails(showMessage = true) {
  * @param {number} quantity - The quantity of the addon
  * @returns {Promise<{data: {}, status: string}>}
  */
-export async function getAddonPaymentLink(stripeProductPriceId, quantity) {
+export async function getAddonPaymentLink(
+  { stripeProductPriceId, quantity },
+  showMessage = true
+) {
   const response = await Axios({
     url: `${config.apiUrl}/subscription/addon-payment-link/${stripeProductPriceId}/${quantity}`,
     method: "GET",

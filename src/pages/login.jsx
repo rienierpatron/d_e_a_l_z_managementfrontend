@@ -62,7 +62,7 @@ export default function Login() {
     const auth_type = "google";
 
     // Send the data to the backend for authentication
-      const response = await api.auth.loginEmail(data, auth_type);
+      const response = await api.auth.loginEmail(payload, auth_type);
       if (response.status === "ok") {
         console.log("Login success:", response);
         window.location.href = '/dashboard'

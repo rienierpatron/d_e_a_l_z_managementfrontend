@@ -3,6 +3,7 @@
  */
 import { ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 /**
  * Internal dependencies
@@ -11,18 +12,32 @@ import '../styles/index.css'; // Tailwind CSS
 import LoggedInLayout from '../layouts/LoggedInLayout';
 import LoggedOutLayout from '../layouts/LoggedOutLayout';
 import DocumentHead from '@/components/Common/DocumentHead';
-// import { isAuthenticated } from '../utils/auth'; // Mock auth helper
 import HttpInterceptors from '@/layouts/HttpInterceptors';
-
+import { helper } from '@/helpers';
 
 function DealzManagement({ Component, pageProps }) {
-  // const loggedIn = isAuthenticated(); // Replace with real auth logic
-  const loggedIn = false;
+  // State to manage logged-in status
+  const [loggedIn, setLoggedIn] = useState(false);
   const router = useRouter();
 
-  const isAuthPage = router.pathname === '/login' || router.pathname === '/signup' || router.pathname === '/confirmation';
-  
-  const Layout = loggedIn || isAuthPage ? LoggedOutLayout : LoggedInLayout;
+  // Check if the user is authenticated on mount and redirect if not
+  useEffect(() => {
+    const checkAuth = async () => {
+      const isAuthenticated = await helper.auth.isAuthenticated();
+      console.log('Is user authenticated?', isAuthenticated);
+
+      // If not authenticated and the user is trying to access any page other than login or signup, redirect to login
+      if (!isAuthenticated && router.pathname !== '/login' && router.pathname !== '/signup') {
+        router.push('/login'); // Redirect to the login page
+      } else {
+        setLoggedIn(isAuthenticated); // Update the loggedIn state if authenticated
+      }
+    };
+    checkAuth();
+  }, [router.pathname]); // Runs every time the pathname changes
+
+  // Determine which layout to use based on authentication status
+  const Layout = loggedIn ? LoggedInLayout : LoggedOutLayout;
 
   return (
     <Layout>

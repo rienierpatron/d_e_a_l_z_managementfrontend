@@ -24,17 +24,20 @@ function DealzManagement({ Component, pageProps }) {
   useEffect(() => {
     const checkAuth = async () => {
       const isAuthenticated = await helper.auth.isAuthenticated();
-      console.log('Is user authenticated?', isAuthenticated);
-
-      // If not authenticated and the user is trying to access any page other than login or signup, redirect to login
       if (!isAuthenticated && router.pathname !== '/login' && router.pathname !== '/signup') {
-        router.push('/login'); // Redirect to the login page
+        router.push('/login'); // Redirect to login if not authenticated
+        setLoggedIn(false); // Ensure loggedIn is set to false for other pages
       } else {
-        setLoggedIn(isAuthenticated); // Update the loggedIn state if authenticated
+        if (isAuthenticated && (router.pathname === '/login' || router.pathname === '/signup')) {
+          helper.cookie.deleteAccessToken();
+          setLoggedIn(false);
+        } else {
+          setLoggedIn(isAuthenticated);
+        }
       }
     };
     checkAuth();
-  }, [router.pathname]); // Runs every time the pathname changes
+  }, [router.pathname]);
 
   // Determine which layout to use based on authentication status
   const Layout = loggedIn ? LoggedInLayout : LoggedOutLayout;

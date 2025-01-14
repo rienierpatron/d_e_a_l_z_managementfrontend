@@ -16,6 +16,7 @@ export async function getPaymentLink(
     method: "GET",
     headers: {
       Accept: "application/json",
+      "x-access-token": helper.cookie.getAccessToken(),
     },
     DONT_SHOW_ERROR: showMessage,
   });
@@ -32,6 +33,7 @@ export async function getCustomerPortalLink() {
     method: "GET",
     headers: {
       Accept: "application/json",
+      "x-access-token": helper.cookie.getAccessToken(),
     },
   });
   return helper.api.handleApiResponse(response);
@@ -47,6 +49,7 @@ export async function getSubscriptionDetails(showMessage = true) {
     method: "GET",
     headers: {
       Accept: "application/json",
+      "x-access-token": helper.cookie.getAccessToken(),
     },
   });
   return helper.api.handleApiResponse(response, showMessage);
@@ -67,6 +70,7 @@ export async function getAddonPaymentLink(
     method: "GET",
     headers: {
       Accept: "application/json",
+      "x-access-token": helper.cookie.getAccessToken(),
     },
   });
   return helper.api.handleApiResponse(response);

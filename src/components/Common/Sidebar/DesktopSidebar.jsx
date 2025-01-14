@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
 import Image from "next/image";
 import Link from "next/link";
 import classNames from "classnames";
@@ -16,6 +17,7 @@ import IconMessageQuestion from "@/components/Icons/IconMessageQuestion";
 import { NAV_ITEMS } from "@/lib/routes";
 
 const DesktopSidebar = () => {
+  const { currentSubscription, error } = useSubscription();
   const router = useRouter();
   const navRef = useRef(null);
 
@@ -59,7 +61,9 @@ const DesktopSidebar = () => {
               </li>
             );
           })}
-          <SidbarUpgradeCta />
+          {currentSubscription?.subscription?.subscription_name !== "pro" && (
+            <SidbarUpgradeCta />
+          )}
         </ul>
       </div>
       <ul className="flex flex-col gap-8 justify-center items-center">

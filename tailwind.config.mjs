@@ -34,6 +34,7 @@ export default {
         "dark-gray": "var(--color-dark-gray)",
         "light-gray": "var(--color-light-gray)",
         green: "var(--color-green)",
+        "green-60": "var(--color-green-60)",
         gold: "var(--color-gold)",
         "gold-15": "var(--color-gold-15)",
       },

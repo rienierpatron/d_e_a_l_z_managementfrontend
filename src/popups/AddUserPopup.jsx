@@ -1,6 +1,5 @@
 // AddUserPopup.js
 import React, { useState } from "react";
-import Image from "next/image";
 import Typography from "@/components/Common/Typography";
 import FormInput from "@/components/Common/FormInput";
 import Button from "@/components/Common/Button";

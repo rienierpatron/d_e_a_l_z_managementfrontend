@@ -55,39 +55,45 @@ const MyDealz = () => {
     {
       id: 1,
       title: "Template qa test",
-      schedule: "12-29 Dec, Morning",
-      discount: "$25",
+      slot_date: "23rd Nov, Morning",
+      start_date: "22 Nov, 2024",
+      end_date: "25 Nov, 2024",
       website: "www.xyz.com",
       status: "draft",
     },
     {
       id: 2,
       title: "Test robot",
-      schedule: "12-29 Dec, Morning",
-      discount: "$25",
+      slot_date: "22nd Nov, Morning",
+      start_date: "22 Nov, 2024",
+      end_date: "25 Nov, 2024",
       website: "www.xyz.com",
       status: "pending",
     },
     {
       id: 3,
       title: "Template qa test",
-      schedule: "12-29 Dec, Morning",
+      slot_date: "23rd Nov, Evening",
+      start_date: "22 Nov, 2024",
+      end_date: "25 Nov, 2024",
       website: "www.xyz.com",
       status: "approved",
     },
     {
       id: 4,
       title: "Template qa test",
-      schedule: "02-06 Dec, Morning",
-      discount: "$25",
+      slot_date: "24th Nov, Evening",
+      start_date: "22 Nov, 2024",
+      end_date: "25 Nov, 2024",
       website: "www.xyz.com",
       status: "revision",
     },
     {
       id: 5,
       title: "Test robot",
-      schedule: "12-29 Dec, Morning",
-      discount: "$25",
+      slot_date: "23rd Nov, Morning",
+      start_date: "22 Nov, 2024",
+      end_date: "25 Nov, 2024",
       website: "www.xyz.com",
       status: "closed",
     },
@@ -100,12 +106,15 @@ const MyDealz = () => {
         accessorKey: "title",
       },
       {
-        header: "SCHEDULED",
-        accessorKey: "schedule",
+        header: "SLOT",
+        accessorKey: "slot_date",
       },
       {
-        header: "DISCOUNT",
-        accessorKey: "discount",
+        header: "VALIDITY",
+        accessorKey: "start_date",
+        Cell: ({ row: { original } }) => {
+          return original.start_date + '-' + original.end_date;
+        }
       },
       {
         header: "WEBSITE OR BOOKING LINK",
@@ -146,9 +155,9 @@ const MyDealz = () => {
     [showPopover, query]
   );
 
-  if (!viewAllDealz) {
-    columns.splice(2, 2);
-  }
+  // if (!viewAllDealz) {
+  //   columns.splice(2, 2);
+  // }
 
   const filterFields = [
     {

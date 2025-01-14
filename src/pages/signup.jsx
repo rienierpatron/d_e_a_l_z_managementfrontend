@@ -100,7 +100,9 @@ export default function Signup() {
         window.location.href = "/dashboard"
       }
     } else {
-      console.error("Error during registration:", error);
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
     }
   };
 

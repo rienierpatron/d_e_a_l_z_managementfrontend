@@ -36,7 +36,9 @@ const Verify = () => {
         window.location.href = "/dashboard"
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
     } finally {
       setLoading(false);
     }

@@ -43,7 +43,7 @@ export default function Login() {
       return;
     }
     
-    console.log("Submitted email:", email);
+    // console.log("Submitted email:", email);
 
     const auth_type = 'email'
     const data = { email: email };
@@ -54,7 +54,9 @@ export default function Login() {
         window.location.href = '/confirmation'
       }
     } catch (error) {
-      console.log("Error during registration:", error);
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
     }
   };
 
@@ -64,10 +66,11 @@ export default function Login() {
     // Send the data to the backend for authentication
       const response = await api.auth.loginEmail(payload, auth_type);
       if (response.status === "ok") {
-        console.log("Login success:", response);
         window.location.href = '/dashboard'
       } else {
-        console.error("Login failed:", response);
+        return helper.general.alert("error", {
+          message: "Something went wrong.",
+        });
       }
   }
 

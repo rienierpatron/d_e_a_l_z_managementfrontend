@@ -8,6 +8,7 @@
   --color-secondary: #4177F4;
   --color-secondary-60: #4177F40F; 
   --color-purple: #9B61DC;
+  --color-purple-60: #9B61DC0F;
   --color-red: #EF0E0E;
   --color-red-40: #EF0E0E0A;
   --color-orange: #F47418;
@@ -23,6 +24,4 @@
   --color-green-60: #14A5550F;
   --color-gold: #DDB83F;
   --color-gold-15: #F9CF4526;
-  --color-purple: #9B61DC;
-  --color-purple-60: #9B61DC0F;
 }

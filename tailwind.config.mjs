@@ -22,6 +22,7 @@ export default {
         secondary: "var(--color-secondary)",
         "secondary-60": "var(--color-secondary-60)",
         purple: "var(--color-purple)",
+        "purple-60": "var(--color-purple-60)",
         red: "var(--color-red)",
         "red-40": "var(--color-red-40)",
         orange: "var(--color-orange)",

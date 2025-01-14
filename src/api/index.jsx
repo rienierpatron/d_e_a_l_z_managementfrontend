@@ -1,5 +1,7 @@
-import * as authApi from './auth';
+import * as authApi from "./auth";
+import * as subscriptionApi from "./subscriptions";
 
 export const api = {
-  auth: authApi
+  auth: authApi,
+  subscription: subscriptionApi,
 };

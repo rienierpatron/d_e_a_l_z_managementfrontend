@@ -1,5 +1,7 @@
 import { helper } from ".";
 
+export const cookieAccessToken = "_access_token"
+
 export function cookiePrefix() {
   return 'K0A9B9XW3FG45DT8QRMZ_' + '_dealzmanagement_';
 }
@@ -72,5 +74,5 @@ export function deleteAccessToken() {
  * @returns {string}
  */
 export function getAccessToken() {
-  return h.cookie.getCookie(h.cookie.cookieAccessToken);
+  return helper.cookie.getCookie(helper.cookie.cookieAccessToken);
 }

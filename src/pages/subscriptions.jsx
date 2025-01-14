@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 /**
@@ -13,8 +13,56 @@ import CancelSubscriptionCta from "@/components/Subscriptions/CancelSubscription
 import AddOnsCard from "@/components/Subscriptions/AddOnsCard";
 import PlanCard from "@/components/Subscriptions/PlanCard";
 import { SUBSCRIPTIONS } from "@/lib/constants";
+import { helper } from "@/helpers";
+import {
+  getSubscriptionDetails,
+  getSubscriptionPlans,
+} from "@/api/subscriptions";
 
 export default function Subscriptions() {
+  const [planList, setPlanList] = useState([]);
+  const [fetchingList, setFetchingList] = useState(false);
+  const [currentSubscription, setCurrentSubscription] = useState(null);
+
+  const getSubscriptionPlanList = async () => {
+    try {
+      setFetchingList(true);
+      const response = await getSubscriptionPlans();
+      if (
+        response &&
+        helper.cmpStr(response.status, "ok") &&
+        response.data.plans.length > 0
+      ) {
+        setFetchingList(false);
+        setPlanList(response.data.plans);
+      }
+    } catch (error) {
+      setFetchingList(false);
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
+    }
+  };
+
+  const getCurrentSubscriptionDetails = async () => {
+    try {
+      const showMessage = false;
+      const res = await getSubscriptionDetails(showMessage);
+      if (res && helper.cmpStr(res.status, "ok")) {
+        setCurrentSubscription(res.data);
+      }
+    } catch (error) {
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
+    }
+  };
+
+  useEffect(() => {
+    getSubscriptionPlanList();
+    getCurrentSubscriptionDetails();
+  }, []);
+
   return (
     <div className="w-full p-10">
       <div className="flex flex-1 justify-between border border-light-gray p-6 rounded-2xl">
@@ -29,7 +77,7 @@ export default function Subscriptions() {
           </Typography>
         </div>
         <div className="flex gap-2">
-          <CancelSubscriptionCta />
+          <CancelSubscriptionCta currentSubscription={currentSubscription} />
           <Button
             icon="/icons/call-icon.svg"
             variant="primary"
@@ -53,6 +101,15 @@ export default function Subscriptions() {
               priceOldAmount={plan.priceOldAmount}
               pricePeriod={plan.pricePeriod}
               benefits={plan.benefits}
+              disabled={fetchingList}
+              stripeProductPriceId={
+                planList?.find(
+                  (ele) =>
+                    ele.product_name.toLowerCase() ===
+                    plan.planTitle.toLowerCase()
+                )?.stripe_product_price_id
+              }
+              currentSubscription={currentSubscription}
             />
           );
         })}
@@ -68,6 +125,7 @@ export default function Subscriptions() {
                   priceText={item.priceText}
                   dealDescription={item.dealDescription}
                   availabilityNote={item.availabilityNote}
+                  stripeProductPriceId={item.stripe_product_price_id}
                 />
               );
             })}

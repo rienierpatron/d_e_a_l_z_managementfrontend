@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
  * Internal dependencies
  */
 import DealzStats from "@/components/DashboardInsights/DealStats";
-import IconPeople from "@/components/Icons/IconPeople";
+import IconCoupon from "@/components/Icons/IconCoupon";
 import IconTick from "@/components/Icons/IconTick";
 import IconMessageQuestion from "@/components/Icons/IconMessageQuestion";
 import IconCloseCircle from "@/components/Icons/IconCloseCircle";
@@ -16,7 +16,7 @@ const Dashboard = () => {
   return (
     <div className="flex items-stretch justify-between gap-6">
       <DealzStats
-        icon={<IconPeople className="text-secondary" />}
+        icon={<IconCoupon className="text-secondary" />}
         iconClassName="bg-secondary-60"
         metricName="Your dealz reach"
         metricCount="24,965"

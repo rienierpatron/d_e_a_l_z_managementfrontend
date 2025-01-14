@@ -26,7 +26,6 @@ function DealzManagement({ Component, pageProps }) {
       const isAuthenticated = await helper.auth.isAuthenticated();
       if (!isAuthenticated && router.pathname !== '/login' && router.pathname !== '/signup') {
         router.push('/login'); // Redirect to login if not authenticated
-        setLoggedIn(false); // Ensure loggedIn is set to false for other pages
       } else {
         if (isAuthenticated && (router.pathname === '/login' || router.pathname === '/signup')) {
           helper.cookie.deleteAccessToken();

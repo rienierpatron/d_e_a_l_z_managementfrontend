@@ -2,14 +2,14 @@ import { config } from '../lib/config';
 import { helper } from '@/helpers';
 import Axios from 'axios';
 
-export async function getCsrfToken() {
+export async function getCsrfToken(showMessage = false) {
   const response = await Axios({
     url: `${config.apiUrl}/auth/csrf`,
     method: 'GET',
     withCredentials: true,
   });
 
-  helper.api.handleApiResponse(response).then((res) => {
+  helper.api.handleApiResponse(response, showMessage).then((res) => {
     if (res.status === 'ok') {
       helper.cookie.setCookie('_csrf', res.data.csrf_token);
     }

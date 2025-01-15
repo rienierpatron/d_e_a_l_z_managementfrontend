@@ -1,19 +1,20 @@
 /**
  * External dependencies
  */
-import { ToastContainer } from 'react-toastify';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { ToastContainer } from "react-toastify";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 /**
  * Internal dependencies
  */
-import '../styles/index.css'; // Tailwind CSS
-import LoggedInLayout from '../layouts/LoggedInLayout';
-import LoggedOutLayout from '../layouts/LoggedOutLayout';
-import DocumentHead from '@/components/Common/DocumentHead';
-import HttpInterceptors from '@/layouts/HttpInterceptors';
-import { helper } from '@/helpers';
+import "../styles/index.css"; // Tailwind CSS
+import LoggedInLayout from "../layouts/LoggedInLayout";
+import LoggedOutLayout from "../layouts/LoggedOutLayout";
+import DocumentHead from "@/components/Common/DocumentHead";
+import HttpInterceptors from "@/layouts/HttpInterceptors";
+import { helper } from "@/helpers";
+import { UserProvider } from "@/context/UserContext";
 
 function DealzManagement({ Component, pageProps }) {
   // State to manage logged-in status
@@ -24,10 +25,17 @@ function DealzManagement({ Component, pageProps }) {
   useEffect(() => {
     const checkAuth = async () => {
       const isAuthenticated = await helper.auth.isAuthenticated();
-      if (!isAuthenticated && router.pathname !== '/login' && router.pathname !== '/signup') {
-        router.push('/login'); // Redirect to login if not authenticated
+      if (
+        !isAuthenticated &&
+        router.pathname !== "/login" &&
+        router.pathname !== "/signup"
+      ) {
+        router.push("/login"); // Redirect to login if not authenticated
       } else {
-        if (isAuthenticated && (router.pathname === '/login' || router.pathname === '/signup')) {
+        if (
+          isAuthenticated &&
+          (router.pathname === "/login" || router.pathname === "/signup")
+        ) {
           helper.cookie.deleteAccessToken();
           setLoggedIn(false);
         } else {
@@ -42,12 +50,14 @@ function DealzManagement({ Component, pageProps }) {
   const Layout = loggedIn ? LoggedInLayout : LoggedOutLayout;
 
   return (
-    <Layout>
-      <DocumentHead />
-      <HttpInterceptors />
-      <ToastContainer />
-      <Component {...pageProps} />
-    </Layout>
+    <UserProvider>
+      <Layout>
+        <DocumentHead />
+        <HttpInterceptors />
+        <ToastContainer />
+        <Component {...pageProps} />
+      </Layout>
+    </UserProvider>
   );
 }
 

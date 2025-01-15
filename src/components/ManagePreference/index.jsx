@@ -33,10 +33,12 @@ import { saveAgencyPreference } from "@/api/agency-preference";
 import FormSelectAsync from "@/components/Common/FormSelectAsync";
 import { loadLocationAddress } from "@/lib/utils";
 import { api } from "@/api";
+import { useUser } from "@/context/UserContext";
 
 const ManagePreference = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUser();
 
   const intitalState = {
     business_type: "",
@@ -75,7 +77,7 @@ const ManagePreference = () => {
     try {
       setIsLoading(true);
       const res = await api.preference.getAgencyPreference(
-        "11e8864c-598e-43e1-93b1-6dcba01b39e0",
+        user.agency_id,
         false
       );
       if (res.status === "ok") {
@@ -128,7 +130,7 @@ const ManagePreference = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const { hasError, errors } = await validateFormData(
         validationSchema,
         formData
@@ -139,7 +141,7 @@ const ManagePreference = () => {
       } else {
         const _formData = {
           ...formData,
-          agency_id: "11e8864c-598e-43e1-93b1-6dcba01b39e0",
+          agency_id: user.agency_id,
         };
         _formData.business_location = formData.business_location.map(
           (location) => location.value
@@ -147,7 +149,7 @@ const ManagePreference = () => {
         const res = await saveAgencyPreference(_formData);
         if (res && helper.cmpStr(res.status, "ok")) {
           setError(null);
-          setIsLoading(false)
+          setIsLoading(false);
         } else {
           setError(false);
         }

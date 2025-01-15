@@ -12,6 +12,7 @@ import FormLabel from "@/components/Common/FormLabel";
 import { BUSINESS_TYPE_OPTIONS } from "@/lib/constants";
 import FormSelect from "@/components/Common/FormSelect";
 import { helper } from "@/helpers";
+import CustomGoogleLogin from "@/components/GoogleSignIn";
 
 export default function Signup() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -21,6 +22,14 @@ export default function Signup() {
     email: "",
     companyName: "",
     businessType: "",
+  });
+
+  const [errors, setErrors] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    companyName: false,
+    businessType: false,
   });
 
   const [authType, setAuthType] = useState("email");
@@ -43,9 +52,18 @@ export default function Signup() {
     const { firstName, lastName, email, companyName, businessType } = userData;
 
     // Check if any field is empty
-    if (!firstName || !lastName || !email || !companyName || !businessType) {
-      console.log("Please fill in all fields.");
-      return;
+    const newErrors = {
+      firstName: !userData.firstName,
+      lastName: !userData.lastName,
+      email: !userData.email || !helper.validateEmail(userData.email),
+      companyName: !userData.companyName,
+      businessType: !userData.businessType,
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).includes(true)) {
+      return;  // Don't proceed with submission if there are errors
     }
     
     let data;
@@ -126,6 +144,15 @@ export default function Signup() {
     console.error("Google Sign-In failed:", error);
   };
 
+  const onGoogleSignupSuccess = (response) => {
+    setUserData({
+      ...userData,
+      firstName: response.given_name,
+      lastName: response.family_name,
+      email: response.email,
+    })
+  }
+
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
       <div className="w-full">
@@ -187,6 +214,7 @@ export default function Signup() {
                       icon="/icons/user-icon.svg"
                       fullWidth
                       rounded
+                      isError={errors.firstName}
                     />
                   </FormFieldset>
                   <FormFieldset className="!mb-0">
@@ -206,6 +234,7 @@ export default function Signup() {
                       icon="/icons/user-icon.svg"
                       fullWidth
                       rounded
+                      isError={errors.lastName}
                     />
                   </FormFieldset>
                 </div>
@@ -226,6 +255,7 @@ export default function Signup() {
                     icon="/icons/company-icon.svg"
                     fullWidth
                     rounded
+                    isError={errors.companyName}
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
@@ -242,6 +272,7 @@ export default function Signup() {
                     }
                     rounded
                     icon="/icons/company-icon.svg"
+                    isError={errors.businessType}
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
@@ -261,6 +292,7 @@ export default function Signup() {
                     icon="/icons/email-icon.svg"
                     fullWidth
                     rounded
+                    isError={errors.email}
                   />
                 </FormFieldset>
               </div>
@@ -302,19 +334,8 @@ export default function Signup() {
                     Google
                   </Button>
                 </GoogleLogin>
-                {/* <GoogleLogin
-                  onSuccess={handleGoogleSignInSuccess}
-                  onError={handleGoogleSignInFailure}
-                  render={(renderProps) => (
-                    <button
-                      {...renderProps}
-                      className="google-login-button" // Apply custom class
-                    >
-                      <FaGoogle size={18} /> with Google
-                    </button>
-                  )}
-                /> */}
               </div>
+              <CustomGoogleLogin onLoginSuccess={onGoogleSignupSuccess}/>
             </form>
           </div>
         </div>

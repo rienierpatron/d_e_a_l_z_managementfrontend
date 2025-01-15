@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CommonTable from "@/components/Common/CommonTable";
 import Image from "next/image";
 import AddUserPopup from "@/popups/AddUserPopup";
+import UserManagementStatusRenderer from "@/components/UserManagementStatusRenderer";
 
 export default function userManagement() {
   const [isPopupOpen, setIsPopupOpen] = useState(true); // State to control popup visibility
@@ -120,6 +121,9 @@ export default function userManagement() {
       {
         header: "Status",
         accessorKey: "status",
+        Cell: ({ row: { original } }) => {
+          return <UserManagementStatusRenderer status={original.status} />;
+        },
       },
       {
         header: "Actions",

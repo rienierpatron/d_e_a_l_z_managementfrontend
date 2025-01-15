@@ -5,7 +5,7 @@ import { helper } from "@/helpers";
 import { api } from "@/api";
 import Button from "../Common/Button";
 
-const CustomGoogleLogin = () => {
+const CustomGoogleLogin = ({ onLoginSuccess }) => {
   const auth_type = "google"; // Auth type
 
   // Initialize the Google login using the useGoogleLogin hook
@@ -42,14 +42,18 @@ const CustomGoogleLogin = () => {
 
           console.log(data);
 
-          // Send the data to the backend for authentication
-          const response = await api.auth.loginEmail(data, auth_type);
-          if (response.status === "ok") {
-            console.log("Login success:", response);
-            window.location.href = '/dashboard'
-          } else {
-            console.error("Login failed:", response);
+          if (onLoginSuccess && typeof onLoginSuccess === "function") {
+            onLoginSuccess(userInfo)
           }
+
+          // Send the data to the backend for authentication
+          // const response = await api.auth.loginEmail(data, auth_type);
+          // if (response.status === "ok") {
+          //   console.log("Login success:", response);
+          //   window.location.href = '/dashboard'
+          // } else {
+          //   console.error("Login failed:", response);
+          // }
         } catch (error) {
           console.error("Error fetching user info:", error);
         }
@@ -87,7 +91,7 @@ const CustomGoogleLogin = () => {
         fullWidth
         isRound
       >
-        Sign in with Google
+        Google
       </Button>
     </div>
   );

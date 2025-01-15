@@ -43,7 +43,7 @@ export default function Login() {
       return;
     }
     
-    console.log("Submitted email:", email);
+    // console.log("Submitted email:", email);
 
     const auth_type = 'email'
     const data = { email: email };
@@ -54,9 +54,25 @@ export default function Login() {
         window.location.href = '/confirmation'
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
     }
   };
+
+  const onGoogleSignInSuccess = async (payload) => {
+    const auth_type = "google";
+
+    // Send the data to the backend for authentication
+      const response = await api.auth.loginEmail(payload, auth_type);
+      if (response.status === "ok") {
+        window.location.href = '/dashboard'
+      } else {
+        return helper.general.alert("error", {
+          message: "Something went wrong.",
+        });
+      }
+  }
 
   return (
     <div className="w-full h-screen">
@@ -152,7 +168,7 @@ export default function Login() {
             </Typography>
 
             <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-              <CustomGoogleLogin />
+              <CustomGoogleLogin onLoginSuccess={onGoogleSignInSuccess} />
             </GoogleOAuthProvider>
           </form>
         </div>

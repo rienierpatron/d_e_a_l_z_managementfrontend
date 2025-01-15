@@ -14,8 +14,10 @@ import IconCrown from "@/components/Icons/IconCrown";
 import CustomDatePicker from "@/components/Common/DatePicker";
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
+import { useSubscription } from "../Subscriptions/GetSubscriptionDetails";
 
 const DealzBuilderStep3 = ({ formData, setFormData }) => {
+  const { currentSubscription, error } = useSubscription();
   const activePlan = "daily_dealz";
 
   const handlBack = () => {
@@ -73,31 +75,35 @@ const DealzBuilderStep3 = ({ formData, setFormData }) => {
           inputClassName="!bg-light-blue !rounded-[32px]"
           value={new Date()}
         />
-        <Button
-          icon="/icons/crown-gradient.svg"
-          className="w-max text-sm font-semibold bg-[linear-gradient(104deg,rgba(65,119,244,0.08)_11.43%,rgba(249,69,177,0.08)_82.92%)] border-none rounded-3xl !p-[10px]"
-        >
-          <span className="bg-[linear-gradient(104deg,#4177F4_11.43%,#F945B1_82.92%)] bg-clip-text text-transparent">
-            Upgrade to premium to select time of day
-          </span>
-        </Button>
-        <FormFieldset className="!mb-0">
-          <FormLabel className="uppercase !mb-6">Pick time of day</FormLabel>
-          <div className="flex items-center gap-3">
-            <Button
-              className="!bg-[#F1F3F6] text-dark-gray text-sm font-semibold"
-              isRound
-            >
-              Morning (10am-1pm)
-            </Button>
-            <Button
-              className="!bg-[#F1F3F6] text-dark-gray text-sm font-semibold"
-              isRound
-            >
-              Evening (5pm-10pm)
-            </Button>
-          </div>
-        </FormFieldset>
+        {currentSubscription?.subscription?.subscription_name !== "pro" && (
+          <Button
+            icon="/icons/crown-gradient.svg"
+            className="w-max text-sm font-semibold bg-[linear-gradient(104deg,rgba(65,119,244,0.08)_11.43%,rgba(249,69,177,0.08)_82.92%)] border-none rounded-3xl !p-[10px]"
+          >
+            <span className="bg-[linear-gradient(104deg,#4177F4_11.43%,#F945B1_82.92%)] bg-clip-text text-transparent">
+              Upgrade to premium to select time of day
+            </span>
+          </Button>
+        )}
+        {currentSubscription?.subscription?.subscription_name === "pro" && (
+          <FormFieldset className="!mb-0">
+            <FormLabel className="uppercase !mb-6">Pick time of day</FormLabel>
+            <div className="flex items-center gap-3">
+              <Button
+                className="!bg-[#F1F3F6] text-dark-gray text-sm font-semibold"
+                isRound
+              >
+                Morning (10am-1pm)
+              </Button>
+              <Button
+                className="!bg-[#F1F3F6] text-dark-gray text-sm font-semibold"
+                isRound
+              >
+                Evening (5pm-10pm)
+              </Button>
+            </div>
+          </FormFieldset>
+        )}
       </div>
       <Typography
         variant="body"

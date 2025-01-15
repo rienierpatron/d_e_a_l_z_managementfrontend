@@ -25,7 +25,7 @@ const Verify = () => {
 
     try {
       // Making the API call
-      const response = await api.auth.verifyLoginEmail(data);
+      const response = await api.auth.verifyLoginEmail(data, false);
 
       if (response && helper.cmpStr(response.status, 'ok')) {
         setMessage('Verification successful! Redirecting to dashboard...');
@@ -36,7 +36,9 @@ const Verify = () => {
         window.location.href = "/dashboard"
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
     } finally {
       setLoading(false);
     }

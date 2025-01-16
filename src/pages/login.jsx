@@ -62,11 +62,15 @@ export default function Login() {
 
   const onGoogleSignInSuccess = async (payload) => {
     const auth_type = "google";
-
+    
     // Send the data to the backend for authentication
       const response = await api.auth.loginEmail(payload, auth_type);
-      if (response.status === "ok") {
-        window.location.href = '/dashboard'
+      if (response && helper.cmpStr(response.status, 'ok')) {
+        const accessToken = response.data.access_token;
+        if (accessToken) {
+          helper.cookie.setAccessToken(accessToken);
+          window.location.href = '/dashboard'
+        }
       } else {
         return helper.general.alert("error", {
           message: "Something went wrong.",

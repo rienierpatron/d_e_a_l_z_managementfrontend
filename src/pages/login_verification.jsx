@@ -32,8 +32,8 @@ const Verify = () => {
         const accessToken = response.data.access_token;
         if (accessToken) {
           helper.cookie.setAccessToken(accessToken);
+          window.location.href = "/dashboard"
         }
-        window.location.href = "/dashboard"
       }
     } catch (error) {
       return helper.general.alert("error", {

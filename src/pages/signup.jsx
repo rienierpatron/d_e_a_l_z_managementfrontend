@@ -96,8 +96,10 @@ export default function Signup() {
         setIsPopupOpen(!isPopupOpen);
       } else {
         const accessToken = response.data.access_token;
-        if (accessToken) helper.cookie.setAccessToken(accessToken);
-        window.location.href = "/dashboard"
+        if (accessToken) {
+          helper.cookie.setAccessToken(accessToken);
+          window.location.href = "/dashboard"
+        }
       }
     } else {
       return helper.general.alert("error", {

@@ -13,7 +13,10 @@ const nextConfig = {
         permanent: true,
       },
     ];
-  }
+  },
+  images: {
+    domains: ['lh3.googleusercontent.com', 'cdn.yourpave.com'],
+  },
 };
 
 export default nextConfig;

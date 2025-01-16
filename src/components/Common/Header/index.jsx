@@ -32,7 +32,7 @@ const Header = () => {
       </div>
       <div className="flex gap-4 items-center">
         <ManagePreference />
-        <Button
+        {/* <Button
           className="border-none relative shadow-custom-black !p-[14px]"
           isRound
           icon="/icons/notification-black.svg"
@@ -40,7 +40,7 @@ const Header = () => {
           <span className="absolute right-0 top-0 text-[10px] font-semibold bg-primary text-white rounded-[32px] py-[2px] px-[5px]">
             13
           </span>
-        </Button>
+        </Button> */}
       </div>
     </header>
   );

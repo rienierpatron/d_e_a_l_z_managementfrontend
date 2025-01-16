@@ -35,6 +35,24 @@ export const NAV_ITEMS = [
   },
 ];
 
+export const ADMIN_NAV_ITEMS = [
+  {
+    icon: <IconCategory width={24} height={24} />,
+    path: "/admin/dashboard",
+    label: "Dashboard",
+  },
+  {
+    icon: <IconCalendar width={24} height={24} />,
+    path: "/admin/calendar",
+    label: "Calendar",
+  },
+  {
+    icon: <IconProfileTwoUser />,
+    path: "/admin/userManagement",
+    label: "User Management",
+  },
+];
+
 export const ROUTES_HEADING_MAPPER = {
   "/login": "Login",
   "/signup": "Sign Up",

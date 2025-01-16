@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { helper } from "@/helpers"; // Assuming this is your utility module
-import Button from "../Common/Button"; // Assuming this is your custom button component
+import { helper } from "@/helpers";
+import Button from "../Common/Button";
 
 const CustomGoogleLogin = ({ onLoginSuccess }) => {
-  const [user, setUser] = useState(null); // Initialize as null since it's an object
-  const [profile, setProfile] = useState(null); // Initialize as null
+  const [user, setUser] = useState(null); 
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     // Only proceed if the user object is populated

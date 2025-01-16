@@ -18,9 +18,22 @@ export const BUSINESS_TYPE_OPTIONS = [
   { label: "Others", value: "others" },
 ];
 
+export const BUSINESS_LOCATION = [
+  { label: "Hong Kong Island", value: "Hong Kong Island" },
+  { label: "Kowloon", value: "Kowloon" },
+  { label: "New Territories", value: "New Territories" },
+]
+
 export const AGE_RANGE = [
-  { label: "18 - 24", value: "18-24" },
-  { label: "25 - 65", value: "25-65" },
+  { label: 'Below 18', value: 'Below 18' },
+  { label: '18-24', value: '18-24' },
+  { label: '25-29', value: '25-29' },
+  { label: '30-35', value: '30-35' },
+  { label: '36-40', value: '36-40' },
+  { label: '41-50', value: '41-50' },
+  { label: '51-60', value: '51-60' },
+  { label: '61-70', value: '61-70' },
+  { label: 'Above 70', value: 'Above 70' }
 ];
 
 export const GENDER = [
@@ -29,7 +42,12 @@ export const GENDER = [
   { label: "Other", value: "other" },
 ];
 
-export const BUSINESS_GOAL = [];
+export const BUSINESS_GOAL = [
+  { label: "Last minute promotions", value: "Last minute promotions" },
+  { label: "Generate sales", value: "Generate sales" },
+  { label: "Get foot traffic", value: "Get foot traffic" },
+  { label: "Promote our brand", value: "Promote our brand" },
+];
 
 export const DEALZ_STATUS = {
   draft: "Draft",

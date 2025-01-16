@@ -4,9 +4,10 @@
 import React from "react";
 import classNames from "classnames";
 
-const FormInputValidation = ({ children, className, ...props }) => {
+const FormInputValidation = ({ children, className,text, ...props }) => {
   return (
-    <fieldset {...props} className={classNames(className, "mb-5")}>
+    <fieldset {...props} className={classNames(className, "mt-2 ml-2 text-red text-[12px]")}>
+      {text}
       {children}
     </fieldset>
   );

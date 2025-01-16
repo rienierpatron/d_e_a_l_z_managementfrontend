@@ -5,18 +5,9 @@ export const validations = {
     "Required field can not be left blank"
   ),
   businessType: Yup.string().required("Business type is required"),
-  businessLocation: Yup.array()
-    .min(1, "At least one business location is required")
-    .required("Required field can not be left blank"),
   businessLocationAddress: Yup.array()
-    .of(
-      Yup.string()
-        .trim()
-        .min(1, "Required field can not be left blank") // Ensures no empty strings
-        .required("Required field can not be left blank") // Ensures each address is not null or undefined
-    )
-    .min(1, "At least one business location address is required")
-    .required("Required field can not be left blank"),
+    .min(1, "At least one business location address is required") // Ensures the array has at least one object
+    .required("Required field can not be left blank"), // Ensures the array is not null or undefined
 };
 
 /**

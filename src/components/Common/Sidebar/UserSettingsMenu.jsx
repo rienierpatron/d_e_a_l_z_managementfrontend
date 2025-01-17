@@ -12,17 +12,18 @@ export default function UserSettingsMenu() {
     <div className="absolute w-[265px] bottom-5 left-[90%] transform -translate-x-3/2 bg-white shadow-lg p-4 rounded-md border border-light-grat">
       <ul className="pt-1">
         <li className="flex gap-2 pb-4 items-center border-b border-light-gray">
-          <div
-            className="p-1 bg-gradient-primary text-white w-10 h-10 flex items-center justify-center rounded-full"
-          >
+          {/* Profile Initials inside a Circle */}
+          <div className="p-1 bg-gradient-primary text-white w-10 h-10 flex items-center justify-center rounded-full">
             {helper.general.getInitials(currentUser?.user?.first_name, currentUser?.user?.last_name)}
           </div>
+
+          {/* User Info */}
           <div className="flex flex-wrap">
             <Typography variant="caption" className="!text-black">
               {currentUser?.user?.first_name} {currentUser?.user?.last_name}
             </Typography>
             <Typography variant="caption" className="!text-black">
-            {currentUser?.user?.email}
+              {currentUser?.user?.email}
             </Typography>
           </div>
         </li>

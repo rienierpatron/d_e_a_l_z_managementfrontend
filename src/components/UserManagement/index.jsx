@@ -1,32 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { helper } from "@/helpers";
 import CommonTable from "@/components/Common/CommonTable";
 import Image from "next/image";
 import AddUserPopup from "@/popups/AddUserPopup";
-import UserManagementStatusRenderer from "@/components/UserManagementStatusRenderer";
-import { getAllAgencyUsers, inviteAgencyUser, inviteSelectedPendingAgencyUser, deleteAgencyUser } from "@/api/user";
+import UserManagementStatusRenderer from "./statusRenderer";
+import { getAllAgencyUsers, inviteSelectedPendingAgencyUser, deleteAgencyUser } from "@/api/user";
 
-export default function CommonUserManagement() {
-  const [isPopupOpen, setIsPopupOpen] = useState(false); 
+export default function CommonUserManagement({ handleNewUserSubmit, isPopupOpen, setIsPopupOpen }) {
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
 
   // Toggle popup state
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
-  };
-
-  // Handle form submission for new user
-  const handleNewUserSubmit = (userData) => {
-    const data = {
-      first_name: userData.firstName,
-      last_name: userData.lastName,
-      email: userData.email
-    }
-    inviteUser(data);
   };
 
   // Fetch agency users list
@@ -47,14 +35,6 @@ export default function CommonUserManagement() {
       return helper.general.alert("error", {
         message: "Something went wrong.",
       });
-    }
-  };
-
-  // Invite User
-  const inviteUser = async (data) => {
-    const response = await inviteAgencyUser(data);
-    if (response && helper.cmpStr(response.status, "ok")) {
-      setIsPopupOpen(!isPopupOpen);
     }
   };
 
@@ -82,7 +62,7 @@ export default function CommonUserManagement() {
     getAgencyUserList();
   }, []);
 
-  // Placeholder for deleting user (example)
+  // Delete Agency User
   const deleteUser = async (user_id) => {
     try {
       const response = await deleteAgencyUser(user_id);
@@ -123,7 +103,7 @@ export default function CommonUserManagement() {
             type="checkbox"
             checked={selectedUsers.includes(original.agency_user_id)}
             onChange={(e) => handleCheckboxChange(original.agency_user_id, e.target.checked)}
-          />        
+          />
         </div>
       ),
     },

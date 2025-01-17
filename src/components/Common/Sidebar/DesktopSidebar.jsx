@@ -104,29 +104,27 @@ const DesktopSidebar = () => {
         </li>
 
         <li className="cursor-pointer">
-          <Button
-            variant="primary"
-            className="rounded-full p-4 h-12 w-12"
+          <div
+            className="rounded-full h-12 w-12 flex items-center justify-center"
             onClick={openUserPopup}
             aria-label="User Settings"
+            title="Click to open user settings"
           >
-            {/* Profile image or initials */}
-            <div className="flex items-center justify-center">
-              {currentUser?.user?.profile_picture_url ? (
-                <Image
-                  src={currentUser.user.profile_picture_url}
-                  width={40}
-                  height={40}
-                  alt="User Profile"
-                  className="rounded-full"
-                />
-              ) : (
-                <div className="w-12 h-12 flex items-center justify-center rounded-full text-sm">
-                  {helper.general.getInitials(currentUser?.user?.first_name, currentUser?.user?.last_name)}
-                </div>
-              )}
-            </div>
-          </Button>
+            {/* Conditionally render profile image or initials */}
+            {currentUser?.user?.profile_picture_url ? (
+              <Image
+                src={currentUser.user.profile_picture_url}
+                width={40}
+                height={40}
+                alt="User Profile"
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-12 h-12 flex items-center justify-center rounded-full text-sm bg-primary text-white">
+                {helper.general.getInitials(currentUser?.user?.first_name, currentUser?.user?.last_name)}
+              </div>
+            )}
+          </div>
         </li>
       </ul>
       {/* Popup Menu */}

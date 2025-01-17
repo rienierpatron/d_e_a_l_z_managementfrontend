@@ -21,10 +21,6 @@ export default function Login() {
   const [errors, setErrors] = useState({
     email: false,
   });
-  
-  const togglePopup = () => {
-    setIsPopupOpen(!isPopupOpen);
-  };
 
   useEffect(() => {
     // Get CSRF TOKEN

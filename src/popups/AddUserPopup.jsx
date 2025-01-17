@@ -4,16 +4,33 @@ import Typography from "@/components/Common/Typography";
 import FormInput from "@/components/Common/FormInput";
 import Button from "@/components/Common/Button";
 import Dialog from "@/components/Common/Dialog";
+import { helper } from "@/helpers";
 
 export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
   const [firstName, setFirstName] = useState(""); // State for first name input
   const [lastName, setLastName] = useState(""); // State for last name input
   const [email, setEmail] = useState(""); // State for email input
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ firstName, lastName, email }); // Pass the data back to parent component
-    togglePopup(); // Close the popup after submission
+
+    // Validate fields
+    const newErrors = {
+      firstName: !firstName,
+      lastName: !lastName,
+      email: !email || !helper.validateEmail(email), // Email validation helper
+    };
+
+    // Set errors and return if any errors are present
+    setErrors(newErrors);
+    if (Object.values(newErrors).includes(true)) {
+      return;
+    }
+
+    // If validation passes, trigger the onSubmit callback
+    onSubmit({ firstName, lastName, email });
+    togglePopup(); // Close the popup after successful submission
   };
 
   return (
@@ -76,6 +93,7 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
             icon="/icons/user-icon.svg"
             fullWidth
             rounded
+            isError={errors.firstName}
           />
         </div>
         
@@ -98,6 +116,7 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
             icon="/icons/user-icon.svg"
             fullWidth
             rounded
+            isError={errors.lastName}
           />
         </div>
 
@@ -119,6 +138,7 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
             icon="/icons/email-icon.svg"
             fullWidth
             rounded
+            isError={errors.email}
           />
         </div>
       </form>

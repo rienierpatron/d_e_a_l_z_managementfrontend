@@ -33,7 +33,7 @@ export async function register(data, showMessage) {
 }
 
 /**
- * Confirm login by email
+ * Verify Registered email verification
  * @param {object} [data]
  * @param {boolean} [showMessage=true]
  * @returns {Promise<{data: {}, status: string}>}
@@ -81,6 +81,25 @@ export async function loginEmail(data, auth_type) {
 export async function verifyLoginEmail(data, showMessage) {
   const response = await Axios({
     url: `${config.apiUrl}/auth/login/verify`,
+    method: 'post',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    data,
+  });
+  return helper.api.handleApiResponse(response, showMessage);
+}
+
+/**
+ * Verify Invited email verification
+ * @param {object} [data]
+ * @param {boolean} [showMessage=true]
+ * @returns {Promise<{data: {}, status: string}>}
+ */
+export async function verifyInvitedEmail(data, showMessage) {
+  const response = await Axios({
+    url: `${config.apiUrl}/auth/invite/accept`,
     method: 'post',
     headers: {
       Accept: 'application/json',

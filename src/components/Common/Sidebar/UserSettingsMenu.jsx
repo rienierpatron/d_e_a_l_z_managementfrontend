@@ -28,7 +28,7 @@ export default function UserSettingsMenu() {
         </li>
         <li className="pt-3">
           <Link 
-            href={isSuperAdminOrStaff ? "/admin/userManagement" : "/userManagemnt"}
+            href={isSuperAdminOrStaff ? "/admin/userManagement" : "/userManagement"}
             className="flex items-center gap-2" aria-label="User Management"
           >
             <Image src="/icons/people-icon.svg" width={18} height={18} />

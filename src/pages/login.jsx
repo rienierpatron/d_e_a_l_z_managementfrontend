@@ -9,9 +9,11 @@ import CustomGoogleLogin from "@/components/GoogleSignIn";
 import Button from "@/components/Common/Button";
 import Link from "next/link";
 import FormLabel from "@/components/Common/FormLabel";
-import EmailConfirmationPopup from "@/popups/EmailConfirmationPopup";
+import { useUser } from "@/context/UserContext";
 
 export default function Login() {
+  const currentUser = useUser();
+  const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
   const [userData, setUserData] = useState({
       email: "",
     });
@@ -69,7 +71,7 @@ export default function Login() {
         const accessToken = response.data.access_token;
         if (accessToken) {
           helper.cookie.setAccessToken(accessToken);
-          window.location.href = '/dashboard'
+          window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
         }
       } else {
         return helper.general.alert("error", {

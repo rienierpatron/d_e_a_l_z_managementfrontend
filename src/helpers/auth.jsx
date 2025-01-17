@@ -13,3 +13,7 @@ export async function isAuthenticated() {
     return false; // In case of any error, consider the user not authenticated.
   }
 }
+
+export async function redirectToLogin() {
+  window.location.href = '/login'
+}

@@ -96,3 +96,22 @@ export async function inviteSelectedPendingAgencyUser(data, showMessage) {
   });
   return helper.api.handleApiResponse(response, showMessage);
 }
+
+/**
+ * Delete a user
+ * @param {object} [data]
+ * @param {boolean} [showMessage=true]
+ * @returns {Promise<{data: {}, status: string}>}
+ */
+export async function deleteAgencyUser(AgencyUserId, showMessage) {
+  const response = await Axios({
+    url: `${config.apiUrl}/agency/user/${AgencyUserId}`,
+    method: 'delete',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      "x-access-token": helper.cookie.getAccessToken()
+    },
+  });
+  return helper.api.handleApiResponse(response, showMessage);
+}

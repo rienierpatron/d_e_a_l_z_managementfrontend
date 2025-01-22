@@ -8,7 +8,7 @@ const Dashboard = () => {
   return (
     <div className="px-10 py-8 h-full">
       <AdminDealzStats />
-      <AllDealz />
+      <AllDealz title="Recent DEALZ" />
     </div>
   );
 };

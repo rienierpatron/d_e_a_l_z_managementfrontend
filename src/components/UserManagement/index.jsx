@@ -123,6 +123,17 @@ export default function CommonUserManagement({ handleNewUserSubmit, isPopupOpen,
     {
       header: "Last seen",
       accessorKey: "last_seen",
+      Cell: ({ row: { original } }) => {
+        const last_seen = original.last_seen;
+        if (helper.isEmpty(last_seen)) {
+          return <span>None</span>;
+        }
+        const lastSeenFormatted =
+          helper.date.timeSince(new Date(last_seen)) == 'Now'
+            ? 'Now'
+            : helper.date.timeSince(new Date(last_seen)) + ' ago';
+        return <span>{lastSeenFormatted}</span>;
+      },
     },
     {
       header: "Status",

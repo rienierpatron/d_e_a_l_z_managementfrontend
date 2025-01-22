@@ -1,4 +1,4 @@
-import { helper } from '../helpers';
+import { helper } from ".";
 
 /**
  * checks if user is authenticated by checking for access token in cookie

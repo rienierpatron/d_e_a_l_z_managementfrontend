@@ -1,6 +1,9 @@
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { getDealzSuperAdminRecordDetail, updateSuperAdminDealzRecord, updateSuperAdminStatusDealzRecord } from "@/api/dealz";
+import { helper } from "@/helpers";
 import Typography from "@/components/Common/Typography";
 import Button from "@/components/Common/Button";
-import React, { useState } from "react";
 import FormSelect from "@/components/Common/FormSelect";
 import IconCoupon from "@/components/Icons/IconCoupon";
 import IconCalendar from "@/components/Icons/IconCalendar";
@@ -11,6 +14,7 @@ import FormInput from "@/components/Common/FormInput";
 import Image from "next/image";
 import SlotNotAvailableDialog from "@/components/Admin/SlotNotAvailableDialog";
 import RequestToReviseDialog from "@/components/Admin/RequestToReviseDialog";
+import SaveDetailsDialog from "@/components/Admin/SaveDetailsDialog";
 
 // Options for Slot Time Selection
 export const SLOT_TIME_OPTIONS = [
@@ -24,39 +28,181 @@ const DealInfoCard = ({ icon: Icon, label, children }) => (
   <div className="flex gap-2 items-center">
     <Icon className="text-dark-gray" />
     <Typography variant="caption" className="uppercase">{label}</Typography>
-    <div>{children}</div>
+    <div className="capitalize">{children}</div>
   </div>
 );
 
 export default function DealzEdit() {
-  const [showSlotNotAvailableWarningDialog, setShowSlotNotAvailableDialog] = useState(false);
-  const [showRequestReviseWarningDialog, setShowRequestReviseWarningDialog] = useState(false);
-
+  const router = useRouter();
+  const [dealzId, setDealzId] = useState(null);
+  const [dealzDetails, setDealzDetails] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date("2024-12-25"));
+  const [selectedSlotTime, setSelectedSlotTime] = useState({ label: '', value: '' });
+  const [dealzReached, setDealzReached] = useState(0);
+  const [showSlotNotAvailableWarningDialog, setShowSlotNotAvailableDialog] = useState(false);
+  const [showSaveDetailsWarningDialog, setShowSaveDetailsWarningDialog] = useState(false);
+  const [showRequestReviseWarningDialog, setShowRequestReviseWarningDialog] = useState(false);
+  const [reviseFields, setReviseFields] = useState({ 
+    reviseReason: "", 
+    reviseEmail: "payal@chaaat.io" 
+  });
+
+  // Ensuring dealzId is available and then fetch the data
+  useEffect(() => {
+    if (router.isReady && router.query.dealz_id) {
+      const { dealz_id } = router.query;
+      setDealzId(dealz_id); // Set the dealzId in state
+      getDealzRecordDetails(dealz_id); // Fetch details from API
+    }
+  }, [router.isReady, router.query.dealz_id]);
+
+  // Fetch agency users list
+  const getDealzRecordDetails = async (dealzId) => {
+    try {
+      const showMessage = false;
+      const response = await getDealzSuperAdminRecordDetail(dealzId, showMessage);
+      if (response && helper.cmpStr(response.status, "ok")) {
+        setDealzDetails(response.data);
+        console.log(response.data);
+      }
+    } catch (error) {
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
+    }
+  };
+
+  // Update Dealz Record
+  const updateDealzRecord = async(dealzId) => {
+    const data = {
+      "slot_date": selectedDate,
+      "slot_time": selectedDate.value,
+      "reach_count": dealzReached
+    }
+
+    try {
+      const response = await updateSuperAdminDealzRecord(data, dealzId);
+      if (response && helper.cmpStr(response.status, "ok")) {
+        setShowSaveDetailsWarningDialog(false)
+      }
+    } catch (error) {
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
+    }
+  }
+
+  // Status Update Dealz Record
+  const updateDealzRecordStatus = async(data, dealzId) => {
+    try {
+      const response = await updateSuperAdminStatusDealzRecord(data, dealzId);
+      if (response && helper.cmpStr(response.status, "ok")) {
+        console.log(response.data);
+      }
+    } catch (error) {
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
+    }
+  }
+
+  // Effect to handle setting the selectedDate once dealzDetails is fetched
+  useEffect(() => {
+    if (dealzDetails) {
+      // Parse and set the selected date
+      if (dealzDetails.dealz.slot_date) {
+        const parsedDate = new Date(dealzDetails.dealz.slot_date);
+        if (!isNaN(parsedDate)) {
+          const formattedDate = parsedDate.toISOString().split('T')[0];
+          setSelectedDate(formattedDate);
+        } else {
+          console.error("Invalid date format for slot_date_time:", dealzDetails.dealz.slot_date);
+        }
+      }
+
+      // Set the slot time if available
+      if (dealzDetails.dealz.slot_time) {
+        setSelectedSlotTime(dealzDetails.dealz.slot_time);
+      }
+    }
+  }, [dealzDetails]);
 
   const handleDateChange = (newDate) => {
     // Ensure the newDate is a valid Date object
     const parsedDate = new Date(newDate);
     if (!isNaN(parsedDate)) {
-      setSelectedDate(parsedDate);
-      console.log("Selected date:", parsedDate);
+      const formattedDate = parsedDate.toISOString().split('T')[0];
+      setSelectedDate(formattedDate);
+      console.log("Selected date:", formattedDate);
     } else {
       console.error("Invalid date selected");
     }
   };
+
+  const handleSlotTimeChange = (newSlotTime) => {
+    setSelectedSlotTime(newSlotTime);
+  };
+
+  const handleDealzReachedChange = (e) => {
+    setDealzReached(e.target.value);
+  };
+
+  const handleSaveSubmit = () => {
+    if (dealzId) {
+      updateDealzRecord(dealzId);
+    } else {
+      console.log("dealzId not available, please wait.");
+    }
+  };
+
+  const handleApprove = () => {
+    if (dealzId) {
+      const data = {
+        "status": "approved"
+      }
+      updateDealzRecordStatus(data, dealzId);
+    } else {
+      console.log("dealzId not available, please wait.");
+    }
+  };
+
+  const handleRevision = () => {
+    if (dealzId) {
+      const data = {
+        "status": "revision",
+        "to": reviseFields.reviseEmail,
+        "subject": "Request for Revise",
+        "message": reviseFields.reviseReason
+      }
+      updateDealzRecordStatus(data, dealzId);
+    } else {
+      console.log("dealzId not available, please wait.");
+    }
+  }
+
+  const handleReviseFieldChange = (field, value) => {
+    setReviseFields((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  if (!dealzDetails) {
+    return <div>Deal details not found.</div>;  // Show a message if no deal details are found
+  }
 
   return (
     <div className="w-full px-10 py-8">
       {/* Header Section */}
       <div className="flex justify-between pb-8">
         <div>
-          <Typography variant="heading">Holiday Specials</Typography>
-          <Typography variant="caption">Your Next Favorite Deal</Typography>
+          <Typography variant="heading">{dealzDetails.dealz?.title}</Typography>
+          <Typography variant="caption">{dealzDetails.dealz?.description}</Typography>
         </div>
         <div className="flex gap-3">
           <Button
             icon="/icons/refresh-circle-icon.svg"
-            className="px-[16px] py-[0] border-0 !bg-light-gray"
+            className="px-[16px] py-[10] border-0 !bg-light-gray"
             isRound
             onClick={() => setShowRequestReviseWarningDialog(true)}
           >
@@ -66,6 +212,8 @@ export default function DealzEdit() {
             icon="/icons/tick-circle-icon.svg"
             className="px-[16px] py-[0] border-0 !bg-green-60"
             isRound
+            onClick={handleApprove}
+            disabled={dealzDetails.dealz?.status === "approved"}
           >
             Approve
           </Button>
@@ -73,7 +221,8 @@ export default function DealzEdit() {
             icon="/icons/save-icon.svg"
             className="px-[16px] py-[0] border-0 !bg-light-gray"
             isRound
-            onClick={() => setShowSlotNotAvailableDialog(true)}
+            onClick={() => setShowSaveDetailsWarningDialog(true)}
+            disabled={dealzDetails.dealz?.status === "approved"}
           >
             Save
           </Button>
@@ -82,17 +231,20 @@ export default function DealzEdit() {
 
       {/* Deal Information Section */}
       <div className="grid grid-cols-2 gap-4 pb-5">
-        <DealInfoCard icon={IconCoupon} label="DEALZ Code">Unique code</DealInfoCard>
+        <DealInfoCard icon={IconCoupon} label="DEALZ Code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
         <DealInfoCard icon={IconCalendar} label="Agency Name">Burger King</DealInfoCard>
-        <DealInfoCard icon={IconDollar} label="Discount">$25</DealInfoCard>
-        <DealInfoCard icon={IconCalendar} label="Website or Booking link">https://chaaat.io</DealInfoCard>
+        <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
+        <DealInfoCard icon={IconCalendar} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard>
         
         {/* Validity */}
         <div className="flex gap-2 items-center">
           <IconCalendar className="text-dark-gray" />
           <Typography variant="caption" className="uppercase">Validity</Typography>
-          <div>25-29 Jan, 2025</div>
+          <div>{dealzDetails.dealz?.validity_date}</div>
         </div>
+
+        <DealInfoCard icon={IconCoupon} label="Coupon created method">{dealzDetails.dealz?.coupon_creation_type}</DealInfoCard>
+        <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
 
         {/* Slot Selection */}
         <div className="flex gap-2 items-center w-full">
@@ -104,12 +256,15 @@ export default function DealzEdit() {
               inputClassName="!bg-white border-0"
               value={selectedDate}
               onChange={handleDateChange}
+              className="w-full"
             />
             <FormSelect
               id="slot-time"
               name="slot-time"
               placeholder="Slot time"
               options={SLOT_TIME_OPTIONS}
+              value={selectedSlotTime}
+              onChange={handleSlotTimeChange}
               rounded
               icon="/icons/company-icon.svg"
               className="w-full border-0"
@@ -121,22 +276,27 @@ export default function DealzEdit() {
       {/* Deal Wording Section */}
       <div className="p-4 border border-light-gray rounded-xl my-6">
         <Typography variant="caption" className="uppercase pb-2">Wording for the Deal</Typography>
-        <Typography variant="caption" className="!text-black">Enjoy $25 off on your next purchase. Treat yourself to the best deals and make your experience even more rewarding.</Typography>
+        <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.initial_message}</Typography>
       </div>
 
       {/* Follow-Up Wording Section */}
       <div className="p-4 border border-light-gray rounded-xl my-6">
         <Typography variant="caption" className="uppercase pb-2">Wording for the follow-up message</Typography>
-        <Typography variant="caption" className="!text-black">Enjoy [X]% off on your next purchase.</Typography>
+        <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.followup_message}</Typography>
       </div>
 
       {/* Customer Reach and File Upload Section */}
       <div className="flex justify-between">
         <div>
-          <div className="relative p-4 rounded-2xl border border-light-gray w-max">
-            <Image src="/icons/csv-preview.svg" width={48} height={48} alt="CSV Preview" />
-          </div>
-          <Typography variant="caption">Coupon.csv</Typography>
+          <a
+            href={dealzDetails.coupons[0].code}
+            download
+          >
+            <div className="relative p-4 mt-2 rounded-2xl border border-light-gray w-max">
+              <Image src="/icons/csv-preview.svg" width={48} height={48} alt="CSV Preview" />
+            </div>
+            <Typography variant="caption">Coupon.csv</Typography>
+          </a>
         </div>
         <div>
           <Typography variant="caption" className="uppercase pb-2">Total Number of Customers Reached for This DEALZ Broadcast</Typography>
@@ -150,20 +310,29 @@ export default function DealzEdit() {
             fullWidth
             rounded
             className="bg-light-gray text-black"
+            value={dealzReached}
+            onChange={handleDealzReachedChange}
           />
         </div>
       </div>
 
       {/* Dialogs */}
-      <SlotNotAvailableDialog
+      <SaveDetailsDialog 
+        open={showSaveDetailsWarningDialog}
+        onClose={() => setShowSaveDetailsWarningDialog(false)}
+        onSubmit={handleSaveSubmit}
+      />
+      {/* <SlotNotAvailableDialog
         open={showSlotNotAvailableWarningDialog}
         onClose={() => setShowSlotNotAvailableDialog(false)}
         onSubmit={() => setShowSlotNotAvailableDialog(false)}
-      />
+      /> */}
       <RequestToReviseDialog
         open={showRequestReviseWarningDialog}
         onClose={() => setShowRequestReviseWarningDialog(false)}
-        onSubmit={() => setShowRequestReviseWarningDialog(false)}
+        onSubmit={handleRevision}
+        reviseFields={reviseFields}
+        onReviseFieldChange={handleReviseFieldChange}
       />
     </div>
   );

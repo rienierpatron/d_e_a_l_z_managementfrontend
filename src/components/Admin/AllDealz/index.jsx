@@ -1,11 +1,12 @@
 /**
  * External dependencies
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 /**
  * Internal dependencies
  */
+import { helper } from "@/helpers";
 import CommonTable from "@/components/Common/CommonTable";
 import DealzStatusRenderer from "@/components/DealzStatusRenderer";
 import { PAGINATION } from "@/lib/constants";
@@ -13,79 +14,87 @@ import DealzFilter from "@/components/DealzFilter";
 import IconChart from "@/components/Icons/IconChart";
 import IconProfileCircle from "@/components/Icons/IconProfileCircle";
 import Typography from "@/components/Common/Typography";
+import { getAllSuperAdminDealzRecords } from "@/api/dealz";
+import PopoverMenu from "@/components/Common/PopoverMenu";
+import IconEdit from "@/components/Icons/IconEdit";
+import IconEye from "@/components/Icons/IconEye";
+import IconTrash from "@/components/Icons/IconTrash";
+import IconVerticalDots from "@/components/Icons/IconVerticalDots";
+import Button from "@/components/Common/Button";
+import BackNavigation from "@/components/Common/BackNavigation";
 
-export default function Calendar() {
-  const data = React.useMemo(
-    () => [
-      {
-        dealz_title: "Alice",
-        slot_date: "23rd Nov, Morning",
-        start_date: "22 Nov, 2024",
-        end_date: "25 Nov, 2024",
-        created_by: "John Doe",
-        code: "WELCOME50",
-        status: "draft",
-      },
-      {
-        dealz_title: "Bob",
-        slot_date: "22nd Nov, Morning",
-        start_date: "22 Nov, 2024",
-        end_date: "25 Nov, 2024",
-        created_by: "John Doe",
-        code: "SAVE50NOW",
-        status: "pending",
-      },
-      {
-        dealz_title: "Charlie",
-        slot_date: "23rd Nov, Evening",
-        start_date: "22 Nov, 2024",
-        end_date: "25 Nov, 2024",
-        created_by: "John Doe",
-        code: "CHRISTMAS",
-        status: "approved",
-      },
-      {
-        dealz_title: "David",
-        slot_date: "24th Nov, Evening",
-        start_date: "22 Nov, 2024",
-        end_date: "25 Nov, 2024",
-        created_by: "John Doe",
-        code: "EXTRA25",
-        status: "revision",
-      },
-      {
-        dealz_title: "David",
-        slot_date: "23rd Nov, Morning",
-        start_date: "22 Nov, 2024",
-        end_date: "25 Nov, 2024",
-        created_by: "John Doe",
-        code: "DEAL100",
-        status: "closed",
-      },
-    ],
-    []
-  );
+export default function Calendar({title, backNav}) {
+  const [allRecords, setAllRecords] = useState([]);
+  const [showPopover, setShowPopover] = useState(false);
+
+  const menuItems = [
+    {
+      icon: <IconEdit width={16} height={16} />,
+      label: "Edit",
+      onClick: (dealzId) => window.location.href = `/admin/dealz/edit?dealz_id=${dealzId}`,
+    },
+    {
+      icon: <IconEye width={16} height={16} />,
+      label: "View",
+      onClick: (dealzId) => window.location.href = `/admin/dealz/view?dealz_id=${dealzId}`,
+    },
+    {
+      icon: <IconTrash width={16} height={16} />,
+      label: "Delete",
+      onClick: () => console.log("Delete clicked"),
+    },
+  ];
+
+  // Fetch agency users list
+  const getAllDealzRecords = async () => {
+    try {
+      const showMessage = false;
+      const response = await getAllSuperAdminDealzRecords(showMessage);
+      if (response && helper.cmpStr(response.status, "ok")) {
+        const agencyAllRecords = response.data.dealz.map(recordItem => ({
+          ...recordItem,
+          agency_name: recordItem.agency_user?.agency?.agency_name
+        }));
+        console.log("agencyAllRecords", agencyAllRecords)
+        setAllRecords(agencyAllRecords);
+      }
+    } catch (error) {
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
+    }
+  };
+
+  // Fetch users when component mounts
+  useEffect(() => {
+    getAllDealzRecords();
+  }, []);
+  
+  const data = React.useMemo (() => allRecords);
 
   const columns = React.useMemo(
     () => [
       {
         header: "DEALZ NAME",
-        accessorKey: "dealz_title",
+        accessorKey: "title",
+      },
+      {
+        header: "Agency",
+        accessorKey: "agency_name",
       },
       {
         header: "SLOT DATE",
         accessorKey: "slot_date",
-      },
-      {
-        header: "VALIDITY",
-        accessorKey: "start_date",
         Cell: ({ row: { original } }) => {
-          return original.start_date + '-' + original.end_date;
+          return original.slot_date_time + ' ' + original.slot_time;
         }
       },
       {
-        header: "COUPON CODE",
-        accessorKey: "code",
+        header: "VALIDITY",
+        accessorKey: "validity_date",
+        Cell: ({ row: { original } }) => {
+          return original.validity_date;
+        }
       },
       {
         header: "CREATED BY",
@@ -98,8 +107,36 @@ export default function Calendar() {
           return <DealzStatusRenderer status={original.status} />;
         },
       },
+      {
+        header: "ACTIONS",
+        accessorKey: "actions",
+        headerSorting: false,
+        Cell: ({ row: { original } }) => {
+          return (
+            <PopoverMenu
+              // menuItems={menuItems}
+              menuItems={menuItems.map(item => ({
+                ...item,
+                onClick: () => item.onClick(original.dealz_id), // Pass dealz_id dynamically
+              }))}
+              arrow={false}
+              show={showPopover === original.dealz_id}
+              placement="auto"
+              onClose={() => setShowPopover(null)}
+            >
+              <Button
+                borderless
+                className="!p-0 !bg-transparent"
+                onClick={() => setShowPopover(original.dealz_id)}
+              >
+                <IconVerticalDots />
+              </Button>
+            </PopoverMenu>
+          );
+        },
+      },
     ],
-    []
+    [showPopover]
   );
 
   const handleApply = (filterState) => {
@@ -165,9 +202,17 @@ export default function Calendar() {
   return (
     <div className="w-full py-8">
       <div className="rounded-tl-2xl rounded-tr-2xl border border-light-blue p-6 flex flex-col gap-6">
+      {backNav ? (
+        <BackNavigation
+          text={title}
+          baseClassName="!mb-0 w-max"
+          className="text-2xl font-semibold"
+        />
+      ) : (
         <div className="flex items-center gap-2">
-            <Typography variant="subtitle">Recent DEALZ</Typography>
-          </div>
+          <Typography variant="subtitle">Recent DEALZ</Typography>
+        </div>
+      )}
         <DealzFilter fields={filterFields} onApply={handleApply} />
       </div>
       <CommonTable

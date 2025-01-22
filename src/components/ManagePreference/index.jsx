@@ -42,12 +42,13 @@ const ManagePreference = () => {
 
   const intitalState = {
     business_type: "",
-    business_location: [],
+    business_location: "",
     business_location_address: [""],
     audience_age_range: "",
     audience_gender: "",
     audience_location: "",
     business_goal: "",
+    all_business_location: "",
   };
 
   const [formData, setFormData] = useState(intitalState);
@@ -93,8 +94,9 @@ const ManagePreference = () => {
           business_location: business_location?.location,
           business_location_address: business_location
             ? business_location.biz_location_addresses
-            : [''],
+            : [""],
           business_goal: agency_preference.business_goal,
+          all_business_location: agency_preference?.agency_biz_locations,
         });
       }
     } catch (error) {
@@ -118,6 +120,19 @@ const ManagePreference = () => {
     });
   };
 
+  const onChangeBusinessLocation = (value) => {
+    const allBusinessLocation = formData.all_business_location || [];
+    const bizLocationAddresses = allBusinessLocation.find(
+      (ele) => ele.location === value
+    );
+    setFormData({
+      ...formData,
+      business_location: value,
+      business_location_address:
+        bizLocationAddresses?.biz_location_addresses || [""],
+    });
+  };
+
   const onChangeLocation = (option, index) => {
     setFormData((prevFormData) => {
       const updatedAddresses = [...prevFormData.business_location_address];
@@ -136,6 +151,7 @@ const ManagePreference = () => {
       );
       if (hasError) {
         setError(errors);
+        setIsLoading(false);
         return;
       } else {
         const _formData = {
@@ -145,6 +161,7 @@ const ManagePreference = () => {
         const res = await saveAgencyPreference(_formData);
         if (res && helper.cmpStr(res.status, "ok")) {
           setError(null);
+          setShowDialog(false);
           setIsLoading(false);
         } else {
           setError(false);
@@ -245,9 +262,7 @@ const ManagePreference = () => {
               rounded
               icon={<IconBuilding />}
               placeholder="Select business location"
-              onChange={(option) =>
-                setFormData({ ...formData, business_location: option?.value })
-              }
+              onChange={(option) => onChangeBusinessLocation(option?.value)}
               onKeyDown={handleKeyDown}
               isError={error && error["business_location"]}
             />

@@ -9,7 +9,7 @@ import Image from "next/image";
 import Typography from "@/components/Common/Typography";
 import IconAdd from "@/components/Icons/IconAdd";
 
-const MobilePreview = () => {
+const MobilePreview = ({ message = "" }) => {
   return (
     <div className="w-[320px] relative h-[830px]">
       <img
@@ -40,15 +40,9 @@ const MobilePreview = () => {
             "linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/images/wa-white.jpeg')",
         }}
       >
-        <div className="bg-white rounded-[10px] p-[10px]">
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It
-          has roots in a piece of classical Latin literature from 45 BC, making
-          it over 2000 years old. Richard McClintock, a Latin professor at
-          Hampden-Sydney College in Virginia, looked up one of the more obscure
-          Latin words, consectetur, from a Lorem Ipsum passage, and going
-          through the cites of the word in classical literature, discovered the
-          undoubtable source.
-        </div>
+        {message && (
+          <div className="bg-white rounded-[10px] p-[10px]">{message}</div>
+        )}
       </div>
 
       <div className="flex justify-between items-center gap-2 px-[30px] absolute w-full bottom-[215px]">
@@ -59,4 +53,4 @@ const MobilePreview = () => {
   );
 };
 
-export default MobilePreview
+export default MobilePreview;

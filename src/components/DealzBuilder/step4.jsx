@@ -1,4 +1,10 @@
 /**
+ * External dependencies
+ */
+import { useState } from "react";
+import * as Yup from "yup";
+
+/**
  * Internal dependencies
  */
 import Typography from "@/components/Common/Typography";
@@ -6,8 +12,19 @@ import Button from "@/components/Common/Button";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
 import BackNavigation from "@/components/Common/BackNavigation";
 import CustomDatePicker from "@/components/Common/DatePicker";
+import { formatDateToYYYYMMDD } from "@/lib/date";
+import { validateFormData, validations } from "@/lib/validations";
+import FormInputValidation from "@/components/Common/FormInputValidation";
 
 const DealzBuilderStep4 = ({ formData, setFormData }) => {
+  const [error, setError] = useState(null);
+  const { valid_date_from, valid_date_to } = formData;
+
+  const validationSchema = Yup.object().shape({
+    valid_date_from: validations.stringRequiredField,
+    valid_date_to: validations.stringRequiredField,
+  });
+
   const handlBack = () => {
     setFormData({
       ...formData,
@@ -15,7 +32,15 @@ const DealzBuilderStep4 = ({ formData, setFormData }) => {
     });
   };
 
-  const handleNext = () => {
+  const handleNext = async() => {
+    const { hasError, errors } = await validateFormData(
+      validationSchema,
+      formData
+    );
+    if (hasError) {
+      setError(errors);
+      return;
+    }
     setFormData({
       ...formData,
       step: formData.step + 1,
@@ -32,19 +57,43 @@ const DealzBuilderStep4 = ({ formData, setFormData }) => {
       />
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between gap-4">
-          <CustomDatePicker
-            id="start-date"
-            className="w-full"
-            placeholder="Start date"
-            inputClassName="!bg-light-blue !rounded-[32px]"
-            onChange={(value) => {}}
-          />
-          <CustomDatePicker
-            id="end-date"
-            placeholder="End date"
-            inputClassName="!bg-light-blue !rounded-[32px]"
-            className="w-full"
-          />
+          <div className="w-full">
+            <CustomDatePicker
+              id="valid_date_from"
+              className="w-full"
+              placeholder="Start date"
+              inputClassName="!bg-light-blue !rounded-[32px]"
+              value={valid_date_from ? new Date(valid_date_from) : null}
+              onChange={(date) =>
+                setFormData({
+                  ...formData,
+                  valid_date_from: formatDateToYYYYMMDD(date),
+                })
+              }
+            />
+            {error && error["valid_date_from"] && (
+              <FormInputValidation isError text={error["valid_date_from"]} />
+            )}
+          </div>
+          <div className="w-full">
+            <CustomDatePicker
+              id="valid_date_to"
+              placeholder="End date"
+              inputClassName="!bg-light-blue !rounded-[32px]"
+              className="w-full"
+              minDate={valid_date_from ? new Date(valid_date_from) : null}
+              value={valid_date_to ? new Date(valid_date_to) : null}
+              onChange={(date) =>
+                setFormData({
+                  ...formData,
+                  valid_date_to: formatDateToYYYYMMDD(date),
+                })
+              }
+            />
+            {error && error["valid_date_to"] && (
+              <FormInputValidation isError text={error["valid_date_to"]} />
+            )}
+          </div>
         </div>
       </div>
       <Typography

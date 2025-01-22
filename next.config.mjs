@@ -13,7 +13,10 @@ const nextConfig = {
         permanent: true,
       },
     ];
-  }
+  },
+  images: {
+    domains: ["cdn-staging.yourpave.com"],
+  },
+  reactStrictMode: false
 };
-
 export default nextConfig;

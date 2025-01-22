@@ -1,8 +1,9 @@
 /**
  * External dependencies
  */
-import Image from "next/image";
-
+import classNames from "classnames";
+import * as Yup from "yup";
+import { useState } from "react";
 /**
  * Internal dependencies
  */
@@ -13,20 +14,66 @@ import FormTextArea from "@/components/Common/FormTextArea";
 import Button from "@/components/Common/Button";
 import IconDollar from "@/components/Icons/IconDollar";
 import IconPercentage from "@/components/Icons/IconPercentage";
-import FilePicker from "@/components/Common/FilePicker";
-import IconUploadFile from "@/components/Icons/IconUploadFile";
 import IconDownload from "@/components/Icons/IconDownload";
 import FormRadio from "@/components/Common/FormRadio";
-import IconClose from "@/components/Icons/IconClose";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
+import { DEALZ } from "@/lib/constants";
+import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
+import UploadHeroImage from "./UploadHeroImage";
+import UploadDealzCodes from "./UploadDealzCodes";
+import { validateFormData, validations } from "@/lib/validations";
+import FormInputValidation from "@/components/Common/FormInputValidation";
+import { helper } from "@/helpers";
 
 const DealzBuilderStep1 = ({ formData, setFormData }) => {
-  const handleNext = () => {
+  const { initial_message, offer_type, coupon_creation_type } = formData;
+  const [error, setError] = useState(null);
+  const { currentSubscription } = useSubscription();
+
+  const validationSchema = Yup.object().shape({
+    initial_message: validations.stringRequiredWithMaxLength(115),
+    offer_type: validations.stringRequiredField,
+    coupon_creation_type: validations.stringRequiredField,
+    coupon_code_file_url: validations.coupon_code_file_url,
+  });
+
+  const handleChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleClickOfferType = (offerType) => {
+    setFormData({
+      ...formData,
+      offer_type: offerType,
+    });
+  };
+
+  const handleNext = async () => {
+    const { hasError, errors } = await validateFormData(
+      validationSchema,
+      formData
+    );
+    if (hasError) {
+      setError(errors);
+      return;
+    }
     setFormData({
       ...formData,
       step: formData.step + 1,
     });
   };
+
+  const downloadFile = () => {
+    const fileUrl = "/files/dealz_codes_template.csv";
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = "dealz_codes_template.csv"; // Specify the file name for download
+    link.click();
+  };
+
   return (
     <div>
       <Typography variant="heading" className="my-8">
@@ -40,7 +87,15 @@ const DealzBuilderStep1 = ({ formData, setFormData }) => {
           <FormTextArea
             className="bg-light-blue !text-dark-gray text-sm font-normal"
             icon="/icons/tag-2-icon.svg"
+            name="initial_message"
+            id="initial_message"
+            value={initial_message}
+            onChange={(e) => handleChange("initial_message", e.target.value)}
+            isError={error && error["initial_message"]}
           />
+          {error && error["initial_message"] && (
+            <FormInputValidation isError text={error["initial_message"]} />
+          )}
           <Typography variant="caption" className="text-right mt-4">
             Max. 115 characters
           </Typography>
@@ -49,37 +104,63 @@ const DealzBuilderStep1 = ({ formData, setFormData }) => {
           <FormLabel className="uppercase">Deal</FormLabel>
           <div className="flex gap-4">
             <Button
-              className="hover:text-secondary font-medium hover:border-secondary"
+              className={classNames(
+                "hover:text-secondary font-medium hover:border-secondary",
+                {
+                  "text-secondary border-secondary":
+                    DEALZ.OFFER_TYPE.Dollar === offer_type,
+                }
+              )}
               icon={<IconDollar />}
               isRound
+              onClick={() => handleClickOfferType(DEALZ.OFFER_TYPE.Dollar)}
             >
               Dollars
             </Button>
             <Button
-              className="hover:text-secondary font-medium hover:border-secondary"
+              className={classNames(
+                "hover:text-secondary font-medium hover:border-secondary",
+                {
+                  "text-secondary border-secondary":
+                    DEALZ.OFFER_TYPE.Percentage === offer_type,
+                }
+              )}
               icon={<IconPercentage />}
               isRound
+              onClick={() => handleClickOfferType(DEALZ.OFFER_TYPE.Percentage)}
             >
               Percentage
             </Button>
-          </div>
-        </FormFieldset>
-        <div className="bg-primary-40 rounded-2xl px-6 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <FormLabel className="uppercase !mb-0">hero deal</FormLabel>
-            <Typography className="!text-gold text-sm bg-white p-2 rounded-md w-max">
-              Add-on
-            </Typography>
-          </div>
-          <FilePicker onFileSelect={(file) => {}} className="w-max">
             <Button
-              icon={<IconUploadFile />}
-              className="flex-col border-dashed rounded-2xl"
+              className={classNames(
+                "hover:text-secondary font-medium hover:border-secondary",
+                {
+                  "text-secondary border-secondary":
+                    DEALZ.OFFER_TYPE.Other === offer_type,
+                }
+              )}
+              isRound
+              onClick={() => handleClickOfferType(DEALZ.OFFER_TYPE.Other)}
             >
-              Upload Image
+              Other
             </Button>
-          </FilePicker>
-        </div>
+          </div>
+          {error && error["offer_type"] && (
+            <FormInputValidation isError text={error["offer_type"]} />
+          )}
+        </FormFieldset>
+        {helper.notEmpty(currentSubscription?.subscription) &&
+          currentSubscription?.available_inventory?.banner > 0 && (
+            <div className="bg-primary-40 rounded-2xl px-6 py-4">
+              <div className="flex items-center justify-between mb-4">
+                <FormLabel className="uppercase !mb-0">hero deal</FormLabel>
+                <Typography className="!text-gold text-sm bg-white p-2 rounded-md w-max">
+                  Add-on
+                </Typography>
+              </div>
+              <UploadHeroImage formData={formData} setFormData={setFormData} />
+            </div>
+          )}
         <FormFieldset className="mb-0">
           <div className="flex items-center justify-between">
             <FormLabel className="uppercase !mb-0">Type of Coupon</FormLabel>
@@ -90,43 +171,56 @@ const DealzBuilderStep1 = ({ formData, setFormData }) => {
               borderless
               variant="primary"
               outlined
+              onClick={downloadFile}
             >
               Download coupon template
             </Button>
           </div>
           <div className="flex gap-4 mt-6">
             <FormRadio
-              id="dealz-code"
-              name="coupon-code"
+              id="automatic"
+              name="coupon_creation_type"
               label="Create DEALZ Codes"
               labelClassName="text-midnight-blue !text-base"
+              checked={
+                DEALZ.COUPON_CREATION_TYPE.automatic === coupon_creation_type
+              }
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  coupon_creation_type: DEALZ.COUPON_CREATION_TYPE.automatic,
+                  coupon_code_file_url: null,
+                  csv_file_name: null
+                })
+              }
             />
             <FormRadio
-              id="own-code"
-              name="coupon-code"
+              id="upload"
+              name="coupon_creation_type"
               label="Upload your own codes"
               labelClassName="text-midnight-blue !text-base"
+              checked={
+                DEALZ.COUPON_CREATION_TYPE.upload === coupon_creation_type
+              }
+              onChange={(e) =>
+                handleChange(
+                  "coupon_creation_type",
+                  DEALZ.COUPON_CREATION_TYPE.upload
+                )
+              }
             />
           </div>
+          {error && error["coupon_creation_type"] && (
+            <FormInputValidation isError text={error["coupon_creation_type"]} />
+          )}
         </FormFieldset>
-        <FormFieldset className="flex flex-row-reverse justify-end gap-4">
-          <FilePicker onFileSelect={(file) => {}}>
-            <Button
-              icon={<IconUploadFile />}
-              className="flex-col border-dashed rounded-2xl !bg-light-blue text-dark-gray"
-            >
-              Upload CSV
-            </Button>
-          </FilePicker>
-          <div className="flex flex-col gap-[6px] w-max justify-center">
-            <div className="relative p-4 rounded-2xl border border-light-gray w-max">
-              <div className="absolute -right-1 -top-3 bg-white border border-light-gray rounded-full h-6 w-6 flex items-center justify-center">
-                <IconClose className="cursor-pointer" />
-              </div>
-              <Image src="/icons/csv-preview.svg" width={48} height={48} />
-            </div>
-            <Typography variant="caption">Coupon.csv</Typography>
-          </div>
+        <FormFieldset className="flex flex-col justify-end gap-2">
+          {coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.upload && (
+            <UploadDealzCodes formData={formData} setFormData={setFormData} />
+          )}
+          {error && error["coupon_code_file_url"] && (
+            <FormInputValidation isError text={error["coupon_code_file_url"]} />
+          )}
         </FormFieldset>
       </div>
       <Button

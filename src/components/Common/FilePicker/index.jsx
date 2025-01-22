@@ -3,7 +3,7 @@
  */
 import React, { useRef } from "react";
 
-const FilePicker = ({ onFileSelect, children, className }) => {
+const FilePicker = ({ onFileSelect, children, className,  ...props }) => {
   const fileInputRef = useRef(null);
 
   const handleFileChange = (event) => {
@@ -26,6 +26,7 @@ const FilePicker = ({ onFileSelect, children, className }) => {
         ref={fileInputRef}
         className="hidden"
         onChange={handleFileChange}
+        {...props}
       />
       <div onClick={handleChooseClick} className="cursor-pointer">
         {children || <button>Choose File</button>}

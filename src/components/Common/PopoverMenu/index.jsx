@@ -57,6 +57,7 @@ export default function PopoverMenu({
   menuItemTextClassName,
   show,
   onClose,
+  rowData = {},
   ...props
 }) {
   return (
@@ -96,7 +97,7 @@ export default function PopoverMenu({
                         onClose();
                       }
                       if (typeof item?.onClick === "function") {
-                        item.onClick(item);
+                        item.onClick(rowData);
                       }
                     }}
                   />

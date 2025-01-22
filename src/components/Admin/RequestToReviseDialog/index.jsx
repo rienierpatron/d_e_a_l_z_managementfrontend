@@ -66,7 +66,7 @@ const RequestToReviseDialog = ({ open, onSubmit, onClose, reviseFields, onRevise
             />
           </div>
         </div>
-        <div>
+        {/* <div>
           <Typography variant="caption" className="uppercase pb-3">CC</Typography>
           <div className="flex gap-2 items-center">
             <div className="flex flex-nowrap items-center">
@@ -78,7 +78,7 @@ const RequestToReviseDialog = ({ open, onSubmit, onClose, reviseFields, onRevise
               <IconClose className="text-black" />
             </div>
           </div>
-        </div>
+        </div> */}
         <FormFieldset className="pt-2">
           <FormLabel className="uppercase">Subject</FormLabel>
           <FormInput

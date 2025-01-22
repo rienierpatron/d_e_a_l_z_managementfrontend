@@ -6,7 +6,7 @@ import { api } from '@/api';
 import { helper } from '@/helpers';
 import { useUser } from '@/context/UserContext';
 
-const EmailVerification = ({ verifyApiMethod, successMessage, redirectUrl }) => {
+const EmailVerification = ({ verifyApiMethod, successMessage }) => {
   const currentUser = useUser();
   const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
   const [message, setMessage] = useState('');
@@ -36,7 +36,7 @@ const EmailVerification = ({ verifyApiMethod, successMessage, redirectUrl }) => 
         const accessToken = response.data.access_token;
         if (accessToken) {
           helper.cookie.setAccessToken(accessToken);
-          window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : redirectUrl;
+          window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
         }
       }
     } catch (error) {

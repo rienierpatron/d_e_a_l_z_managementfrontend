@@ -39,9 +39,13 @@ export default function DealzList({
   const intialPaginationStatus = {
     currentPage: 1,
     pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
-    pageIndex: 0,
   };
   const [pagination, setPagination] = useState(intialPaginationStatus);
+  const [filters, setFilters] = useState({}); // New state for filters
+  const [sorting, setSorting] = useState({
+    orderColumn: '',
+    orderDirection: ''
+  })
 
   const menuItems = [
     {
@@ -69,15 +73,22 @@ export default function DealzList({
       },
       {
         header: "SLOT",
-        accessorKey: "slot_date_time",
+        accessorKey: "slot_date",
+        Cell: ({ row: { original } }) => {
+          return original?.slot_date_time
+        }
       },
       {
         header: "VALIDITY",
-        accessorKey: "validity_date",
+        accessorKey: "valid_date_from",
+        Cell: ({ row: { original } }) => {
+          return original?.validity_date
+        }
       },
       {
         header: "WEBSITE OR BOOKING LINK",
         accessorKey: "link",
+        headerSorting: false,
       },
       {
         header: "STATUS",
@@ -176,25 +187,22 @@ export default function DealzList({
     },
   ];
 
-  const fetchDealRecords = async (filters = {}) => {
+  const fetchDealRecords = async () => {
     try {
       const params = {
         offset: (pagination.currentPage - 1) * pagination.pageSize,
         limit: pagination.pageSize,
+        ...filters, // Include the active filters
+        orderColumn: sorting.orderColumn,
+        orderDirection: sorting.orderDirection,
       };
-      // Add filters to params if their values are not empty or undefined
-      for (const key in filters) {
-        if (filters[key]) {
-          params[key] = filters[key];
-        }
-      }
       const res = await api.dealz.getDealRecords(params, false);
       if (res.status === "ok") {
         setDealzList(res?.data?.dealz);
         setTotalRecords(res?.data?.totalOverallResult);
       }
     } catch (error) {
-      console.log("Error in upload file", error);
+      console.log("Error in fetching deal records", error);
     }
   };
 
@@ -206,17 +214,16 @@ export default function DealzList({
         fetchDealRecords();
       }
     } catch (error) {
-      console.log("Error in upload file", error);
+      console.log("Error in deleting deal record", error);
     }
   };
 
   useEffect(() => {
     fetchDealRecords();
-  }, [pagination]);
+  }, [pagination, filters,sorting]); // Trigger API call when pagination or filters change
 
-  const handleApply = async (filterState) => {
-    // setPagination(intialPaginationStatus);
-    const filters = {
+  const handleApply = (filterState) => {
+    const appliedFilters = {
       title: filterState?.title ?? "",
       status: filterState?.status?.value ?? "",
       valid_date_from: filterState?.start_date
@@ -230,7 +237,10 @@ export default function DealzList({
         ? formatDateToYYYYMMDD(filterState.slot_date)
         : "",
     };
-    await fetchDealRecords(filters);
+
+    // Reset pagination and set new filters
+    setPagination(intialPaginationStatus);
+    setFilters(appliedFilters);
   };
 
   return (
@@ -280,14 +290,19 @@ export default function DealzList({
         paginationRequired={showFilter}
         sortingServerSide={true}
         paginationServerSide={true}
-        currentPage={pagination.currentPage - 1}
+        currentPage={pagination.currentPage}
         onPageChange={(newPage) =>
           setPagination({ ...pagination, currentPage: newPage })
         }
         onPageSizeChange={(pageSize) => {
           setPagination({ ...pagination, pageSize, currentPage: 1 });
         }}
-        onSortChange={(orderBy, order) => {}}
+        onSortChange={(orderBy, order) => {
+          setSorting({
+            orderColumn: orderBy,
+            orderDirection: order?.toUpperCase(),
+          });
+        }}
       />
       <EditDealConfirmationDialog
         open={showEditWarningDialog}

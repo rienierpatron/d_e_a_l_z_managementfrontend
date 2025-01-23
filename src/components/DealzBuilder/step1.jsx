@@ -3,7 +3,7 @@
  */
 import classNames from "classnames";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 /**
  * Internal dependencies
  */
@@ -24,9 +24,10 @@ import UploadDealzCodes from "./UploadDealzCodes";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
 import { helper } from "@/helpers";
+import { api } from "@/api";
 
 const DealzBuilderStep1 = ({ formData, setFormData }) => {
-  const { initial_message, offer_type, coupon_creation_type } = formData;
+  const { initial_message, offer_type, coupon_creation_type, code } = formData;
   const [error, setError] = useState(null);
   const { currentSubscription } = useSubscription();
 
@@ -190,7 +191,7 @@ const DealzBuilderStep1 = ({ formData, setFormData }) => {
                   ...formData,
                   coupon_creation_type: DEALZ.COUPON_CREATION_TYPE.automatic,
                   coupon_code_file_url: null,
-                  csv_file_name: null
+                  csv_file_name: null,
                 })
               }
             />

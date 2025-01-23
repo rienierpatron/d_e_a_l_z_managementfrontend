@@ -38,7 +38,8 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
     daily_deal: true,
     weekly_deal: false,
     csv_file_name: null,
-    coupon_creation_type: null
+    coupon_creation_type: null,
+    code: null
   };
   const [formData, setFormData] = useState(initialState);
   const { step } = formData;

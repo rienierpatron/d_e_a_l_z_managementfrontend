@@ -164,13 +164,24 @@ const CommonTable = ({
   onRowClick,
   tableWrapperClassName,
   tableClassName,
-  paginationServerSide
+  paginationServerSide,
+  currentPage,
 }) => {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize,
   });
+
+  // To Reset Page
+  useEffect(() => {
+    if (currentPage) {
+      setPagination({
+        ...pagination,
+        pageIndex: currentPage - 1,
+      });
+    }
+  }, [currentPage]);
 
   const table = useReactTable({
     data,
@@ -184,7 +195,7 @@ const CommonTable = ({
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     manualSorting: sortingServerSide,
-    manualPagination: paginationServerSide
+    manualPagination: paginationServerSide,
   });
 
   const handleSorting = (header) => {

@@ -21,7 +21,8 @@ export const getDealzFormattedData = (data) => {
     daily_deal: formData.daily_deal ?? false,
     weekly_deal: formData.weekly_deal ?? false,
     csv_file_name: null,
-    coupon_creation_type: formData.coupon_creation_type
+    coupon_creation_type: formData.coupon_creation_type,
+    code: couponData?.[0]?.code ?? null
   };
   return dealzData
 };

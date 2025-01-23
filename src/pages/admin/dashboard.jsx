@@ -7,7 +7,7 @@ import AllDealz from "@/components/Admin/AllDealz";
 const Dashboard = () => {
   return (
     <div className="px-10 py-8 h-full">
-      <AdminDealzStats />
+      {/* <AdminDealzStats /> */}
       <AllDealz title="Recent DEALZ" />
     </div>
   );

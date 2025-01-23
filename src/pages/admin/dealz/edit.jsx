@@ -43,7 +43,7 @@ export default function DealzEdit() {
   const [showSaveDetailsWarningDialog, setShowSaveDetailsWarningDialog] = useState(false);
   const [showRequestReviseWarningDialog, setShowRequestReviseWarningDialog] = useState(false);
   const [reviseFields, setReviseFields] = useState({ 
-    reviseReason: "", 
+    reviseReason: "",
     reviseEmail: "payal@chaaat.io" 
   });
 
@@ -123,6 +123,11 @@ export default function DealzEdit() {
       // Set the slot time if available
       if (dealzDetails.dealz.slot_time) {
         setSelectedSlotTime(dealzDetails.dealz.slot_time);
+      }
+
+      // Set the slot time if available
+      if (dealzDetails.dealz.reach_count) {
+        setDealzReached(dealzDetails.dealz.reach_count);
       }
     }
   }, [dealzDetails]);
@@ -232,7 +237,7 @@ export default function DealzEdit() {
       {/* Deal Information Section */}
       <div className="grid grid-cols-2 gap-4 pb-5">
         <DealInfoCard icon={IconCoupon} label="DEALZ Code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
-        <DealInfoCard icon={IconCalendar} label="Agency Name">Burger King</DealInfoCard>
+        <DealInfoCard icon={IconCalendar} label="Agency Name">{dealzDetails.dealz?.agency_user?.agency?.agency_name}</DealInfoCard>
         <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
         <DealInfoCard icon={IconCalendar} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard>
         

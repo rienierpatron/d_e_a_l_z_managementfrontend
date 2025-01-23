@@ -7,12 +7,12 @@ import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetai
 import { useUser } from "@/context/UserContext";
 import { helper } from "@/helpers";
 import SidbarUpgradeCta from "@/components/SidbarUpgradeCta";
-import Button from "@/components/Common/Button";
 import IconMessageQuestion from "@/components/Icons/IconMessageQuestion";
 import { NAV_ITEMS, ADMIN_NAV_ITEMS } from "@/lib/routes";
 import UserSettingsMenu from "./UserSettingsMenu";
 import SwitchAgencyMenu from "./SwitchAgencyMenu";
 import IconWideArrowRight from "@/components/Icons/IconWideArrowRight";
+import Typography from "../Typography";
 
 const DesktopSidebar = () => {
   const currentUser = useUser();
@@ -30,6 +30,15 @@ const DesktopSidebar = () => {
         : "100%";
     }
   }, [router.pathname]);
+
+  // useEffect(() => {
+  //   // Check the conditions when the component mounts or when the relevant props change
+  //   if (isSuperAdminOrStaff && isSuperAdminRoleName) {
+  //     setShowDealzLogo(true);
+  //   } else {
+  //     setShowDealzLogo(false);
+  //   }
+  // }, [isSuperAdminOrStaff, isSuperAdminRoleName]);
 
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const [isSwitchAgencyPopupOpen, setIsSwitchAgencyPopupOpen] = useState(false);
@@ -52,24 +61,29 @@ const DesktopSidebar = () => {
       ref={navRef}
     >
       <div className="flex flex-col gap-12 justify-center items-center">
-        <div
-          className="flex items-center cursor-pointer"
-          onClick={isSuperAdminOrStaff ? openSwitchAgencyPopup : undefined}
-          aria-label="Sidebar Toggle"
-        >
-          <Image
-            src="/dealz-logo.svg"
-            width={67}
-            height={26}
-            alt="Dealz Logo"
-            className="cursor-pointer"
-          />
-          {isSuperAdminOrStaff && <IconWideArrowRight />}
+        <div className="text-center cursor-pointer" onClick={isSuperAdminOrStaff ? openSwitchAgencyPopup : undefined}>
+          {isSuperAdminOrStaff ? (
+            <Image
+              src="/dealz-logo.svg"
+              width={67}
+              height={26}
+              alt="Dealz Logo"
+            />
+            ) : (
+            <div className="p-1 mb-2 bg-black text-white w-6 h-6 flex items-center justify-center rounded">
+              {currentUser?.user?.agency_name ? currentUser?.user?.agency_name[0] : ""}
+            </div>
+          )}
+          <div className="flex items-center justify-center">
+            <Typography variant="caption" className="!text-xs">{currentUser?.user?.agency_name}</Typography>
+            {isSuperAdminOrStaff && <IconWideArrowRight />}
+          </div>
         </div>
 
         {isSwitchAgencyPopupOpen && (
-          <SwitchAgencyMenu />
+          <SwitchAgencyMenu isSuperAdminOrStaff={isSuperAdminOrStaff} />
         )}
+        
 
         <ul className="flex flex-col gap-8">
           {getNavItems().map((item, index) => (

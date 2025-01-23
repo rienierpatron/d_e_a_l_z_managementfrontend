@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+import classNames from "classnames";
 import Image from "next/image";
 import React, { useEffect, useRef } from "react";
 import Select from "react-select";
@@ -18,6 +19,7 @@ const FormSelect = React.forwardRef(
       optionStyle,
       onChange,
       isError = false,
+      wrapperClass = '',
       ...props
     },
     ref
@@ -79,7 +81,7 @@ const FormSelect = React.forwardRef(
     }, [selectRef]);
 
     return (
-      <div className="relative w-full">
+      <div className={classNames("relative", wrapperClass)}>
         {icon && (
           <div className="absolute top-1/2 left-6 transform -translate-y-1/2 z-10">
             {typeof icon === "string" ? (

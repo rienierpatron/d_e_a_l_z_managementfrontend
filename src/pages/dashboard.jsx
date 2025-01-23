@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import DealzStats from "@/components/DashboardInsights/DealStats";
 import RemainingDealz from "@/components/DashboardInsights/RemainingDealz";
 import IconPeople from "@/components/Icons/IconPeople";
-import MyDealz from "@/components/MyDealz";
+import DealzList from "@/components/DealzList";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -30,7 +30,9 @@ const Dashboard = () => {
           <RemainingDealz totalDealz={10} remainingDealz={6} />
         </div>
       )}
-      <MyDealz />
+      <div className="w-full py-8">
+        <DealzList />
+      </div>
     </div>
   );
 };

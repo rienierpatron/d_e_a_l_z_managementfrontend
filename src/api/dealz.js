@@ -32,12 +32,14 @@ export async function createDeal(payload, showMessage = true) {
  * @param {Object} params - The query parameters for the API request
  * @param {string} [params.limit=10] - The number of records to return
  * @param {string} [params.offset=0] - The starting point for the records
- * @param {string} [params.orderColumn='valid_date_from'] - The column to order the results by
- * @param {string} [params.orderDirection='DESC'] - The direction of the order (ASC or DESC)
+ * @param {string} [params.orderColumn=''] - The column to order the results by
+ * @param {string} [params.orderDirection=''] - The direction of the order (ASC or DESC)
  * @param {string} [params.status=''] - The status of the deals
  * @param {string} [params.title=''] - The title of the deals
+ * @param {string} [params.created_by=''] - The created_by of the deals
  * @param {string} [params.valid_date_from=''] - The start date for valid date filter
  * @param {string} [params.valid_date_to=''] - The end date for valid date filter
+ * @param {string} [params.slot_date=''] - The slot date for valid date filter
  * @param {string} [params.agency_id=''] - The agency ID filter
  * @param {boolean} [showMessage=true] - Whether to show a success or error message
  * @returns {Promise<{data: Object[], status: string}>} - The response data and status from the API
@@ -53,7 +55,9 @@ export async function getDealRecords(params = {}, showMessage = true) {
       title = '',
       valid_date_from = '',
       valid_date_to = '',
-      agency_id = ''
+      agency_id = '',
+      created_by = '',
+      slot_date = '',
     } = params;
 
     const requestParams = {};
@@ -67,6 +71,8 @@ export async function getDealRecords(params = {}, showMessage = true) {
     if (valid_date_from) requestParams.valid_date_from = valid_date_from;
     if (valid_date_to) requestParams.valid_date_to = valid_date_to;
     if (agency_id) requestParams.agency_id = agency_id;
+    if (created_by) requestParams.created_by = created_by;
+    if (slot_date) requestParams.slot_date = slot_date;
 
     const response = await Axios({
       url: `${config.apiUrl}/dealz/records`,
@@ -135,6 +141,35 @@ export async function editDeal(dealzId, payload, showMessage = true) {
     return helper.api.handleApiResponse(response, showMessage);
   } catch (error) {
     console.error("Error editing deal:", error);
+    throw error;
+  }
+}
+
+/**
+ * Delete a deal
+ * @param {string|number} dealzId - The ID of the deal to delete
+ * @param {boolean} [showMessage=true] - Whether to show a success or error message
+ * @returns {Promise<{data: object, status: string}>}
+ */
+export async function deleteDeal(dealzId, showMessage = true) {
+  if (!dealzId) {
+    throw new Error("Invalid dealzId provided.");
+  }
+
+  try {
+    const response = await Axios({
+      url: `${config.apiUrl}/dealz/${dealzId}`,
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      DONT_SHOW_ERROR: showMessage,
+    });
+
+    return helper.api.handleApiResponse(response, showMessage);
+  } catch (error) {
+    console.error("Error deleting deal:", error);
     throw error;
   }
 }

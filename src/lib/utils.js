@@ -1,8 +1,9 @@
 const { fetchLocationAddress } = require("@/api/location-address");
+const { DEALZ_STATUS } = require("@/lib/constants");
 
 /**
  * Fetch and format location addresses based on search criteria.
- * 
+ *
  * @async
  * @function loadLocationAddress
  * @param {string} search - The search text used to filter location addresses.
@@ -23,16 +24,16 @@ const loadLocationAddress = async (search, countryCodes = ["HK"]) => {
     };
     const res = await fetchLocationAddress(params, false);
     if (res && res.status === "ok" && res?.data?.locations?.length) {
-      const locations = res.data.locations
+      const locations = res.data.locations;
       return locations.map((item) => {
         return {
           label: item.description,
           value: item.place_id,
-          ...item
-        }
-      })
+          ...item,
+        };
+      });
     }
-    return []
+    return [];
   } catch (error) {
     return [];
   }
@@ -44,7 +45,7 @@ const loadLocationAddress = async (search, countryCodes = ["HK"]) => {
  * @returns {string} - The URL without the domain
  */
 function removeDomain(url) {
-  if (!url) return
+  if (!url) return;
   try {
     const parsedUrl = new URL(url);
     return parsedUrl.pathname + parsedUrl.search + parsedUrl.hash;
@@ -77,13 +78,24 @@ function previewFileName(fileName, maxLength = 20) {
 
   const extension = fileName.slice(fileName.lastIndexOf("."));
   const truncatedName = fileName.slice(0, maxLength - extension.length - 3); // Reserve space for "..."
-  
+
   return `${truncatedName}...${extension}`;
 }
 
+/**
+ * Generates an array of status options from the `DEALZ_STATUS` object.
+ */
+function loadDelzStatusOptions() {
+  const options = [];
+  for (const status in DEALZ_STATUS) {
+    options.push({ value: status, label: DEALZ_STATUS[status] });
+  }
+  return options;
+}
 
 module.exports = {
   loadLocationAddress,
   removeDomain,
-  previewFileName
+  previewFileName,
+  loadDelzStatusOptions
 };

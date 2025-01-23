@@ -68,7 +68,7 @@ function removeDomain(url) {
  */
 function previewFileName(fileName, maxLength = 20) {
   if (!fileName) {
-    return "No file selected";
+    return "";
   }
 
   if (fileName.length <= maxLength) {

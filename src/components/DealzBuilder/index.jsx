@@ -38,6 +38,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
     daily_deal: true,
     weekly_deal: false,
     csv_file_name: null,
+    coupon_creation_type: null
   };
   const [formData, setFormData] = useState(initialState);
   const { step } = formData;
@@ -46,7 +47,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
     try {
       const res = await api.dealz.viewDealById(dealzId);
       if (res.status === "ok") {
-        const formattedData = getDealzFormattedData(res.data.dealz);
+        const formattedData = getDealzFormattedData(res.data);
         if (mode === "view") {
           formattedData.step = 5;
         }
@@ -111,6 +112,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             formData={formData}
             setFormData={setFormData}
             mode={mode}
+            dealzId={dealzId}
           />
         )}
       </div>

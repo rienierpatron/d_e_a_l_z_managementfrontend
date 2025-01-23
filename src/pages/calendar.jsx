@@ -20,25 +20,25 @@ import IconVerticalDots from "@/components/Icons/IconVerticalDots";
 import IconEdit from "@/components/Icons/IconEdit";
 import IconEye from "@/components/Icons/IconEye";
 import IconTrash from "@/components/Icons/IconTrash";
+import EditDealConfirmationDialog from "@/components/EditDealConfirmationDialog";
 
 export default function Calendar() {
-  const router = useRouter()
+  const router = useRouter();
   const [dealzList, setDealzList] = useState([]);
   const [showPopover, setShowPopover] = useState(false);
   const [totalRecords, setTotalRecords] = useState(10);
+  const [showEditWarningDialog, setShowEditWarningDialog] = useState(null);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
     pageIndex: 0,
   });
 
-  console.log("pagination=====", pagination);
-
   const menuItems = [
     {
       icon: <IconEdit width={16} height={16} />,
       label: "Edit",
-      onClick: () => console.log("Edit clicked"),
+      onClick: (row) => setShowEditWarningDialog(row.dealz_id),
     },
     {
       icon: <IconEye width={16} height={16} />,
@@ -82,9 +82,21 @@ export default function Calendar() {
         accessorKey: "actions",
         headerSorting: false,
         Cell: ({ row: { original } }) => {
+          const currentRowMenuItems = menuItems.slice(); // Create a shallow copy of menuItems
+
+          // Conditionally remove the "Edit" menu item if the status is not 'draft' or 'revision'
+          if (!["draft", "revision"].includes(original.status)) {
+            const editIndex = currentRowMenuItems.findIndex(
+              (item) => item.label === "Edit"
+            );
+            if (editIndex !== -1) {
+              currentRowMenuItems.splice(editIndex, 1); // Remove the "Edit" item
+            }
+          }
+
           return (
             <PopoverMenu
-              menuItems={menuItems}
+              menuItems={currentRowMenuItems}
               arrow={false}
               show={showPopover === original.dealz_id}
               placement="auto"
@@ -195,7 +207,7 @@ export default function Calendar() {
         paginationRequired={true}
         sortingServerSide={true}
         paginationServerSide={true}
-        currentPage={pagination.currentPage -1 }
+        currentPage={pagination.currentPage - 1}
         onPageChange={(newPage) =>
           setPagination({ ...pagination, currentPage: newPage })
         }
@@ -203,6 +215,11 @@ export default function Calendar() {
           setPagination({ ...pagination, pageSize, currentPage: 1 });
         }}
         onSortChange={(orderBy, order) => {}}
+      />
+       <EditDealConfirmationDialog
+        open={showEditWarningDialog}
+        onClose={() => setShowEditWarningDialog(false)}
+        onSubmit={() => router.push(`/dealz/edit/${showEditWarningDialog}`)}
       />
     </div>
   );

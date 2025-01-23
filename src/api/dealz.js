@@ -107,3 +107,34 @@ export async function viewDealById(dealzId, showMessage = false) {
     throw error;
   }
 }
+
+/**
+ * Edit a deal
+ * @param {string|number} dealzId - The ID of the deal to edit
+ * @param {Record<string, any>} payload - The data for the deal to be updated
+ * @param {boolean} [showMessage=true] - Whether to show a success or error message
+ * @returns {Promise<{data: object, status: string}>}
+ */
+export async function editDeal(dealzId, payload, showMessage = true) {
+  if (!dealzId) {
+    throw new Error("Invalid dealzId provided.");
+  }
+
+  try {
+    const response = await Axios({
+      url: `${config.apiUrl}/dealz/${dealzId}`,
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      data: payload,
+      DONT_SHOW_ERROR: showMessage,
+    });
+
+    return helper.api.handleApiResponse(response, showMessage);
+  } catch (error) {
+    console.error("Error editing deal:", error);
+    throw error;
+  }
+}

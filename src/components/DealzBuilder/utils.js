@@ -1,6 +1,8 @@
 import { formatDateToYYYYMMDD } from "@/lib/date";
 
-export const getDealzFormattedData = (formData) => {
+export const getDealzFormattedData = (data) => {
+  const formData = data.dealz
+  const couponData = data.coupons
   const dealzData = {
     step: 1,
     title: formData.title,
@@ -9,7 +11,7 @@ export const getDealzFormattedData = (formData) => {
     amount: formData.amount ?? null,
     coupon_code_type: formData.coupon_code_type,
     banner_image: formData.banner_image ?? null,
-    coupon_code_file_url: formData.coupon_code_file_url ?? null,
+    coupon_code_file_url: couponData?.[0]?.code ?? null,
     followup_message: formData.followup_message,
     link: formData.link ?? null,
     slot_date: formatDateToYYYYMMDD(formData.slot_date),
@@ -19,6 +21,7 @@ export const getDealzFormattedData = (formData) => {
     daily_deal: formData.daily_deal ?? false,
     weekly_deal: formData.weekly_deal ?? false,
     csv_file_name: null,
+    coupon_creation_type: formData.coupon_creation_type
   };
   return dealzData
 };

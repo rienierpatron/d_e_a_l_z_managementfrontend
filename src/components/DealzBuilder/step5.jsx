@@ -23,7 +23,7 @@ import { previewFileName } from "@/lib/utils";
 import { api } from "@/api";
 import { useSubscription } from "../Subscriptions/GetSubscriptionDetails";
 
-const DealzBuilderStep5 = ({ formData, setFormData, mode }) => {
+const DealzBuilderStep5 = ({ formData, setFormData, mode, dealzId = "" }) => {
   const {
     title,
     initial_message,
@@ -69,7 +69,12 @@ const DealzBuilderStep5 = ({ formData, setFormData, mode }) => {
       delete payload.slot_time;
     }
     try {
-      const res = await api.dealz.createDeal(payload);
+      let res;
+      if (dealzId) {
+        res = await api.dealz.editDeal(dealzId, payload);
+      } else {
+        res = await api.dealz.createDeal(payload);
+      }
       if (res.status === "ok") {
         setIsLoading(null);
         return router.push("/calendar");

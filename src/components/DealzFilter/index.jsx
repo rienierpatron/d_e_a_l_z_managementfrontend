@@ -12,12 +12,23 @@ import CustomDatePicker from "@/components/Common/DatePicker";
 import FormSelect from "@/components/Common/FormSelect";
 import Button from "@/components/Common/Button";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
+import IconCloseCircle from "../Icons/IconCloseCircle";
+import { helper } from "@/helpers";
 
 const DealzFilter = ({ fields, onApply, className }) => {
   const [filterState, setFilterState] = useState({});
+  const [isFilterApplied, setIsFilterApplied] = useState(false);
+  const [key, setKey] = useState(0);
 
   const handleChange = (field, value) => {
     setFilterState((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleClearFilter = () => {
+    setFilterState({});
+    setIsFilterApplied(false);
+    setKey((prevKey) => prevKey + 1);
+    onApply({});
   };
 
   const renderField = (field) => {
@@ -25,7 +36,7 @@ const DealzFilter = ({ fields, onApply, className }) => {
       case "input":
         return (
           <FormInput
-            key={field.id}
+            key={`${field.id}-${key}`}
             placeholder={field.placeholder || ""}
             rounded
             icon={field.icon}
@@ -39,7 +50,7 @@ const DealzFilter = ({ fields, onApply, className }) => {
       case "datePicker":
         return (
           <CustomDatePicker
-            key={field.id}
+            key={`${field.id}-${key}`}
             id={field.id}
             placeholder={field.placeholder || ""}
             inputClassName={field.inputClassName || ""}
@@ -51,7 +62,7 @@ const DealzFilter = ({ fields, onApply, className }) => {
       case "select":
         return (
           <FormSelect
-            key={field.id}
+            key={`${field.id}-${key}`}
             id={field.id}
             name={field.id}
             options={field.options || []}
@@ -61,6 +72,7 @@ const DealzFilter = ({ fields, onApply, className }) => {
             height={field.height || "50px"}
             controlStyle={field.controlStyle || {}}
             onChange={(value) => handleChange(field.id, value)}
+            wrapperClass={field.wrapperClass}
             value={field.options.find(
               (ele) => ele.value === filterState?.[field.id]
             )}
@@ -81,10 +93,28 @@ const DealzFilter = ({ fields, onApply, className }) => {
         icon={<IconArrowRight />}
         iconPosition="right"
         className="!px-6 !py-3"
-        onClick={() => onApply(filterState)}
+        disabled={!helper.notEmpty(filterState)}
+        onClick={() => {
+          onApply(filterState);
+          setIsFilterApplied(true);
+        }}
       >
         Apply
       </Button>
+      {isFilterApplied && (
+        <Button
+          variant="primary"
+          isRound
+          outlined
+          icon={<IconCloseCircle />}
+          iconPosition="left"
+          className="!px-0 !text-red underline hover:!text-red"
+          onClick={() => handleClearFilter()}
+          borderless
+        >
+          Clear filter
+        </Button>
+      )}
     </div>
   );
 };

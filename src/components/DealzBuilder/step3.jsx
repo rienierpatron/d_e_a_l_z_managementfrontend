@@ -1,7 +1,9 @@
 /**
  * External dependencies
  */
+import { useState } from "react";
 import classNames from "classnames";
+import * as Yup from "yup";
 /**
  * Internal dependencies
  */
@@ -15,10 +17,20 @@ import CustomDatePicker from "@/components/Common/DatePicker";
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
 import { useSubscription } from "../Subscriptions/GetSubscriptionDetails";
+import { formatDateToYYYYMMDD } from "@/lib/date";
+import { DEALZ, SUBSCRIPTIONS } from "@/lib/constants";
+import { validateFormData, validations } from "@/lib/validations";
+import FormInputValidation from "@/components/Common/FormInputValidation";
 
 const DealzBuilderStep3 = ({ formData, setFormData }) => {
-  const { currentSubscription, error } = useSubscription();
-  const activePlan = "daily_dealz";
+  const [error, setError] = useState(null);
+  const { currentSubscription } = useSubscription();
+  const { slot_date, slot_time, daily_deal, weekly_deal, banner_image } =
+    formData;
+
+  const validationSchema = Yup.object().shape({
+    slot_date: validations.stringRequiredField,
+  });
 
   const handlBack = () => {
     setFormData({
@@ -27,11 +39,37 @@ const DealzBuilderStep3 = ({ formData, setFormData }) => {
     });
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    const { hasError, errors } = await validateFormData(
+      validationSchema,
+      formData
+    );
+    if (hasError) {
+      setError(errors);
+      return;
+    }
     setFormData({
       ...formData,
       step: formData.step + 1,
     });
+  };
+
+  const allowWeeklyDeal = () => {
+    if (
+      currentSubscription?.subscription &&
+      !banner_image &&
+      currentSubscription?.available_inventory?.weekly_dealz > 0
+    ) {
+      return true;
+    }
+    if (
+      banner_image &&
+      currentSubscription?.subscription &&
+      currentSubscription?.available_inventory?.weekly_banner_dealz > 0
+    ) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -48,7 +86,7 @@ const DealzBuilderStep3 = ({ formData, setFormData }) => {
             className={classNames(
               "flex items-center gap-1 cursor-pointer w-full justify-center p-2 hover:bg-white hover:text-primary rounded-[32px]",
               {
-                "bg-white text-primary": activePlan === "daily_dealz",
+                "bg-white text-primary": daily_deal === true,
               }
             )}
           >
@@ -59,7 +97,9 @@ const DealzBuilderStep3 = ({ formData, setFormData }) => {
             className={classNames(
               "flex items-center gap-1 cursor-pointer w-full justify-center p-2 hover:bg-white hover:text-primary rounded-[32px]",
               {
-                "bg-white text-primary": activePlan === "weekly_dealz",
+                "bg-white text-primary": weekly_deal === true,
+                "!cursor-not-allowed hover:text-midnight-blue hover:bg-[#F1F3F6]":
+                  !allowWeeklyDeal(),
               }
             )}
           >
@@ -69,13 +109,27 @@ const DealzBuilderStep3 = ({ formData, setFormData }) => {
             </Typography>
           </div>
         </div>
-        <CustomDatePicker
-          id="slot-date"
-          className="w-full"
-          inputClassName="!bg-light-blue !rounded-[32px]"
-          value={new Date()}
-        />
-        {currentSubscription?.subscription?.subscription_name !== "pro" && (
+        <FormFieldset className="!mb-0">
+          <CustomDatePicker
+            id="slot_date"
+            name="slot_date"
+            className="w-full"
+            inputClassName="!bg-light-blue !rounded-[32px]"
+            value={slot_date ? new Date(slot_date) : null}
+            placeholder="Select date"
+            onChange={(date) => {
+              setFormData({
+                ...formData,
+                slot_date: formatDateToYYYYMMDD(date),
+              });
+            }}
+          />
+          {error && error["slot_date"] && (
+            <FormInputValidation isError text={error["slot_date"]} />
+          )}
+        </FormFieldset>
+        {currentSubscription?.subscription?.subscription_name?.toLowerCase() !==
+          SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && (
           <Button
             icon="/icons/crown-gradient.svg"
             className="w-max text-sm font-semibold bg-[linear-gradient(104deg,rgba(65,119,244,0.08)_11.43%,rgba(249,69,177,0.08)_82.92%)] border-none rounded-3xl !p-[10px]"
@@ -85,19 +139,42 @@ const DealzBuilderStep3 = ({ formData, setFormData }) => {
             </span>
           </Button>
         )}
-        {currentSubscription?.subscription?.subscription_name === "pro" && (
+        {currentSubscription?.subscription?.subscription_name?.toLowerCase() ===
+          SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && (
           <FormFieldset className="!mb-0">
             <FormLabel className="uppercase !mb-6">Pick time of day</FormLabel>
             <div className="flex items-center gap-3">
               <Button
-                className="!bg-[#F1F3F6] text-dark-gray text-sm font-semibold"
+                className={classNames(
+                  "!bg-[#F1F3F6] text-dark-gray text-sm font-semibold",
+                  {
+                    "border-dark-gray": slot_time === DEALZ.SLOT_TIME.MORNING,
+                  }
+                )}
                 isRound
+                onClick={() =>
+                  setFormData({
+                    ...formData,
+                    slot_time: DEALZ.SLOT_TIME.MORNING,
+                  })
+                }
               >
                 Morning (10am-1pm)
               </Button>
               <Button
-                className="!bg-[#F1F3F6] text-dark-gray text-sm font-semibold"
+                className={classNames(
+                  "!bg-[#F1F3F6] text-dark-gray text-sm font-semibold",
+                  {
+                    "border-dark-gray": slot_time === DEALZ.SLOT_TIME.EVENING,
+                  }
+                )}
                 isRound
+                onClick={() =>
+                  setFormData({
+                    ...formData,
+                    slot_time: DEALZ.SLOT_TIME.EVENING,
+                  })
+                }
               >
                 Evening (5pm-10pm)
               </Button>

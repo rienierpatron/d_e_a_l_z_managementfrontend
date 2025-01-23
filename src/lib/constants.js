@@ -22,18 +22,18 @@ export const BUSINESS_LOCATION = [
   { label: "Hong Kong Island", value: "Hong Kong Island" },
   { label: "Kowloon", value: "Kowloon" },
   { label: "New Territories", value: "New Territories" },
-]
+];
 
 export const AGE_RANGE = [
-  { label: 'Below 18', value: 'Below 18' },
-  { label: '18-24', value: '18-24' },
-  { label: '25-29', value: '25-29' },
-  { label: '30-35', value: '30-35' },
-  { label: '36-40', value: '36-40' },
-  { label: '41-50', value: '41-50' },
-  { label: '51-60', value: '51-60' },
-  { label: '61-70', value: '61-70' },
-  { label: 'Above 70', value: 'Above 70' }
+  { label: "Below 18", value: "Below 18" },
+  { label: "18-24", value: "18-24" },
+  { label: "25-29", value: "25-29" },
+  { label: "30-35", value: "30-35" },
+  { label: "36-40", value: "36-40" },
+  { label: "41-50", value: "41-50" },
+  { label: "51-60", value: "51-60" },
+  { label: "61-70", value: "61-70" },
+  { label: "Above 70", value: "Above 70" },
 ];
 
 export const GENDER = [
@@ -66,15 +66,15 @@ export const DEALZ_STATUS_COLOR_MAPPING = {
 };
 
 export const USER_MANAGEMENT_STATUS = {
-  active: "Active",
-  inactive: "Inactive",
-  pending: "Pending"
+  Active: "Active",
+  Inactive: "Inactive",
+  Pending: "Pending",
 };
 
 export const USER_MANAGEMENT_STATUS_COLOR_MAPPING = {
-  active: "#4177F4",
-  inactive: "#646B75",
-  pending: "#f47418"
+  Active: "#4177F4",
+  Inactive: "#646B75",
+  Pending: "#f47418",
 };
 
 export const SUBSCRIPTIONS = {
@@ -136,4 +136,36 @@ export const SUBSCRIPTIONS = {
       availabilityNote: "*This product will be available in next month",
     },
   ],
+  SUBSCRIPTION_TYPES: {
+    Pro: "pro",
+    Starter: "starter",
+  },
+};
+
+export const DEALZ = {
+  OFFER_TYPE: {
+    Percentage: "percentage",
+    Dollar: "dollar",
+    Other: "other",
+  },
+  COUPON_CREATION_TYPE: {
+    upload: "upload",
+    automatic: "automatic",
+  },
+  COUPON_CODE_TYPE: {
+    personalized: "personalized",
+    universal: "universal",
+  },
+  SLOT_TIME: {
+    MORNING: "MORNING",
+    AFTERNOON: "AFTERNOON",
+    EVENING: "EVENING",
+  },
+};
+
+export const UPLOAD_TYPES = {
+  user_profile_image: "user_profile_image",
+  agency_logo_image: "agency_logo_image",
+  dealz_banner: "dealz_banner",
+  dealz_codes: "dealz_codes",
 };

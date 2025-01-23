@@ -15,8 +15,8 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ['lh3.googleusercontent.com', 'cdn.yourpave.com'],
+    domains: ['lh3.googleusercontent.com', 'cdn.yourpave.com', 'cdn-staging.yourpave.com'],
   },
+  reactStrictMode: false
 };
-
 export default nextConfig;

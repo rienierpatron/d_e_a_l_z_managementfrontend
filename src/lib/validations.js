@@ -1,22 +1,47 @@
 import * as Yup from "yup";
+import { DEALZ } from "./constants";
 
 export const validations = {
   stringRequiredField: Yup.string().required(
     "Required field can not be left blank"
   ),
+  stringRequiredWithMaxLength: (maxLength) =>
+    Yup.string()
+      .required("Required field can not be left blank.")
+      .max(maxLength, `Value must be at most ${maxLength} characters.`),
+  optionalLink: Yup.string()
+    .nullable()
+    .url("Please enter a valid URL")
+    .optional(),
   businessType: Yup.string().required("Business type is required"),
-  businessLocation: Yup.array()
-    .min(1, "At least one business location is required")
-    .required("Required field can not be left blank"),
   businessLocationAddress: Yup.array()
     .of(
-      Yup.string()
-        .trim()
-        .min(1, "Required field can not be left blank") // Ensures no empty strings
-        .required("Required field can not be left blank") // Ensures each address is not null or undefined
+      Yup.mixed().test(
+        "not-empty",
+        "Required field can not be left blank",
+        (item) => item && typeof item === "object"
+      )
     )
-    .min(1, "At least one business location address is required")
-    .required("Required field can not be left blank"),
+    .min(1, "At least one business location address is required") // Ensures the array has at least one object
+    .required("Required field can not be left blank"), // Ensures the array is not null or undefined
+  coupon_code_file_url: Yup.string()
+    .nullable()
+    .when("coupon_creation_type", {
+      is: (value) => value === DEALZ.COUPON_CREATION_TYPE.upload,
+      then: (schema) => schema.required("Please upload csv file."),
+      otherwise: (schema) => schema.optional(),
+    }),
+  dealzAmount: Yup.number()
+    .nullable()
+    .when("offer_type", {
+      is: (value) => value && value !== DEALZ.OFFER_TYPE.Other,
+      then: (schema) => schema.required("Required field can not be left blank"),
+      otherwise: (schema) => schema.optional(),
+    }),
+};
+
+export const regEx = {
+  numberWithDecimal: /^(\d+(\.\d*)?|\.\d*)?$/, // e.g. 123, 123.45, .45
 };
 
 /**

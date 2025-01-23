@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
 
 /**
@@ -14,14 +14,55 @@ import DealzBuilderStep2 from "@/components/DealzBuilder/step2";
 import DealzBuilderStep3 from "@/components/DealzBuilder/step3";
 import DealzBuilderStep4 from "@/components/DealzBuilder/step4";
 import DealzBuilderStep5 from "@/components/DealzBuilder/step5";
+import { DEALZ } from "@/lib/constants";
+import { api } from "@/api";
+import { getDealzFormattedData } from "./utils";
 
-const DealzBuilder = () => {
+const DealzBuilder = ({ dealzId = "", mode = "" }) => {
   const TOTAL_STEPS = 5;
   const initialState = {
     step: 1,
+    title: null,
+    initial_message: null,
+    offer_type: null,
+    amount: null,
+    banner_image: null,
+    coupon_code_file_url: null,
+    followup_message: null,
+    link: null,
+    coupon_code_type: DEALZ.COUPON_CODE_TYPE.universal,
+    slot_date: null,
+    slot_time: null,
+    valid_date_from: null,
+    valid_date_to: null,
+    daily_deal: true,
+    weekly_deal: false,
+    csv_file_name: null,
+    coupon_creation_type: null
   };
   const [formData, setFormData] = useState(initialState);
   const { step } = formData;
+
+  const fetchDealzData = async () => {
+    try {
+      const res = await api.dealz.viewDealById(dealzId);
+      if (res.status === "ok") {
+        const formattedData = getDealzFormattedData(res.data);
+        if (mode === "view") {
+          formattedData.step = 5;
+        }
+        setFormData(formattedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (dealzId) {
+      fetchDealzData();
+    }
+  }, [dealzId]);
 
   return (
     <div className="flex justify-center pt-8 pb-[38px] m-auto gap-6">
@@ -67,10 +108,15 @@ const DealzBuilder = () => {
           <DealzBuilderStep4 formData={formData} setFormData={setFormData} />
         )}
         {step === 5 && (
-          <DealzBuilderStep5 formData={formData} setFormData={setFormData} />
+          <DealzBuilderStep5
+            formData={formData}
+            setFormData={setFormData}
+            mode={mode}
+            dealzId={dealzId}
+          />
         )}
       </div>
-      <MobilePreview />
+      <MobilePreview message={formData.initial_message} />
     </div>
   );
 };

@@ -151,7 +151,8 @@ const PaginationControls = ({ table, onPageChange, onPageSizeChange }) => {
 const CommonTable = ({
   columns,
   data,
-  pageSize = 2,
+  pageSize = 10,
+  totalCount,
   order,
   orderBy,
   paginationRequired = true,
@@ -163,6 +164,7 @@ const CommonTable = ({
   onRowClick,
   tableWrapperClassName,
   tableClassName,
+  paginationServerSide
 }) => {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
@@ -173,6 +175,7 @@ const CommonTable = ({
   const table = useReactTable({
     data,
     columns,
+    pageCount: Math.ceil(totalCount / pageSize),
     state: { sorting, pagination },
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
@@ -181,6 +184,7 @@ const CommonTable = ({
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     manualSorting: sortingServerSide,
+    manualPagination: paginationServerSide
   });
 
   const handleSorting = (header) => {

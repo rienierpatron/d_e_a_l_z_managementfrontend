@@ -42,12 +42,13 @@ const ManagePreference = () => {
 
   const intitalState = {
     business_type: "",
-    business_location: [],
+    business_location: "",
     business_location_address: [""],
     audience_age_range: "",
     audience_gender: "",
     audience_location: "",
     business_goal: "",
+    all_business_location: "",
   };
 
   const [formData, setFormData] = useState(intitalState);
@@ -65,7 +66,7 @@ const ManagePreference = () => {
 
   const validationSchema = Yup.object().shape({
     business_type: validations.stringRequiredField,
-    business_location: validations.businessLocation,
+    business_location: validations.stringRequiredField,
     business_location_address: validations.businessLocationAddress,
     audience_age_range: validations.stringRequiredField,
     audience_gender: validations.stringRequiredField,
@@ -80,29 +81,29 @@ const ManagePreference = () => {
         user.agency_id,
         false
       );
-      if (res.status === "ok") {
+      if (res.status === "ok" && res?.data?.agency_preference) {
         setIsLoading(false);
         const agency_preference = res.data.agency_preference;
+        const business_location =
+          agency_preference?.agency_biz_locations?.[0] || null;
         setFormData({
           business_type: agency_preference.business_type,
           audience_age_range: agency_preference.audience_age_range,
           audience_gender: agency_preference.audience_gender,
           audience_location: agency_preference.audience_location,
-          business_location: agency_preference.agency_biz_locations.map(
-            (ele) => {
-              return {
-                label: ele.location,
-                value: ele.location,
-              };
-            }
-          ),
-          business_location_address,
+          business_location: business_location?.location,
+          business_location_address: business_location
+            ? business_location.biz_location_addresses
+            : [""],
           business_goal: agency_preference.business_goal,
+          all_business_location: agency_preference?.agency_biz_locations,
         });
       }
     } catch (error) {
       setIsLoading(false);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -119,10 +120,23 @@ const ManagePreference = () => {
     });
   };
 
-  const onChangeLocation = (value, index) => {
+  const onChangeBusinessLocation = (value) => {
+    const allBusinessLocation = formData.all_business_location || [];
+    const bizLocationAddresses = allBusinessLocation.find(
+      (ele) => ele.location === value
+    );
+    setFormData({
+      ...formData,
+      business_location: value,
+      business_location_address:
+        bizLocationAddresses?.biz_location_addresses || [""],
+    });
+  };
+
+  const onChangeLocation = (option, index) => {
     setFormData((prevFormData) => {
       const updatedAddresses = [...prevFormData.business_location_address];
-      updatedAddresses[index] = value;
+      updatedAddresses[index] = { label: option.label, value: option.value };
       return { ...prevFormData, business_location_address: updatedAddresses };
     });
   };
@@ -137,25 +151,26 @@ const ManagePreference = () => {
       );
       if (hasError) {
         setError(errors);
+        setIsLoading(false);
         return;
       } else {
         const _formData = {
           ...formData,
           agency_id: user.agency_id,
         };
-        _formData.business_location = formData.business_location.map(
-          (location) => location.value
-        );
         const res = await saveAgencyPreference(_formData);
         if (res && helper.cmpStr(res.status, "ok")) {
           setError(null);
+          setShowDialog(false);
           setIsLoading(false);
         } else {
           setError(false);
+          setIsLoading(false);
         }
       }
     } catch (error) {
       setError(false);
+      setIsLoading(false);
       console.error("Error calidate user info:", error);
     }
   };
@@ -234,27 +249,20 @@ const ManagePreference = () => {
           <FormFieldset className="mb-[32px]">
             <FormLabel className="uppercase w-full">
               <div className="flex items-center justify-between w-full">
-                <span>
-                  Business Location{" "}
-                  {business_location?.length > 0
-                    ? `(${business_location.length})`
-                    : ""}
-                </span>
-                {/* <IconAdd className="cursor-pointer" /> */}
+                <span>Business Location</span>
               </div>
             </FormLabel>
             <FormSelect
               id="business_location"
               name="business_location"
-              value={business_location}
+              value={BUSINESS_LOCATION.find(
+                (ele) => ele.value === business_location
+              )}
               options={BUSINESS_LOCATION}
               rounded
-              isMulti
               icon={<IconBuilding />}
               placeholder="Select business location"
-              onChange={(option) =>
-                setFormData({ ...formData, business_location: option })
-              }
+              onChange={(option) => onChangeBusinessLocation(option?.value)}
               onKeyDown={handleKeyDown}
               isError={error && error["business_location"]}
             />
@@ -281,15 +289,11 @@ const ManagePreference = () => {
                         id={`business_location_address[${i}]`}
                         name={`business_location_address[${i}]`}
                         loadOptions={(label) => loadLocationAddress(label)}
-                        value={BUSINESS_TYPE_OPTIONS.find(
-                          (ele) => ele.value === location
-                        )}
+                        value={location}
                         rounded
                         icon={<IconLocation />}
                         placeholder="Select location address"
-                        onChange={(option) =>
-                          onChangeLocation(option?.value, i)
-                        }
+                        onChange={(option) => onChangeLocation(option, i)}
                         onKeyDown={handleKeyDown}
                         className="mb-2"
                         isError={

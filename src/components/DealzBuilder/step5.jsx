@@ -1,7 +1,9 @@
 /**
  * External dependencies
  */
+import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 /**
  * Internal dependencies
@@ -14,20 +16,74 @@ import IconCoupon from "@/components/Icons/IconCoupon";
 import IconDollar from "@/components/Icons/IconDollar";
 import IconSave from "@/components/Icons/IconSave";
 import IconClipboardClick from "@/components/Icons/IconClipboardClick";
+import { DEALZ, SUBSCRIPTIONS } from "@/lib/constants";
+import IconPercentage from "@/components/Icons/IconPercentage";
+import { previewDealzDateRange } from "@/lib/date";
+import { previewFileName } from "@/lib/utils";
+import { api } from "@/api";
+import { useSubscription } from "../Subscriptions/GetSubscriptionDetails";
 
-const DealzBuilderStep5 = ({ formData, setFormData }) => {
+const DealzBuilderStep5 = ({ formData, setFormData, mode, dealzId = "" }) => {
+  const {
+    title,
+    initial_message,
+    offer_type,
+    amount,
+    valid_date_from,
+    valid_date_to,
+    link,
+    followup_message,
+    csv_file_name,
+    coupon_code_file_url,
+  } = formData;
+  const isViewMode = mode === "view";
+
+  const [isLoading, setIsLoading] = useState(null);
+  const { currentSubscription } = useSubscription();
+  const router = useRouter();
+
   const handlBack = () => {
+    if (isViewMode) {
+      router.push("/calendar");
+      return;
+    }
     setFormData({
       ...formData,
       step: formData.step - 1,
     });
   };
 
-  const handleNext = () => {
-    setFormData({
+  const handleSubmit = async (status) => {
+    setIsLoading(status);
+    const payload = {
       ...formData,
-      step: formData.step + 1,
-    });
+      status: status,
+      amount: formData.amount ? Number(formData.amount) : 0,
+      link: formData.link ? formData.link : null,
+    };
+    delete payload.csv_file_name;
+    if (
+      currentSubscription?.subscription?.subscription_name.toLowerCase() !==
+      SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro
+    ) {
+      delete payload.slot_time;
+    }
+    try {
+      let res;
+      if (dealzId) {
+        res = await api.dealz.editDeal(dealzId, payload);
+      } else {
+        res = await api.dealz.createDeal(payload);
+      }
+      if (res.status === "ok") {
+        setIsLoading(null);
+        return router.push("/calendar");
+      }
+      setIsLoading(null);
+    } catch (error) {
+      setIsLoading(null);
+      console.log("Error in upload file", error);
+    }
   };
 
   return (
@@ -53,20 +109,24 @@ const DealzBuilderStep5 = ({ formData, setFormData }) => {
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-4">
             <Typography variant="heading" className="!font-medium">
-              Holiday Specials
+              {title}
             </Typography>
             <Typography variant="small" className="text-dark-gray">
               Your Next Favorite Deal Awaits
             </Typography>
           </div>
-          <div className="flex flex-col gap-[6px] items-center w-max">
-            <div className="p-2 bg-white w-max rounded-lg">
-              <Image src="/icons/csv-preview.svg" width={30} height={30} />
+          {coupon_code_file_url && (
+            <div className="flex flex-col gap-[6px] items-center w-max">
+              <div className="p-2 bg-white w-max rounded-lg">
+                <Image src="/icons/csv-preview.svg" width={30} height={30} />
+              </div>
+              {csv_file_name && (
+                <Typography variant="small" className="text-dark-gray">
+                  {previewFileName(csv_file_name)}
+                </Typography>
+              )}
             </div>
-            <Typography variant="small" className="text-dark-gray">
-              Coupon.csv
-            </Typography>
-          </div>
+          )}
         </div>
         <div className="h-[1px] border border-dashed border-#[D0C4D0] my-4"></div>
         <div className="flex flex-col gap-6">
@@ -81,46 +141,59 @@ const DealzBuilderStep5 = ({ formData, setFormData }) => {
               Unique codes
             </Typography>
           </div>
-          <div className="flex justify-between items-center">
-            <div className="flex gap-[6px]">
-              <IconDollar />
-              <Typography variant="caption" className="uppercase">
-                Discount
+          {offer_type !== DEALZ.OFFER_TYPE.Other && (
+            <div className="flex justify-between items-center">
+              <div className="flex gap-[6px]">
+                {offer_type === DEALZ.OFFER_TYPE.Percentage ? (
+                  <IconPercentage />
+                ) : (
+                  <IconDollar />
+                )}
+                <Typography variant="caption" className="uppercase">
+                  {offer_type === DEALZ.OFFER_TYPE.Percentage
+                    ? "Discount"
+                    : "Dollar"}
+                </Typography>
+              </div>
+              <Typography className="!font-medium" variant="body">
+                {offer_type === DEALZ.OFFER_TYPE.Percentage
+                  ? `${amount}%`
+                  : `$${amount}`}
               </Typography>
             </div>
-            <Typography className="!font-medium" variant="body">
-              $25
-            </Typography>
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="flex gap-[6px]">
-              <Image src="/icons/global.svg" width={20} height={20} />
-              <Typography variant="caption" className="uppercase">
-                website or booking link
+          )}
+          {link && (
+            <div className="flex justify-between items-center">
+              <div className="flex gap-[6px]">
+                <Image src="/icons/global.svg" width={20} height={20} />
+                <Typography variant="caption" className="uppercase">
+                  website or booking link
+                </Typography>
+              </div>
+              <Typography className="!font-medium" variant="body">
+                {link}
               </Typography>
             </div>
-            <Typography className="!font-medium" variant="body">
-              www.xyz.com
-            </Typography>
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="flex gap-[6px]">
-              <Image src="/icons/global.svg" width={20} height={20} />
-              <Typography variant="caption" className="uppercase">
-                schedule
+          )}
+          {valid_date_from && valid_date_to && (
+            <div className="flex justify-between items-center">
+              <div className="flex gap-[6px]">
+                <Image src="/icons/global.svg" width={20} height={20} />
+                <Typography variant="caption" className="uppercase">
+                  schedule
+                </Typography>
+              </div>
+              <Typography className="!font-medium" variant="body">
+                {previewDealzDateRange(valid_date_from, valid_date_to)}
               </Typography>
             </div>
-            <Typography className="!font-medium" variant="body">
-              25-29 Dec, 2024
-            </Typography>
-          </div>
+          )}
           <div className="bg-white rounded-2xl p-6">
             <Typography variant="caption" className="text-xs uppercase mb-4">
               wording for their deal
             </Typography>
             <Typography variant="caption" className="text-midnight-blue">
-              Enjoy $25 off on your next purchase. Treat yourself to the best
-              deals and make your experience even more rewarding.
+              {initial_message}
             </Typography>
           </div>
           <div className="bg-white rounded-2xl p-6">
@@ -128,31 +201,39 @@ const DealzBuilderStep5 = ({ formData, setFormData }) => {
               wording for the follow up message
             </Typography>
             <Typography variant="caption" className="text-midnight-blue">
-              Enjoy [X]% off on your next purchase.
+              {followup_message}
             </Typography>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mt-5">
-        <Button
-          icon={<IconSave />}
-          variant="primary"
-          isRound
-          outlined
-          className="w-full shadow-custom-primary font-bold"
-        >
-          Save as Draft
-        </Button>
-        <Button
-          icon={<IconClipboardClick />}
-          variant="primary"
-          isRound
-          className="w-full shadow-custom-primary font-bold"
-        >
-          Submit for Review
-        </Button>
-      </div>
+      {!isViewMode && (
+        <div className="flex items-center gap-4 mt-5">
+          <Button
+            icon={<IconSave />}
+            variant="primary"
+            isRound
+            outlined
+            className="w-full shadow-custom-primary font-bold"
+            onClick={() => handleSubmit("draft")}
+            isLoading={isLoading === "draft"}
+            disabled={!!isLoading}
+          >
+            Save as Draft
+          </Button>
+          <Button
+            icon={<IconClipboardClick />}
+            variant="primary"
+            isRound
+            className="w-full shadow-custom-primary font-bold"
+            onClick={() => handleSubmit("pending")}
+            isLoading={isLoading === "pending"}
+            disabled={!!isLoading}
+          >
+            Submit for Review
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

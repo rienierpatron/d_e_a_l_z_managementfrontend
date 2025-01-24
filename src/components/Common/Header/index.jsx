@@ -11,10 +11,12 @@ import Typography from "@/components/Common/Typography";
 import { ROUTES_HEADING_MAPPER } from "@/lib/routes";
 import IconStar from "@/components/Icons/IconStar";
 import ManagePreference from "@/components/ManagePreference";
+import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
 
 const Header = () => {
   const router = useRouter();
   const { pathname } = router;
+  const { currentSubscription } = useSubscription();
 
   return (
     <header className="bg-background-blue py-6 px-10 flex items-center justify-between">
@@ -22,13 +24,15 @@ const Header = () => {
         <Typography variant="title">
           {ROUTES_HEADING_MAPPER[pathname]}
         </Typography>
-        <Button
-          className="border-none uppercase bg-gradient-primary text-base font-bold text-white shadow-custom-purple"
-          isRound
-          icon={<IconStar />}
-        >
-          starter
-        </Button>
+        {currentSubscription?.subscription?.subscription_name && (
+          <Button
+            className="border-none uppercase bg-gradient-primary text-base font-bold text-white shadow-custom-purple"
+            isRound
+            icon={<IconStar />}
+          >
+            {currentSubscription.subscription.subscription_name}
+          </Button>
+        )}
       </div>
       <div className="flex gap-4 items-center">
         <ManagePreference />

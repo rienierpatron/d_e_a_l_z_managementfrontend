@@ -28,7 +28,7 @@ import { api } from "@/api";
 import FormInput from "../Common/FormInput";
 import IconCoupon from "../Icons/IconCoupon";
 
-const DealzBuilderStep1 = ({ formData, setFormData }) => {
+const DealzBuilderStep1 = ({ formData, setFormData, dealzId }) => {
   const { initial_message, offer_type, coupon_creation_type, code } = formData;
   const [error, setError] = useState(null);
   const { currentSubscription } = useSubscription();
@@ -38,6 +38,7 @@ const DealzBuilderStep1 = ({ formData, setFormData }) => {
     offer_type: validations.stringRequiredField,
     coupon_creation_type: validations.stringRequiredField,
     coupon_code_file_url: validations.coupon_code_file_url,
+    code: validations.code,
   });
 
   const createCouponCode = async () => {
@@ -233,7 +234,11 @@ const DealzBuilderStep1 = ({ formData, setFormData }) => {
         </FormFieldset>
         {coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.upload && (
           <FormFieldset className="flex flex-col justify-end gap-2">
-            <UploadDealzCodes formData={formData} setFormData={setFormData} />
+            <UploadDealzCodes
+              formData={formData}
+              setFormData={setFormData}
+              dealzId={dealzId}
+            />
             {error && error["coupon_code_file_url"] && (
               <FormInputValidation
                 isError

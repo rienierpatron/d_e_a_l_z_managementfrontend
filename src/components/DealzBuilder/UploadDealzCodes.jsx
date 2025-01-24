@@ -13,17 +13,23 @@ import Button from "@/components/Common/Button";
 import Typography from "@/components/Common/Typography";
 import { previewFileName } from "@/lib/utils";
 
-const UploadDealzCodes = ({ formData, setFormData }) => {
+const UploadDealzCodes = ({ formData, setFormData, dealzId = "" }) => {
   const { coupon_code_file_url, csv_file_name } = formData;
   const [uplodingDealzCodes, setUplodingDealzCodes] = useState(false);
 
   const onUploadFile = async (file, uploadType) => {
     try {
       setUplodingDealzCodes(true);
-      const res = await api.file.uploadFile(uploadType, file, {
+      let params = {
         couponCreationType: DEALZ.COUPON_CREATION_TYPE.upload,
         couponCodeType: DEALZ.COUPON_CODE_TYPE.universal,
-      });
+      };
+      if (dealzId) {
+        params = {
+          dealzId,
+        };
+      }
+      const res = await api.file.uploadFile(uploadType, file, params);
       if (res.status === "ok") {
         setUplodingDealzCodes(false);
         setFormData({

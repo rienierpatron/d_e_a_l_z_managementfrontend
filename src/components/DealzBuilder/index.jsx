@@ -97,7 +97,11 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
           </Typography>
         </div>
         {step === 1 && (
-          <DealzBuilderStep1 formData={formData} setFormData={setFormData} />
+          <DealzBuilderStep1
+            formData={formData}
+            setFormData={setFormData}
+            dealzId={dealzId}
+          />
         )}
         {step === 2 && (
           <DealzBuilderStep2 formData={formData} setFormData={setFormData} />

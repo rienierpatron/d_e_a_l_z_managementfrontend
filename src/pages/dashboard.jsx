@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 /**
  * Internal dependencies
@@ -11,9 +11,26 @@ import RemainingDealz from "@/components/DashboardInsights/RemainingDealz";
 import IconPeople from "@/components/Icons/IconPeople";
 import DealzList from "@/components/DealzList";
 import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
+import { api } from "@/api";
 
 const Dashboard = () => {
   const { currentSubscription } = useSubscription();
+  const [reachCount, setReachCount] = useState(0)
+
+  const getReachCount = async () => {
+    try {
+      const res = await api.dealz.getReachCount(false);
+      if (res.status === "ok") {
+        setReachCount(res.data?.reach_count ?? 0)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getReachCount()
+  }, []);
 
   return (
     <div className="px-10 py-8 h-full">
@@ -22,7 +39,7 @@ const Dashboard = () => {
           icon={<IconPeople className="text-secondary" />}
           iconClassName="bg-secondary-60"
           metricName="Your dealz reach"
-          metricCount="24,965"
+          metricCount={reachCount}
           metricUnit="Users"
         />
         <RemainingDealz

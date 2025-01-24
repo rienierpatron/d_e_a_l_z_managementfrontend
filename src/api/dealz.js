@@ -175,16 +175,12 @@ export async function deleteDeal(dealzId, showMessage = true) {
 }
 
 /**
- * Create a coupon
- * @param {number} length - The length of the coupon
+ * Create a coupon code
+ * @param {number} length - The length of the coupon code
  * @param {boolean} [showMessage=true] - Whether to show a success or error message
  * @returns {Promise<{data: object, status: string}>}
  */
 export async function createCouponCode(length = 10, showMessage = false) {
-  if (!length) {
-    throw new Error("Invalid length provided.");
-  }
-
   try {
     const response = await Axios({
       url: `${config.apiUrl}/dealz/coupon/${length}`,
@@ -199,6 +195,29 @@ export async function createCouponCode(length = 10, showMessage = false) {
     return helper.api.handleApiResponse(response, showMessage);
   } catch (error) {
     console.error("Error creating coupon:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get reach count for agency
+ * @param {boolean} [showMessage=true] - Whether to show a success or error message
+ * @returns {Promise<{data: object, status: string}>}
+ */
+export async function getReachCount(showMessage = true) {
+  try {
+    const response = await Axios({
+      url: `${config.apiUrl}/dealz/reach_count`,
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      DONT_SHOW_ERROR: showMessage,
+    });
+    return helper.api.handleApiResponse(response, showMessage);
+  } catch (error) {
+    console.error("Error fetching reach count:", error);
     throw error;
   }
 }

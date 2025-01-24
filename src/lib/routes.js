@@ -40,6 +40,8 @@ export const ROUTES_HEADING_MAPPER = {
   "/signup": "Sign Up",
   "/dashboard": "Dashboard",
   "/dealz/create": "Create DEALZ",
+  "/dealz/edit/[id]": "Edit DEALZ",
+  "/dealz/view/[id]": "DEALZ Details",
   "/calendar": "Calendar",
   "/subscriptions": "Subscriptions",
   "/admin/dashboard": "Dashboard",

@@ -31,7 +31,11 @@ export async function uploadFile(
   if (couponCreationType) params.append("coupon_creation_type", couponCreationType);
   if (couponCodeType) params.append("coupon_code_type", couponCodeType);
 
-  const url = `${config.apiUrl}/upload/${uploadType}?${params.toString()}`;
+  let url = `${config.apiUrl}/upload/${uploadType}`;
+
+  if (params.toString()?.length) {
+    url = url + `?${params.toString()}`
+  }
 
   const formData = new FormData();
   formData.append("file", file);

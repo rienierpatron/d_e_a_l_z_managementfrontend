@@ -180,7 +180,7 @@ export async function deleteDeal(dealzId, showMessage = true) {
  * @param {boolean} [showMessage=true] - Whether to show a success or error message
  * @returns {Promise<{data: object, status: string}>}
  */
-export async function createCoupon(length = 10, showMessage = false) {
+export async function createCouponCode(length = 10, showMessage = false) {
   if (!length) {
     throw new Error("Invalid length provided.");
   }

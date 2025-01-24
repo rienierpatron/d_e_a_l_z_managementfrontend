@@ -9,7 +9,7 @@ import Image from "next/image";
 import Typography from "@/components/Common/Typography";
 import IconAdd from "@/components/Icons/IconAdd";
 
-const MobilePreview = ({ message = "" }) => {
+const MobilePreview = ({ message = "", image = "" }) => {
   return (
     <div className="w-[320px] relative h-[830px]">
       <img
@@ -40,8 +40,11 @@ const MobilePreview = ({ message = "" }) => {
             "linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/images/wa-white.jpeg')",
         }}
       >
-        {message && (
-          <div className="bg-white rounded-[10px] p-[10px]">{message}</div>
+        {(message || image) && (
+          <div className="bg-white rounded-[10px] p-[10px]">
+            {image && <img src={image} className="mb-2" />}
+            {message && <span>{message}</span>}
+          </div>
         )}
       </div>
 

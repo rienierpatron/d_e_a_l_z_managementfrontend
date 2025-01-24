@@ -39,7 +39,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
     weekly_deal: false,
     csv_file_name: null,
     coupon_creation_type: null,
-    code: null
+    code: null,
   };
   const [formData, setFormData] = useState(initialState);
   const { step } = formData;
@@ -117,7 +117,10 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
           />
         )}
       </div>
-      <MobilePreview message={formData.initial_message} />
+      <MobilePreview
+        message={formData.initial_message}
+        image={formData?.banner_image}
+      />
     </div>
   );
 };

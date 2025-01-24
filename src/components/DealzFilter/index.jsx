@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 /**
@@ -31,11 +31,40 @@ const DealzFilter = ({ fields, onApply, className }) => {
     onApply({});
   };
 
+  const handleFilterApply = () => {
+    setIsFilterApplied(true);
+    onApply(filterState);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const activeElement =
+        typeof window !== "undefined" && document.activeElement;
+
+      // Check if the active element is one of the filter fields
+      const isFocusedField = fields.some(
+        (field) =>
+          activeElement.id === field.id || activeElement.name === field.id
+      );
+
+      if (event.key === "Enter" && isFocusedField) {
+        handleFilterApply();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [filterState, fields]);
+
   const renderField = (field) => {
     switch (field.type) {
       case "input":
         return (
           <FormInput
+            id={field.id}
             key={`${field.id}-${key}`}
             placeholder={field.placeholder || ""}
             rounded
@@ -95,8 +124,7 @@ const DealzFilter = ({ fields, onApply, className }) => {
         className="!px-6 !py-3"
         disabled={!helper.notEmpty(filterState)}
         onClick={() => {
-          onApply(filterState);
-          setIsFilterApplied(true);
+          handleFilterApply();
         }}
       >
         Apply

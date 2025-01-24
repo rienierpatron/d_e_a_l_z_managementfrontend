@@ -25,6 +25,8 @@ import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
 import { helper } from "@/helpers";
 import { api } from "@/api";
+import FormInput from "../Common/FormInput";
+import IconCoupon from "../Icons/IconCoupon";
 
 const DealzBuilderStep1 = ({ formData, setFormData }) => {
   const { initial_message, offer_type, coupon_creation_type, code } = formData;
@@ -37,6 +39,20 @@ const DealzBuilderStep1 = ({ formData, setFormData }) => {
     coupon_creation_type: validations.stringRequiredField,
     coupon_code_file_url: validations.coupon_code_file_url,
   });
+
+  const createCouponCode = async () => {
+    try {
+      const res = await api.dealz.createCouponCode();
+      if (res.status === "ok") {
+        setFormData({
+          ...formData,
+          code: res.data.code,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleChange = (name, value) => {
     setFormData({
@@ -215,14 +231,47 @@ const DealzBuilderStep1 = ({ formData, setFormData }) => {
             <FormInputValidation isError text={error["coupon_creation_type"]} />
           )}
         </FormFieldset>
-        <FormFieldset className="flex flex-col justify-end gap-2">
-          {coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.upload && (
+        {coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.upload && (
+          <FormFieldset className="flex flex-col justify-end gap-2">
             <UploadDealzCodes formData={formData} setFormData={setFormData} />
-          )}
-          {error && error["coupon_code_file_url"] && (
-            <FormInputValidation isError text={error["coupon_code_file_url"]} />
-          )}
-        </FormFieldset>
+            {error && error["coupon_code_file_url"] && (
+              <FormInputValidation
+                isError
+                text={error["coupon_code_file_url"]}
+              />
+            )}
+          </FormFieldset>
+        )}
+        {coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.automatic && (
+          <div className="flex items-center">
+            <FormFieldset className="mb-0">
+              <FormLabel className="uppercase">Coupon code</FormLabel>
+              <FormInput
+                className="bg-light-blue"
+                icon={<IconCoupon />}
+                placeholder="Coupon Code"
+                fullWidth
+                rounded
+                name="code"
+                id="code"
+                value={code}
+                onChange={(e) => handleChange("code", e.target.value)}
+                isError={error && error["code"]}
+              />
+              {error && error["code"] && (
+                <FormInputValidation isError text={error["code"]} />
+              )}
+            </FormFieldset>
+            <Button
+              borderless
+              outlined
+              className="text-secondary underline"
+              onClick={() => createCouponCode()}
+            >
+              Generete coupon code
+            </Button>
+          </div>
+        )}
       </div>
       <Button
         className="uppercase shadow-custom-primary"

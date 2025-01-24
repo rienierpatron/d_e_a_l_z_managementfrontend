@@ -54,38 +54,25 @@ const DealzBuilderStep5 = ({ formData, setFormData, mode, dealzId = "" }) => {
     });
   };
 
-  console.log(formData);
-
-  const createDealzCoupon = async () => {
-    try {
-      let res;
-      res = await api.dealz.createCoupon();
-      if (res.status === "ok") {
-        return res.data.code
-      }
-    } catch (error) {
-      console.log("Error in upload file", error);
-    }
-  };
-
   const handleSubmit = async (status) => {
     setIsLoading(status);
-    let code;
-    if (coupon_creation_type && coupon_creation_type === "automatic") {
-      code = await createDealzCoupon();
-    } else {
-      code = formData.coupon_code_file_url;
-    }
     const payload = {
       ...formData,
       status: status,
-      amount: formData.amount ? Number(formData.amount) : 0,
+      amount:
+        !formData.amount || formData.offer_type === DEALZ.OFFER_TYPE.Other
+          ? 0
+          : Number(formData.amount),
       link: formData.link ? formData.link : null,
       banner_image: formData.banner_image ? formData.banner_image : null,
-      code,
+      code:
+        coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.upload
+          ? formData.coupon_code_file_url
+          : formData.code,
     };
     delete payload.csv_file_name;
     delete payload.coupon_code_file_url;
+    delete payload.step;
     if (
       currentSubscription?.subscription?.subscription_name.toLowerCase() !==
       SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro

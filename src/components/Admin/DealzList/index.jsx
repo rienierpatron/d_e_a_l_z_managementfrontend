@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 /**
  * Internal dependencies
  */
+import { api } from "@/api";
 import { helper } from "@/helpers";
 import CommonTable from "@/components/Common/CommonTable";
 import DealzStatusRenderer from "@/components/DealzStatusRenderer";
@@ -23,9 +24,21 @@ import IconVerticalDots from "@/components/Icons/IconVerticalDots";
 import Button from "@/components/Common/Button";
 import BackNavigation from "@/components/Common/BackNavigation";
 
-export default function Calendar({title, backNav}) {
+export default function DealzList({
+  title, 
+  backNav, 
+  showFilter = false,
+  showNavigation = false}) {
   const [allRecords, setAllRecords] = useState([]);
+  const [dealzList, setDealzList] = useState([]);
+  const [totalRecords, setTotalRecords] = useState(10);
   const [showPopover, setShowPopover] = useState(false);
+  const intialPaginationStatus = {
+    currentPage: 1,
+    pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
+    pageIndex: 0,
+  };
+  const [pagination, setPagination] = useState(intialPaginationStatus);
 
   const menuItems = [
     {
@@ -46,31 +59,35 @@ export default function Calendar({title, backNav}) {
   ];
 
   // Fetch agency users list
-  const getAllDealzRecords = async () => {
+  const getAllDealzRecords = async (filters = {}) => {
     try {
-      const showMessage = false;
-      const response = await getAllSuperAdminDealzRecords(showMessage);
-      if (response && helper.cmpStr(response.status, "ok")) {
-        const agencyAllRecords = response.data.dealz.map(recordItem => ({
-          ...recordItem,
-          agency_name: recordItem.agency_user?.agency?.agency_name
-        }));
-        console.log("agencyAllRecords", agencyAllRecords)
-        setAllRecords(agencyAllRecords);
+      const params = {
+        offset: (pagination.currentPage - 1) * pagination.pageSize,
+        limit: pagination.pageSize,
+      };
+      // Add filters to params if their values are not empty or undefined
+      for (const key in filters) {
+        if (filters[key]) {
+          params[key] = filters[key];
+        }
+      }
+      const res = await api.dealz.getAllSuperAdminDealzRecords(params, false);
+      if (res.status === "ok") {
+        console.log(res?.data?.dealz[0].agency_user);
+        setDealzList(res?.data?.dealz);
+        setTotalRecords(res?.data?.totalOverallResult);
       }
     } catch (error) {
-      return helper.general.alert("error", {
-        message: "Something went wrong.",
-      });
+      console.log("Error in upload file", error);
     }
   };
 
   // Fetch users when component mounts
   useEffect(() => {
     getAllDealzRecords();
-  }, []);
+  }, [pagination]);
   
-  const data = React.useMemo (() => allRecords);
+  // const data = React.useMemo (() => allRecords);
 
   const columns = React.useMemo(
     () => [
@@ -80,7 +97,7 @@ export default function Calendar({title, backNav}) {
       },
       {
         header: "Agency",
-        accessorKey: "agency_name",
+        accessorKey: "agency_user.agency.agency_name",
       },
       {
         header: "SLOT DATE",
@@ -99,6 +116,9 @@ export default function Calendar({title, backNav}) {
       {
         header: "CREATED BY",
         accessorKey: "created_by",
+        Cell: ({ row: { original } }) => {
+          return original.agency_user.user.first_name + ' ' + original.agency_user.user.last_name;
+        }
       },
       {
         header: "STATUS",
@@ -139,8 +159,23 @@ export default function Calendar({title, backNav}) {
     [showPopover]
   );
 
-  const handleApply = (filterState) => {
-    console.log("Filter applied:", filterState);
+  const handleApply = async (filterState) => {
+    // setPagination(intialPaginationStatus);
+    const filters = {
+      title: filterState?.title ?? "",
+      status: filterState?.status?.value ?? "",
+      valid_date_from: filterState?.start_date
+        ? formatDateToYYYYMMDD(filterState.start_date)
+        : "",
+      valid_date_to: filterState?.end_date
+        ? formatDateToYYYYMMDD(filterState.end_date)
+        : "",
+      created_by: filterState?.created_by,
+      slot_date: filterState?.slot_date
+        ? formatDateToYYYYMMDD(filterState.slot_date)
+        : "",
+    };
+    await fetchDealRecords(filters);
   };
 
   const filterFields = [
@@ -200,28 +235,41 @@ export default function Calendar({title, backNav}) {
   ];
 
   return (
-    <div className="w-full py-8">
-      <div className="rounded-tl-2xl rounded-tr-2xl border border-light-blue p-6 flex flex-col gap-6">
-      {backNav ? (
-        <BackNavigation
-          text={title}
-          baseClassName="!mb-0 w-max"
-          className="text-2xl font-semibold"
-        />
-      ) : (
-        <div className="flex items-center gap-2">
-          <Typography variant="subtitle">Recent DEALZ</Typography>
+    <>
+      <div className="w-full py-8">
+        <div className="rounded-tl-2xl rounded-tr-2xl border border-light-blue p-6 flex flex-col gap-6">
+        {backNav ? (
+          <BackNavigation
+            text={title}
+            baseClassName="!mb-0 w-max"
+            className="text-2xl font-semibold"
+          />
+        ) : (
+          <div className="flex items-center gap-2">
+            <Typography variant="subtitle">Recent DEALZ</Typography>
+          </div>
+        )}
+          <DealzFilter fields={filterFields} onApply={handleApply} />
         </div>
-      )}
-        <DealzFilter fields={filterFields} onApply={handleApply} />
+        <CommonTable 
+          columns={columns}
+          data={dealzList?.length ? dealzList : []}
+          totalCount={totalRecords}
+          pageSize={pagination.pageSize}
+          paginationRequired={showFilter}
+          sortingServerSide={true}
+          paginationServerSide={true}
+          currentPage={pagination.currentPage - 1}
+          onPageChange={(newPage) =>
+            setPagination({ ...pagination, currentPage: newPage })
+          }
+          onPageSizeChange={(pageSize) => {
+            setPagination({ ...pagination, pageSize, currentPage: 1 });
+          }}
+          onSortChange={(orderBy, order) => {}}
+        />
       </div>
-      <CommonTable
-        columns={columns}
-        data={data}
-        pageSize={PAGINATION.DEFAULT_PAGE_SIZE}
-        paginationRequired={true}
-        sortingServerSide={true}
-      />
-    </div>
+
+    </>
   );
 }

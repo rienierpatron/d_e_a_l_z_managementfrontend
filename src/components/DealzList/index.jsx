@@ -41,11 +41,11 @@ export default function DealzList({
     pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
   };
   const [pagination, setPagination] = useState(intialPaginationStatus);
-  const [filters, setFilters] = useState({}); // New state for filters
+  const [filters, setFilters] = useState({});
   const [sorting, setSorting] = useState({
-    orderColumn: '',
-    orderDirection: ''
-  })
+    orderColumn: "",
+    orderDirection: "",
+  });
 
   const menuItems = [
     {
@@ -75,15 +75,15 @@ export default function DealzList({
         header: "SLOT",
         accessorKey: "slot_date",
         Cell: ({ row: { original } }) => {
-          return original?.slot_date_time
-        }
+          return original?.slot_date_time;
+        },
       },
       {
         header: "VALIDITY",
         accessorKey: "valid_date_from",
         Cell: ({ row: { original } }) => {
-          return original?.validity_date
-        }
+          return original?.validity_date;
+        },
       },
       {
         header: "WEBSITE OR BOOKING LINK",
@@ -220,9 +220,9 @@ export default function DealzList({
 
   useEffect(() => {
     fetchDealRecords();
-  }, [pagination, filters,sorting]); // Trigger API call when pagination or filters change
+  }, [pagination, filters, sorting]);
 
-  const handleApply = (filterState) => {
+  const handleApply = (filterState = {}) => {
     const appliedFilters = {
       title: filterState?.title ?? "",
       status: filterState?.status?.value ?? "",
@@ -279,6 +279,14 @@ export default function DealzList({
             fields={filterFields}
             onApply={handleApply}
             className="flex-wrap"
+            onClearFilter={() => {
+              setPagination({
+                ...pagination,
+                currentPage: 1,
+                pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
+              });
+              setFilters({})
+            }}
           />
         )}
       </div>

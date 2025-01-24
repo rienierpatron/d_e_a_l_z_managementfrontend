@@ -15,7 +15,7 @@ import IconArrowRight from "@/components/Icons/IconArrowRight";
 import IconCloseCircle from "../Icons/IconCloseCircle";
 import { helper } from "@/helpers";
 
-const DealzFilter = ({ fields, onApply, className }) => {
+const DealzFilter = ({ fields, onApply, className, onClearFilter }) => {
   const [filterState, setFilterState] = useState({});
   const [isFilterApplied, setIsFilterApplied] = useState(false);
   const [key, setKey] = useState(0);
@@ -28,7 +28,9 @@ const DealzFilter = ({ fields, onApply, className }) => {
     setFilterState({});
     setIsFilterApplied(false);
     setKey((prevKey) => prevKey + 1);
-    onApply({});
+    if (onClearFilter && typeof onClearFilter === "function") {
+      onClearFilter();
+    }
   };
 
   const handleFilterApply = () => {

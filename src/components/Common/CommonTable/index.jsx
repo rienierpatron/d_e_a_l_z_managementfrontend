@@ -175,13 +175,14 @@ const CommonTable = ({
 
   // To Reset Page
   useEffect(() => {
-    if (currentPage) {
+    if (currentPage && pageSize) {
       setPagination({
         ...pagination,
         pageIndex: currentPage - 1,
+        pageSize
       });
     }
-  }, [currentPage]);
+  }, [currentPage, pageSize]);
 
   const table = useReactTable({
     data,

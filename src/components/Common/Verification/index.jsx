@@ -1,5 +1,3 @@
-// components/EmailVerification.js
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '@/api';
@@ -30,13 +28,16 @@ const EmailVerification = ({ verifyApiMethod, successMessage }) => {
     try {
       // Making the API call using the provided `verifyApiMethod`
       const response = await api.auth[verifyApiMethod](data, false);
-
       if (response && helper.cmpStr(response.status, 'ok')) {
         setMessage(successMessage);
         const accessToken = response.data.access_token;
         if (accessToken) {
           helper.cookie.setAccessToken(accessToken);
-          window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
+
+          // Wait until the token is set before redirecting
+          setTimeout(() => {
+            window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
+          }, 100);
         }
       }
     } catch (error) {

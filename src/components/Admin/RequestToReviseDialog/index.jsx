@@ -16,7 +16,6 @@ import FormLabel from "@/components/Common/FormLabel";
 import FormTextArea from "@/components/Common/FormTextArea";
 
 const RequestToReviseDialog = ({ open, onSubmit, onClose, reviseFields, onReviseFieldChange }) => {
-  
   const handleInputChange = (e, field) => {
     onReviseFieldChange(field, e.target.value); // Update the main page state
   };
@@ -53,11 +52,11 @@ const RequestToReviseDialog = ({ open, onSubmit, onClose, reviseFields, onRevise
         <div>
           <Typography variant="caption" className="uppercase pb-3">To</Typography>
           <div className="flex gap-2 items-center">
-            <Image src="/icons/revision-icon.svg" width={32} height={32} />
+            <Image src={reviseFields.reviseProfilePic} width={32} height={32} />
             <FormInput
               type="text"
               placeholder="Enter text"
-              value={reviseFields.reviseEmail || "payal@chaaat.io"}
+              value={reviseFields.reviseEmail || ""}
               disabled
               rounded
               fullWidth

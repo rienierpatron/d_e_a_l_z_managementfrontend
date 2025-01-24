@@ -82,7 +82,7 @@ export default function DealzView() {
       {/* Deal Information Section */}
       <div className="grid grid-cols-2 gap-4 pb-5">
         <DealInfoCard icon={IconCoupon} label="DEALZ Code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
-        <DealInfoCard icon={IconCalendar} label="Agency Name">Burger King</DealInfoCard>
+        <DealInfoCard icon={IconCalendar} label="Agency Name">{dealzDetails.dealz?.agency_user?.agency?.agency_name}</DealInfoCard>
         <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
         <DealInfoCard icon={IconCalendar} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard>
         
@@ -133,7 +133,7 @@ export default function DealzView() {
           <Typography variant="caption" className="uppercase pb-2">Total Number of Customers Reached for This DEALZ Broadcast</Typography>
           <div className="bg-light-gray text-black p-2 rounded w-full">
             {/* Display value instead of input */}
-            {dealzDetails.dealz?.dealz_reached || "0"}
+            {dealzDetails.dealz?.reach_count || "0"}
           </div>
         </div>
       </div>

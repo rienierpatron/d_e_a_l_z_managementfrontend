@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { formatDateToYYYYMMDD } from "@/lib/date";
 import { useRouter } from "next/router";
 import { getDealzSuperAdminRecordDetail, updateSuperAdminDealzRecord, updateSuperAdminStatusDealzRecord } from "@/api/dealz";
 import { helper } from "@/helpers";
@@ -18,9 +19,9 @@ import SaveDetailsDialog from "@/components/Admin/SaveDetailsDialog";
 
 // Options for Slot Time Selection
 export const SLOT_TIME_OPTIONS = [
-  { label: "Morning", value: "morning" },
-  { label: "Afternoon", value: "afternoon" },
-  { label: "Evening", value: "evening" },
+  { label: "MORNING", value: "MORNING" },
+  { label: "AFTERNOON", value: "AFTERNOON" },
+  { label: "EVENING", value: "EVENING" },
 ];
 
 // Reusable Deal Information Card Component
@@ -44,7 +45,8 @@ export default function DealzEdit() {
   const [showRequestReviseWarningDialog, setShowRequestReviseWarningDialog] = useState(false);
   const [reviseFields, setReviseFields] = useState({ 
     reviseReason: "",
-    reviseEmail: "payal@chaaat.io" 
+    reviseEmail: "",
+    reviseProfilePic: ""
   });
 
   // Ensuring dealzId is available and then fetch the data
@@ -63,7 +65,6 @@ export default function DealzEdit() {
       const response = await getDealzSuperAdminRecordDetail(dealzId, showMessage);
       if (response && helper.cmpStr(response.status, "ok")) {
         setDealzDetails(response.data);
-        console.log(response.data);
       }
     } catch (error) {
       return helper.general.alert("error", {
@@ -76,7 +77,7 @@ export default function DealzEdit() {
   const updateDealzRecord = async(dealzId) => {
     const data = {
       "slot_date": selectedDate,
-      "slot_time": selectedDate.value,
+      "slot_time": selectedSlotTime.value,
       "reach_count": dealzReached
     }
 
@@ -113,7 +114,7 @@ export default function DealzEdit() {
       if (dealzDetails.dealz.slot_date) {
         const parsedDate = new Date(dealzDetails.dealz.slot_date);
         if (!isNaN(parsedDate)) {
-          const formattedDate = parsedDate.toISOString().split('T')[0];
+          const formattedDate = formatDateToYYYYMMDD(parsedDate);
           setSelectedDate(formattedDate);
         } else {
           console.error("Invalid date format for slot_date_time:", dealzDetails.dealz.slot_date);
@@ -122,12 +123,21 @@ export default function DealzEdit() {
 
       // Set the slot time if available
       if (dealzDetails.dealz.slot_time) {
-        setSelectedSlotTime(dealzDetails.dealz.slot_time);
+        const slot_value = { label: dealzDetails.dealz.slot_time, value: dealzDetails.dealz.slot_time }
+        setSelectedSlotTime(slot_value);
       }
 
       // Set the slot time if available
       if (dealzDetails.dealz.reach_count) {
         setDealzReached(dealzDetails.dealz.reach_count);
+      }
+
+      if (dealzDetails.dealz.agency_user.user) {
+        setReviseFields(prevState => ({
+          ...prevState,
+          reviseEmail: dealzDetails.dealz.agency_user.user.email || "",
+          reviseProfilePic: dealzDetails.dealz.agency_user.user.profile_picture_url || "",
+        }));
       }
     }
   }, [dealzDetails]);
@@ -136,9 +146,8 @@ export default function DealzEdit() {
     // Ensure the newDate is a valid Date object
     const parsedDate = new Date(newDate);
     if (!isNaN(parsedDate)) {
-      const formattedDate = parsedDate.toISOString().split('T')[0];
+      const formattedDate = formatDateToYYYYMMDD(parsedDate);
       setSelectedDate(formattedDate);
-      console.log("Selected date:", formattedDate);
     } else {
       console.error("Invalid date selected");
     }
@@ -215,19 +224,19 @@ export default function DealzEdit() {
           </Button>
           <Button
             icon="/icons/tick-circle-icon.svg"
-            className="px-[16px] py-[0] border-0 !bg-green-60"
+            className={`px-[16px] py-[0] border-0 !bg-green-60 ${dealzDetails.dealz?.status !== "pending" ? "opacity-50 cursor-not-allowed" : ""}`}
             isRound
             onClick={handleApprove}
-            disabled={dealzDetails.dealz?.status === "approved"}
+            disabled={dealzDetails.dealz?.status !== "pending"}
           >
             Approve
           </Button>
           <Button
             icon="/icons/save-icon.svg"
-            className="px-[16px] py-[0] border-0 !bg-light-gray"
+            className={`px-[16px] py-[0] border-0 !bg-light-gray ${dealzDetails.dealz?.status === "approved" || dealzDetails.dealz?.status === "revision" ? "opacity-50 cursor-not-allowed" : ""}`}
             isRound
             onClick={() => setShowSaveDetailsWarningDialog(true)}
-            disabled={dealzDetails.dealz?.status === "approved"}
+            disabled={dealzDetails.dealz?.status === "approved" || dealzDetails.dealz?.status === "revision"}
           >
             Save
           </Button>
@@ -261,7 +270,7 @@ export default function DealzEdit() {
               inputClassName="!bg-white border-0"
               value={selectedDate}
               onChange={handleDateChange}
-              className="w-full"
+              className="w-[200]"
             />
             <FormSelect
               id="slot-time"
@@ -272,7 +281,7 @@ export default function DealzEdit() {
               onChange={handleSlotTimeChange}
               rounded
               icon="/icons/company-icon.svg"
-              className="w-full border-0"
+              className="border-0 uppercase"
             />
           </div>
         </div>

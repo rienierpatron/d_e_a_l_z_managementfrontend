@@ -24,22 +24,23 @@ function DealzManagement({ Component, pageProps }) {
   // Check if the user is authenticated on mount and redirect if not
   useEffect(() => {
     const checkAuth = async () => {
-      const isAuthenticated = await helper.auth.isAuthenticated();
+      const isAuthenticated = helper.auth.isAuthenticated();
       if (
         !isAuthenticated &&
         router.pathname !== "/login" &&
-        router.pathname !== "/signup"
+        router.pathname !== "/signup" &&
+        router.pathname !== "/confirmation"
       ) {
         router.push("/login"); // Redirect to login if not authenticated
       } else {
         if (
           isAuthenticated &&
-          (router.pathname === "/login" || router.pathname === "/signup")
+          (router.pathname === "/login" || router.pathname === "/signup" || router.pathname === "/confirmation")
         ) {
           helper.cookie.deleteAccessToken();
           setLoggedIn(false);
         } else {
-          setLoggedIn(isAuthenticated);
+          setLoggedIn(true);
         }
       }
     };

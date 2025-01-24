@@ -101,10 +101,7 @@ export default function DealzList({
       },
       {
         header: "SLOT DATE",
-        accessorKey: "slot_date",
-        Cell: ({ row: { original } }) => {
-          return original.slot_date_time + ' ' + original.slot_time;
-        }
+        accessorKey: "slot_date_time"
       },
       {
         header: "VALIDITY",

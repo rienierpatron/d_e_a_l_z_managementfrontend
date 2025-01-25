@@ -1,16 +1,13 @@
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { helper } from "@/helpers";
 import Typography from "@/components/Common/Typography";
-import Button from "@/components/Common/Button";
-import React, { useState } from "react";
-import FormSelect from "@/components/Common/FormSelect";
 import IconCoupon from "@/components/Icons/IconCoupon";
 import IconCalendar from "@/components/Icons/IconCalendar";
 import IconDollar from "@/components/Icons/IconDollar";
 import IconCouponWide from "@/components/Icons/IconCouponWide";
-import CustomDatePicker from "@/components/Common/DatePicker";
-import FormInput from "@/components/Common/FormInput";
 import Image from "next/image";
-import SlotNotAvailableDialog from "@/components/Admin/SlotNotAvailableDialog";
-import RequestToReviseDialog from "@/components/Admin/RequestToReviseDialog";
+import { getDealzSuperAdminRecordDetail } from "@/api/dealz";
 
 // Options for Slot Time Selection
 export const SLOT_TIME_OPTIONS = [
@@ -29,35 +26,75 @@ const DealInfoCard = ({ icon: Icon, label, children }) => (
 );
 
 export default function DealzView() {
-  const [showSlotNotAvailableWarningDialog, setShowSlotNotAvailableDialog] = useState(false);
-  const [showRequestReviseWarningDialog, setShowRequestReviseWarningDialog] = useState(false);
+  const router = useRouter();
+  const [dealzId, setDealzId] = useState(null);
+  const [dealzDetails, setDealzDetails] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [selectedDate] = useState(new Date("2024-12-25"));  // No state update, read-only
-  const [selectedSlotTime] = useState("morning");  // Slot time is hardcoded for this example
+  // Ensuring dealzId is available and then fetch the data
+  useEffect(() => {
+    if (router.isReady && router.query.dealz_id) {
+      const { dealz_id } = router.query;
+      setDealzId(dealz_id); // Set the dealzId in state
+      getDealzRecordDetails(dealz_id); // Fetch details from API
+    }
+  }, [router.isReady, router.query.dealz_id]);
+
+  // Fetch agency users list
+  const getDealzRecordDetails = async (dealzId) => {
+    console.log(dealzId);
+    try {
+      setIsLoading(true);
+      const showMessage = false;
+      const response = await getDealzSuperAdminRecordDetail(dealzId, showMessage);
+      if (response && helper.cmpStr(response.status, "ok")) {
+        setDealzDetails(response.data);
+        console.log(response.data);
+      }
+    } catch (error) {
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return <div className="text-center py-6">Loading deal details...</div>;
+  }
+
+  // Return an error message if no dealzDetails are found
+  if (!dealzDetails) {
+    return <div className="text-center py-6">Deal details not found.</div>;
+  }
 
   return (
     <div className="w-full px-10 py-8">
       {/* Header Section */}
       <div className="flex justify-between pb-8">
         <div>
-          <Typography variant="heading">Holiday Specials</Typography>
-          <Typography variant="caption">Your Next Favorite Deal</Typography>
+          <Typography variant="heading">{dealzDetails.dealz?.title}</Typography>
+          <Typography variant="caption">{dealzDetails.dealz?.description}</Typography>
         </div>
       </div>
 
       {/* Deal Information Section */}
       <div className="grid grid-cols-2 gap-4 pb-5">
-        <DealInfoCard icon={IconCoupon} label="DEALZ Code">Unique code</DealInfoCard>
-        <DealInfoCard icon={IconCalendar} label="Agency Name">Burger King</DealInfoCard>
-        <DealInfoCard icon={IconDollar} label="Discount">$25</DealInfoCard>
-        <DealInfoCard icon={IconCalendar} label="Website or Booking link">https://chaaat.io</DealInfoCard>
+        <DealInfoCard icon={IconCoupon} label="DEALZ Code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
+        <DealInfoCard icon={IconCalendar} label="Agency Name">{dealzDetails.dealz?.agency_user?.agency?.agency_name}</DealInfoCard>
+        <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
+        <DealInfoCard icon={IconCalendar} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard>
         
         {/* Validity */}
         <div className="flex gap-2 items-center">
           <IconCalendar className="text-dark-gray" />
           <Typography variant="caption" className="uppercase">Validity</Typography>
-          <div>25-29 Jan, 2025</div>
+          <div>{dealzDetails.dealz?.validity_date}</div>
         </div>
+
+        <DealInfoCard icon={IconCoupon} label="Coupon created method">{dealzDetails.dealz?.coupon_creation_type}</DealInfoCard>
+        <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
 
         {/* Slot Selection (Read-only View) */}
         <div className="flex gap-2 items-center w-full">
@@ -66,10 +103,7 @@ export default function DealzView() {
           <div className="flex flex-nowrap items-center">
             {/* Display Date as text, no interaction */}
             <div className="text-gray-700">
-              {selectedDate.toLocaleDateString()}  {/* Display the formatted date */}
-            </div>
-            <div className="text-gray-700 ml-4 capitalize">
-              {selectedSlotTime}  {/* Display selected slot time */}
+              {dealzDetails.dealz?.slot_date_time}
             </div>
           </div>
         </div>
@@ -78,13 +112,13 @@ export default function DealzView() {
       {/* Deal Wording Section */}
       <div className="p-4 border border-light-gray rounded-xl my-6">
         <Typography variant="caption" className="uppercase pb-2">Wording for the Deal</Typography>
-        <Typography variant="caption" className="!text-black">Enjoy $25 off on your next purchase. Treat yourself to the best deals and make your experience even more rewarding.</Typography>
+        <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.initial_message}</Typography>
       </div>
 
       {/* Follow-Up Wording Section */}
       <div className="p-4 border border-light-gray rounded-xl my-6">
         <Typography variant="caption" className="uppercase pb-2">Wording for the follow-up message</Typography>
-        <Typography variant="caption" className="!text-black">Enjoy [X]% off on your next purchase.</Typography>
+        <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.followup_message}</Typography>
       </div>
 
       {/* Customer Reach and File Upload Section */}
@@ -99,22 +133,10 @@ export default function DealzView() {
           <Typography variant="caption" className="uppercase pb-2">Total Number of Customers Reached for This DEALZ Broadcast</Typography>
           <div className="bg-light-gray text-black p-2 rounded w-full">
             {/* Display value instead of input */}
-            1200
+            {dealzDetails.dealz?.reach_count || "0"}
           </div>
         </div>
       </div>
-
-      {/* Dialogs */}
-      <SlotNotAvailableDialog
-        open={showSlotNotAvailableWarningDialog}
-        onClose={() => setShowSlotNotAvailableDialog(false)}
-        onSubmit={() => setShowSlotNotAvailableDialog(false)}
-      />
-      <RequestToReviseDialog
-        open={showRequestReviseWarningDialog}
-        onClose={() => setShowRequestReviseWarningDialog(false)}
-        onSubmit={() => setShowRequestReviseWarningDialog(false)}
-      />
     </div>
   );
 }

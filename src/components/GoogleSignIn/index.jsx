@@ -1,60 +1,39 @@
-import React from "react";
-import { useGoogleLogin } from "@react-oauth/google"; 
-import axios from "axios"; 
-import { helper } from "@/helpers"; 
-import { api } from "@/api";
+import React, { useState, useEffect } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { helper } from "@/helpers";
 import Button from "../Common/Button";
 
 const CustomGoogleLogin = ({ onLoginSuccess }) => {
-  const auth_type = "google"; // Auth type
+  const [user, setUser] = useState(null); 
+  const [profile, setProfile] = useState(null);
 
-  // Initialize the Google login using the useGoogleLogin hook
+  useEffect(() => {
+    // Only proceed if the user object is populated
+    if (helper.notEmpty(user?.access_token)) {
+      console.log("Fetching user info...");
+      getGoogleUserInfo(user.access_token); // Fetch Google user info
+    }
+  }, [user]); // Trigger effect when user state is updated
+
+  useEffect(() => {
+    // Only proceed if the profile object is populated
+    if (helper.notEmpty(profile)) {
+      onLoginSuccess(profile); // Call onLoginSuccess with the profile data
+    }
+  }, [profile]); // Trigger effect when profile state is updated
+
+  // Google login success handler
   const signIn = useGoogleLogin({
-    onSuccess: async (response) => {
-
-      const accessToken = response.access_token;
-      if (accessToken) {
-        // Store access token in cookies
-        helper.cookie.setAccessToken(accessToken);
-
-        try {
-          // Fetch user info using the access token
-          const userInfo = await getGoogleUserInfo(accessToken);
-          // console.log("User Info:", userInfo);
-
-          // social payload for Google registration
-          const data = {
-            social_payload: {
-              profileObj: {
-                id: userInfo.sub, // Google userInfo ID
-                email: userInfo.email,
-                verified_email: userInfo.email_verified,
-                name: userInfo.name,
-                given_name: userInfo.given_name,
-                family_name: userInfo.family_name,
-                picture: userInfo.picture,
-                locale: userInfo.locale,
-                hd: userInfo.hd, // Google domain if present (G Suite)
-              },
-              tokenId: accessToken, // Use the access token for authentication
-            },
-          };
-
-          if (onLoginSuccess && typeof onLoginSuccess === "function") {
-            onLoginSuccess(data);
-          }
-
-        } catch (error) {
-          console.error("Error fetching user info:", error);
-        }
-      }
+    onSuccess: (codeResponse) => {
+      setUser(codeResponse);
     },
-    onError: (err) => {
-      console.error("Google login failed:", err);
+    onError: (error) => {
+      console.error("Login Failed:", error);
     },
   });
 
-  // Function to fetch user's Google profile using the access token
+  // Function to fetch Google's user profile using the access token
   const getGoogleUserInfo = async (accessToken) => {
     try {
       // Make an authenticated request to the Google API to fetch user info
@@ -64,19 +43,40 @@ const CustomGoogleLogin = ({ onLoginSuccess }) => {
         },
       });
 
-      // Return the user's profile data
-      return response.data;
+      if (response && helper.cmpStr(response.status, '200')) {
+        const data = {
+          social_payload: {
+            profileObj: {
+              id: response.data.sub, // Google user ID
+              email: response.data.email,
+              verified_email: response.data.email_verified,
+              name: response.data.name,
+              given_name: response.data.given_name,
+              family_name: response.data.family_name,
+              picture: response.data.picture,
+              locale: response.data.locale,
+              hd: response.data.hd,
+            },
+            tokenId: accessToken, // Use the access token for authentication
+          },
+        };
+
+        // Update profile state with the fetched data
+        setProfile(data);
+      }
     } catch (error) {
-      throw new Error("Error fetching user profile data.");
+      return helper.general.alert("error", {
+        message: "Something went wrong.",
+      });
     }
   };
 
   return (
     <div className="relative">
       <Button
-        onClick={signIn} // Trigger Google login on button click
-        icon="/icons/google-icon.svg" // Path to your Google logo icon
-        iconPosition="left" // Icon on the left of the text
+        onClick={signIn}
+        icon="/icons/google-icon.svg"
+        iconPosition="left"
         className="border-0 focus:outline-none text-midnight-blue"
         fullWidth
         isRound

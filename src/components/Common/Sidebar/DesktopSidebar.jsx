@@ -1,38 +1,58 @@
-/**
- * External dependencies
- */
-import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
 import Image from "next/image";
 import Link from "next/link";
 import classNames from "classnames";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-
-/**
- * Internal dependencies
- */
+import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
+import { useUser } from "@/context/UserContext";
+import { helper } from "@/helpers";
 import SidbarUpgradeCta from "@/components/SidbarUpgradeCta";
-import Button from "@/components/Common/Button";
 import IconMessageQuestion from "@/components/Icons/IconMessageQuestion";
-import { NAV_ITEMS } from "@/lib/routes";
+import { NAV_ITEMS, ADMIN_NAV_ITEMS } from "@/lib/routes";
+import UserSettingsMenu from "./UserSettingsMenu";
+import SwitchAgencyMenu from "./SwitchAgencyMenu";
+import IconWideArrowRight from "@/components/Icons/IconWideArrowRight";
+import Typography from "../Typography";
 
 const DesktopSidebar = () => {
+  const currentUser = useUser();
+  const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
   const { currentSubscription, error } = useSubscription();
   const router = useRouter();
   const navRef = useRef(null);
 
-  /* The `useEffect` hook in the provided code snippet is responsible for adjusting the height of the
-  sidebar component based on the presence of a hotbar element on the page. */
+  // Adjust the sidebar height dynamically based on hotbar presence
   useEffect(() => {
     if (typeof window !== "undefined" && navRef?.current) {
       const hotbarEle = document.getElementById("dealz-hotbar");
-      if (hotbarEle) {
-        navRef.current.style.height = `calc(100vh - 60px)`;
-      } else {
-        navRef.current.style.height = "100%";
-      }
+      navRef.current.style.height = hotbarEle
+        ? "calc(100vh - 60px)"
+        : "100%";
     }
   }, [router.pathname]);
+
+  // useEffect(() => {
+  //   // Check the conditions when the component mounts or when the relevant props change
+  //   if (isSuperAdminOrStaff && isSuperAdminRoleName) {
+  //     setShowDealzLogo(true);
+  //   } else {
+  //     setShowDealzLogo(false);
+  //   }
+  // }, [isSuperAdminOrStaff, isSuperAdminRoleName]);
+
+  const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [isSwitchAgencyPopupOpen, setIsSwitchAgencyPopupOpen] = useState(false);
+
+  const openUserPopup = () => {
+    setIsUserPopupOpen(prevState => !prevState);
+  };
+
+  const openSwitchAgencyPopup = () => {
+    setIsSwitchAgencyPopupOpen(prevState => !prevState);
+  };
+
+  // Helper to map over NAV_ITEMS or ADMIN_NAV_ITEMS based on user role
+  const getNavItems = () => (isSuperAdminOrStaff ? ADMIN_NAV_ITEMS : NAV_ITEMS);
 
   return (
     <nav
@@ -41,43 +61,90 @@ const DesktopSidebar = () => {
       ref={navRef}
     >
       <div className="flex flex-col gap-12 justify-center items-center">
-        <Image src="/dealz-logo.svg" width={67} height={26} />
+        <div className="text-center cursor-pointer" onClick={isSuperAdminOrStaff ? openSwitchAgencyPopup : undefined}>
+          {isSuperAdminOrStaff ? (
+            <Image
+              src="/dealz-logo.svg"
+              width={67}
+              height={26}
+              alt="Dealz Logo"
+            />
+            ) : (
+            <div className="p-1 mb-2 bg-black text-white w-6 h-6 flex items-center justify-center rounded">
+              {currentUser?.user?.agency_name ? currentUser?.user?.agency_name[0] : ""}
+            </div>
+          )}
+          <div className="flex items-center justify-center">
+            <Typography variant="caption" className="!text-xs">{currentUser?.user?.agency_name}</Typography>
+            {isSuperAdminOrStaff && <IconWideArrowRight />}
+          </div>
+        </div>
+
+        {isSwitchAgencyPopupOpen && (
+          <SwitchAgencyMenu isSuperAdminOrStaff={isSuperAdminOrStaff} />
+        )}
+        
+
         <ul className="flex flex-col gap-8">
-          {NAV_ITEMS.map((item, index) => {
-            return (
-              <li
-                className={classNames(
-                  "cursor-pointer text-dark-gray hover:text-primary"
-                )}
-                key={index}
+          {getNavItems().map((item, index) => (
+            <li
+              className={classNames(
+                "cursor-pointer text-dark-gray hover:text-primary"
+              )}
+              key={index}
+            >
+              <Link
+                href={item.path}
+                className="flex items-center justify-center gap-2 flex-col"
+                aria-label={item.label}
               >
-                <Link
-                  href={item.path}
-                  className="flex items-center justify-center gap-2 flex-col"
-                >
-                  {item.icon}
-                  <span className="text-xs font-medium">{item.label}</span>
-                </Link>
-              </li>
-            );
-          })}
-          {currentSubscription?.subscription?.subscription_name !== "pro" && (
+                {item.icon}
+                <span className="text-xs font-medium text-center">{item.label}</span>
+              </Link>
+            </li>
+          ))}
+          {/* Display SidbarUpgradeCta only for non-superadmin or staff users with specific subscription */}
+          {!isSuperAdminOrStaff && currentSubscription?.subscription?.subscription_name !== "pro" && (
             <SidbarUpgradeCta />
           )}
         </ul>
       </div>
+
       <ul className="flex flex-col gap-8 justify-center items-center">
         <li className="cursor-pointer">
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center" aria-label="Help">
             <IconMessageQuestion className="hover:text-primary" />
           </div>
         </li>
+
         <li className="cursor-pointer">
-          <Button variant="primary" className="rounded-full p-4 h-12 w-12">
-            JA
-          </Button>
+          <div
+            className="rounded-full h-12 w-12 flex items-center justify-center"
+            onClick={openUserPopup}
+            aria-label="User Settings"
+            title="Click to open user settings"
+          >
+            {/* Conditionally render profile image or initials */}
+            {currentUser?.user?.profile_picture_url ? (
+              <Image
+                src={currentUser.user.profile_picture_url}
+                width={40}
+                height={40}
+                alt="User Profile"
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-12 h-12 flex items-center justify-center rounded-full text-sm bg-primary text-white">
+                {helper.general.getInitials(currentUser?.user?.first_name, currentUser?.user?.last_name)}
+              </div>
+            )}
+          </div>
         </li>
       </ul>
+      {/* Popup Menu */}
+      {isUserPopupOpen && (
+        <UserSettingsMenu />
+      )}
     </nav>
   );
 };

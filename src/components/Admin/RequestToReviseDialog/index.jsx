@@ -15,7 +15,11 @@ import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
 import FormTextArea from "@/components/Common/FormTextArea";
 
-const RequestToReviseDialog = ({ open, onSubmit, onClose }) => {
+const RequestToReviseDialog = ({ open, onSubmit, onClose, reviseFields, onReviseFieldChange }) => {
+  const handleInputChange = (e, field) => {
+    onReviseFieldChange(field, e.target.value); // Update the main page state
+  };
+
   return (
     <Dialog
       show={open}
@@ -48,11 +52,20 @@ const RequestToReviseDialog = ({ open, onSubmit, onClose }) => {
         <div>
           <Typography variant="caption" className="uppercase pb-3">To</Typography>
           <div className="flex gap-2 items-center">
-            <Image src="/icons/revision-icon.svg" width={32} height={32} />
-            <Typography variant="caption">dealz@chaaat.io</Typography>
+            <Image src={reviseFields.reviseProfilePic} width={32} height={32} />
+            <FormInput
+              type="text"
+              placeholder="Enter text"
+              value={reviseFields.reviseEmail || ""}
+              disabled
+              rounded
+              fullWidth
+              className="bg-white border-0 !text-dark-gray !text-sm pl-0"
+              onChange={(e) => handleInputChange(e, "reviseEmail")}
+            />
           </div>
         </div>
-        <div>
+        {/* <div>
           <Typography variant="caption" className="uppercase pb-3">CC</Typography>
           <div className="flex gap-2 items-center">
             <div className="flex flex-nowrap items-center">
@@ -64,7 +77,7 @@ const RequestToReviseDialog = ({ open, onSubmit, onClose }) => {
               <IconClose className="text-black" />
             </div>
           </div>
-        </div>
+        </div> */}
         <FormFieldset className="pt-2">
           <FormLabel className="uppercase">Subject</FormLabel>
           <FormInput
@@ -79,7 +92,12 @@ const RequestToReviseDialog = ({ open, onSubmit, onClose }) => {
         </FormFieldset>
         <FormFieldset>
           <FormLabel className="uppercase">Your Mail</FormLabel>
-          <FormTextArea placeholder="Enter text" className="bg-light-gray" />
+          <FormTextArea 
+            placeholder="Enter text" 
+            value={reviseFields.reviseReason || ""}
+            className="bg-light-gray"
+            onChange={(e) => handleInputChange(e, "reviseReason")}
+          />
         </FormFieldset>
       </div>
     </Dialog>

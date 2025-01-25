@@ -33,7 +33,7 @@ export async function register(data, showMessage) {
 }
 
 /**
- * Confirm login by email
+ * Verify Registered email verification
  * @param {object} [data]
  * @param {boolean} [showMessage=true]
  * @returns {Promise<{data: {}, status: string}>}
@@ -89,4 +89,42 @@ export async function verifyLoginEmail(data, showMessage) {
     data,
   });
   return helper.api.handleApiResponse(response, showMessage);
+}
+
+/**
+ * Verify Invited email verification
+ * @param {object} [data]
+ * @param {boolean} [showMessage=true]
+ * @returns {Promise<{data: {}, status: string}>}
+ */
+export async function verifyInvitedEmail(data, showMessage) {
+  const response = await Axios({
+    url: `${config.apiUrl}/auth/invite/accept`,
+    method: 'post',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    data,
+  });
+  return helper.api.handleApiResponse(response, showMessage);
+}
+
+/**
+ * Logout user session
+ * @param {object} [data]
+ * @param {boolean} [showMessage=true]
+ * @returns {Promise<{data: {}, status: string}>}
+ */
+export async function logout(showMessage) {
+  const response = await Axios({
+    url: `${config.apiUrl}/auth/logout`,
+    method: 'post',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'x-access-token': helper.cookie.getAccessToken
+    },
+  });
+  return await helper.api.handleApiResponse(response, showMessage);
 }

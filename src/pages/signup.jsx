@@ -13,8 +13,11 @@ import { BUSINESS_TYPE_OPTIONS } from "@/lib/constants";
 import FormSelect from "@/components/Common/FormSelect";
 import { helper } from "@/helpers";
 import CustomGoogleLogin from "@/components/GoogleSignIn";
+import { useUser } from "@/context/UserContext";
 
 export default function Signup() {
+  const currentUser = useUser();
+  const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userData, setUserData] = useState({
     firstName: "",
@@ -96,8 +99,10 @@ export default function Signup() {
         setIsPopupOpen(!isPopupOpen);
       } else {
         const accessToken = response.data.access_token;
-        if (accessToken) helper.cookie.setAccessToken(accessToken);
-        window.location.href = "/dashboard"
+        if (accessToken) {
+          helper.cookie.setAccessToken(accessToken);
+          window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
+        }
       }
     } else {
       return helper.general.alert("error", {

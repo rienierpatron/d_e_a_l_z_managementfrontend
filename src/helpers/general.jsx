@@ -144,3 +144,12 @@ export const validateEmail = (email) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailRegex.test(email);
 };
+
+/* 
+Get Initials
+*/
+export const getInitials = (firstName, lastName) => {
+  const firstInitial = firstName?.charAt(0).toUpperCase() || '';
+  const lastInitial = lastName?.charAt(0).toUpperCase() || '';
+  return `${firstInitial}${lastInitial}`;
+};

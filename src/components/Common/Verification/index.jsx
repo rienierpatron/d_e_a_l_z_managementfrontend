@@ -6,21 +6,32 @@ import { useUser } from '@/context/UserContext';
 
 const EmailVerification = ({ verifyApiMethod, successMessage }) => {
   const currentUser = useUser();
-  const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
+  const [isSuperAdminOrStaff, setIsSuperAdminOrStaff] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userLoaded, setUserLoaded] = useState(false);
   const router = useRouter();
 
   // Extract `code` from the URL query parameter
   const { query } = router;
   const code = query.code;
 
+  // Update `isSuperAdminOrStaff` when `currentUser` changes
+  useEffect(() => {
+    if (currentUser && currentUser.user) {
+      setIsSuperAdminOrStaff(currentUser.user.is_super_or_staff);
+      setUserLoaded(true);
+    }
+  }, [currentUser]); 
+
+  // Trigger email verification once the `code` is available
   useEffect(() => {
     if (code) {
       verifyEmail(code);
     }
   }, [code]);
 
+  // Handle email verification
   const verifyEmail = async (code) => {
     setLoading(true);
     const data = { code };
@@ -28,26 +39,41 @@ const EmailVerification = ({ verifyApiMethod, successMessage }) => {
     try {
       // Making the API call using the provided `verifyApiMethod`
       const response = await api.auth[verifyApiMethod](data, false);
+
       if (response && helper.cmpStr(response.status, 'ok')) {
         setMessage(successMessage);
         const accessToken = response.data.access_token;
+        
         if (accessToken) {
           helper.cookie.setAccessToken(accessToken);
+        }
 
-          // Wait until the token is set before redirecting
-          setTimeout(() => {
-            window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
-          }, 100);
+        // Wait for `isSuperAdminOrStaff` to be set before redirecting
+        if (userLoaded && isSuperAdminOrStaff !== null || isSuperAdminOrStaff !== undefined) {
+          redirectUser(isSuperAdminOrStaff);
         }
       }
     } catch (error) {
-      return helper.general.alert("error", {
+      helper.general.alert("error", {
         message: "Something went wrong.",
       });
     } finally {
       setLoading(false);
     }
   };
+
+  // Function to handle redirection based on role
+  const redirectUser = (isSuperAdminOrStaff) => {
+    console.log(isSuperAdminOrStaff);
+    debugger;
+    const redirectUrl = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
+    router.push(redirectUrl);
+  };
+
+  // Handle the loading state
+  if (currentUser === null || !userLoaded) {
+    return <div>Loading user data...</div>; // Show loading message while waiting for `currentUser`
+  }
 
   return (
     <div>

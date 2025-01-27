@@ -15,14 +15,14 @@ export async function handleApiResponse(response, showMessage = true) {
     if (helper.cmpBool(showMessage, true))
       helper.general.alert('success', { message: apiRes.data.message });
   }
-  else if (helper.notEmpty(response) && helper.cmpStr(response.status, 403)) {
-    if (
-      !helper.cmpStr(window.location.pathname, '/login') &&
-      window.location.pathname.indexOf('/contact') === -1
-    ) {
-      helper.auth.redirectToLogin(null, apiRes.data.message);
-    }
-  }
+  // else if (helper.notEmpty(response) && helper.cmpStr(response.status, 403)) {
+  //   if (
+  //     !helper.cmpStr(window.location.pathname, '/login') &&
+  //     window.location.pathname.indexOf('/contact') === -1
+  //   ) {
+  //     helper.auth.redirectToLogin(null, apiRes.data.message);
+  //   }
+  // }
   else {
     apiRes.status = 'error';
     if (showMessage) helper.general.alert('error', { message: apiRes.data.message });

@@ -89,7 +89,7 @@ export default function Signup() {
         company_name: companyName,
         business_type: businessType,
         token: socialPayload.social_payload.profileObj.id,
-        social_payload: socialPayload.social_payload, // Include all the google social payload data
+        social_payload: socialPayload.social_payload,
       };
     }
 

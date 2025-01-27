@@ -64,4 +64,5 @@ export const ROUTES_HEADING_MAPPER = {
   "/admin/calendar": "Calendar",
   "/admin/userManagement": "User Management",
   "/admin/dealz/edit?dealz_id=[dealz_id]": "DEALZ Details",
+  "/admin/dealz/view?dealz_id=[dealz_id]": "DEALZ Details",
 };

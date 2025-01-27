@@ -86,8 +86,6 @@ export default function DealzList({
   useEffect(() => {
     getAllDealzRecords();
   }, [pagination]);
-  
-  // const data = React.useMemo (() => allRecords);
 
   const columns = React.useMemo(
     () => [

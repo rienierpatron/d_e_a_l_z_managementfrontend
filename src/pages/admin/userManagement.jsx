@@ -1,6 +1,8 @@
 // pages/userManagement.jsx
 import { useState } from "react";
 import CommonUserManagement from "@/components/UserManagement";
+import { inviteAgencyUser } from "@/api/user";
+import { helper } from "@/helpers";
 
 const AdminUserManagement = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -20,10 +22,10 @@ const AdminUserManagement = () => {
   // This function will call the invite API
   const inviteUser = async (data) => {
     try {
-      const response = await inviteAgencyUser(data); // API call to invite user
+      const response = await inviteAgencyUser(data);
       if (response && helper.cmpStr(response.status, "ok")) {
         helper.general.alert("success", { message: "User invited successfully!" });
-        setIsPopupOpen(false); // Close the popup after successful invite
+        setIsPopupOpen(false);
       } else {
         helper.general.alert("error", { message: "Failed to invite user." });
       }

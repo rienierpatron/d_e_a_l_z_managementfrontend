@@ -5,12 +5,19 @@ import Image from "next/image";
 import AddUserPopup from "@/popups/AddUserPopup";
 import UserManagementStatusRenderer from "./statusRenderer";
 import { getAllAgencyUsers, inviteSelectedPendingAgencyUser, deleteAgencyUser } from "@/api/user";
+import { PAGINATION } from "@/lib/constants";
 
-export default function CommonUserManagement({ handleNewUserSubmit, isPopupOpen, setIsPopupOpen }) {
+export default function CommonUserManagement({ handleNewUserSubmit, isPopupOpen, setIsPopupOpen, showFilter = false }) {
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const intialPaginationStatus = {
+    currentPage: 1,
+    pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
+    pageIndex: 0,
+  };
+  const [pagination, setPagination] = useState(intialPaginationStatus);
 
   // Toggle popup state
   const togglePopup = () => {
@@ -62,12 +69,19 @@ export default function CommonUserManagement({ handleNewUserSubmit, isPopupOpen,
     getAgencyUserList();
   }, []);
 
+  useEffect(() => {
+    if (!isPopupOpen) {
+      getAgencyUserList();
+    }
+  }, [isPopupOpen]);
+
   // Delete Agency User
   const deleteUser = async (user_id) => {
     try {
       const response = await deleteAgencyUser(user_id);
       if (response && helper.cmpStr(response.status, "ok")) {
         helper.general.alert("success", { message: "User deleted successfully!" });
+        getAgencyUserList();
       } else {
         helper.general.alert("error", { message: "Failed to delete user." });
       }
@@ -87,8 +101,6 @@ export default function CommonUserManagement({ handleNewUserSubmit, isPopupOpen,
       }
     });
   };
-
-  const data = React.useMemo(() => allUsers );
 
   // Data memoization
   const columns = React.useMemo(() => [
@@ -188,15 +200,21 @@ export default function CommonUserManagement({ handleNewUserSubmit, isPopupOpen,
           <div className="text-red-600">{error}</div>
         ) : (
           <CommonTable
-            columns={columns}
-            data={data}
-            pageSize={5}
-            paginationRequired={true}
-            onPageChange={(currentPage) => {}}
-            onPageSizeChange={(pageSize) => {}}
-            onSortChange={(orderBy, order) => {}}
-            sortingServerSide={false}
-          />
+          columns={columns}
+          data={allUsers?.length ? allUsers : []}
+          totalCount={allUsers?.length}
+          pageSize={pagination.pageSize}
+          paginationRequired={showFilter}
+          paginationServerSide={true}
+          currentPage={pagination.currentPage - 1}
+          onPageChange={(newPage) =>
+            setPagination({ ...pagination, currentPage: newPage })
+          }
+          onPageSizeChange={(pageSize) => {
+            setPagination({ ...pagination, pageSize, currentPage: 1 });
+          }}
+          onSortChange={(orderBy, order) => {}}
+        />
         )}
       </div>
 

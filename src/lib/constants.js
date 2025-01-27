@@ -66,15 +66,15 @@ export const DEALZ_STATUS_COLOR_MAPPING = {
 };
 
 export const USER_MANAGEMENT_STATUS = {
-  Active: "Active",
-  Inactive: "Inactive",
-  Pending: "Pending",
+  active: "Active",
+  inactive: "Inactive",
+  pending: "Pending",
 };
 
 export const USER_MANAGEMENT_STATUS_COLOR_MAPPING = {
-  Active: "#4177F4",
-  Inactive: "#646B75",
-  Pending: "#f47418",
+  active: "#4177F4",
+  inactive: "#646B75",
+  pending: "#f47418",
 };
 
 export const SUBSCRIPTIONS = {

@@ -12,9 +12,8 @@ import IconAdd from "@/components/Icons/IconAdd";
 import IconColoredCoupon from "@/components/Icons/IconColoredCoupon";
 import IconCouponWide from "@/components/Icons/IconCouponWide";
 
-const RemainingDealz = ({ totalDealz, remainingDealz }) => {
+const RemainingDealz = ({ totalDealz, remainingDealz = 0 }) => {
   const router = useRouter();
-
   const organizeDeals = (totalDealz, remainingDealz) => {
     // Create an array for used deals
     const usedDeals = Array(totalDealz - remainingDealz).fill({ used: true });

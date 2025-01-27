@@ -202,6 +202,7 @@ const ManagePreference = () => {
         show={showDialog}
         onClose={() => setShowDialog(false)}
         contentClassName="!pb-0"
+        size="3xl"
         header={
           <>
             <Typography variant="title">Business Details</Typography>

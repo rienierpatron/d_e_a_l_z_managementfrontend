@@ -18,6 +18,8 @@ import classNames from "classnames";
 import { PAGINATION } from "@/lib/constants";
 import IconArrowLeft from "@/components/Icons/IconArrowLeft";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
+import IconWideArrowUp from "@/components/Icons/IconWideArrowUp";
+import IconWideArrowDown from "@/components/Icons/IconWideArrowDown";
 
 const PaginationControls = ({ table, onPageChange, onPageSizeChange }) => {
   const currentPage = table.getState().pagination.pageIndex + 1; // pageIndex starts from 0
@@ -164,13 +166,25 @@ const CommonTable = ({
   onRowClick,
   tableWrapperClassName,
   tableClassName,
-  paginationServerSide
+  paginationServerSide,
+  currentPage,
 }) => {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize,
   });
+
+  // To Reset Page
+  useEffect(() => {
+    if (currentPage && pageSize) {
+      setPagination({
+        ...pagination,
+        pageIndex: currentPage - 1,
+        pageSize
+      });
+    }
+  }, [currentPage, pageSize]);
 
   const table = useReactTable({
     data,
@@ -184,7 +198,7 @@ const CommonTable = ({
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     manualSorting: sortingServerSide,
-    manualPagination: paginationServerSide
+    manualPagination: paginationServerSide,
   });
 
   const handleSorting = (header) => {
@@ -241,14 +255,14 @@ const CommonTable = ({
                     }}
                     onClick={() => handleSorting(header)}
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       {header.isPlaceholder
                         ? null
                         : header.column.columnDef.header}{" "}
                       {header.column.getIsSorted() === "asc" ? (
-                        <IconArrowLeft className="rotate-90" />
+                        <IconWideArrowUp />
                       ) : header.column.getIsSorted() === "desc" ? (
-                        <IconArrowLeft className="-rotate-90" />
+                        <IconWideArrowDown />
                       ) : (
                         ""
                       )}

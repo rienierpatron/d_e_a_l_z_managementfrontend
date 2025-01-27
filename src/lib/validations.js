@@ -31,6 +31,13 @@ export const validations = {
       then: (schema) => schema.required("Please upload csv file."),
       otherwise: (schema) => schema.optional(),
     }),
+  code: Yup.string()
+    .nullable()
+    .when("coupon_creation_type", {
+      is: (value) => value === DEALZ.COUPON_CREATION_TYPE.automatic,
+      then: (schema) => schema.required("Required field can not be left blank."),
+      otherwise: (schema) => schema.optional(),
+    }),
   dealzAmount: Yup.number()
     .nullable()
     .when("offer_type", {

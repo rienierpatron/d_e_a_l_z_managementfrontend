@@ -17,6 +17,7 @@ import DealzBuilderStep5 from "@/components/DealzBuilder/step5";
 import { DEALZ } from "@/lib/constants";
 import { api } from "@/api";
 import { getDealzFormattedData } from "./utils";
+import { useSubscription } from "../Subscriptions/GetSubscriptionDetails";
 
 const DealzBuilder = ({ dealzId = "", mode = "" }) => {
   const TOTAL_STEPS = 5;
@@ -38,9 +39,11 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
     daily_deal: true,
     weekly_deal: false,
     csv_file_name: null,
-    coupon_creation_type: null
+    coupon_creation_type: null,
+    code: null,
   };
   const [formData, setFormData] = useState(initialState);
+  const { currentSubscription } = useSubscription();
   const { step } = formData;
 
   const fetchDealzData = async () => {
@@ -96,16 +99,29 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
           </Typography>
         </div>
         {step === 1 && (
-          <DealzBuilderStep1 formData={formData} setFormData={setFormData} />
+          <DealzBuilderStep1
+            formData={formData}
+            setFormData={setFormData}
+            dealzId={dealzId}
+            currentSubscription={currentSubscription}
+          />
         )}
         {step === 2 && (
           <DealzBuilderStep2 formData={formData} setFormData={setFormData} />
         )}
         {step === 3 && (
-          <DealzBuilderStep3 formData={formData} setFormData={setFormData} />
+          <DealzBuilderStep3
+            formData={formData}
+            setFormData={setFormData}
+            currentSubscription={currentSubscription}
+          />
         )}
         {step === 4 && (
-          <DealzBuilderStep4 formData={formData} setFormData={setFormData} />
+          <DealzBuilderStep4
+            formData={formData}
+            setFormData={setFormData}
+            currentSubscription={currentSubscription}
+          />
         )}
         {step === 5 && (
           <DealzBuilderStep5
@@ -113,10 +129,15 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             setFormData={setFormData}
             mode={mode}
             dealzId={dealzId}
+            initialState={initialState}
+            currentSubscription={currentSubscription}
           />
         )}
       </div>
-      <MobilePreview message={formData.initial_message} />
+      <MobilePreview
+        message={formData.initial_message}
+        image={formData?.banner_image}
+      />
     </div>
   );
 };

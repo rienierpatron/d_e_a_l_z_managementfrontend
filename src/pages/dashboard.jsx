@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
 /**
  * Internal dependencies
@@ -10,26 +10,43 @@ import DealzStats from "@/components/DashboardInsights/DealStats";
 import RemainingDealz from "@/components/DashboardInsights/RemainingDealz";
 import IconPeople from "@/components/Icons/IconPeople";
 import DealzList from "@/components/DealzList";
+import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
+import { api } from "@/api";
 
 const Dashboard = () => {
-  const router = useRouter();
-  const { query } = router;
-  const viewAllDealz = (query?.show && query.show === "all-dealz") || false;
+  const { currentSubscription } = useSubscription();
+  const [reachCount, setReachCount] = useState(0)
+
+  const getReachCount = async () => {
+    try {
+      const res = await api.dealz.getReachCount(false);
+      if (res.status === "ok") {
+        setReachCount(res.data?.reach_count ?? 0)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getReachCount()
+  }, []);
 
   return (
     <div className="px-10 py-8 h-full">
-      {!viewAllDealz && (
-        <div className="flex items-stretch justify-between gap-6">
-          <DealzStats
-            icon={<IconPeople className="text-secondary" />}
-            iconClassName="bg-secondary-60"
-            metricName="Your dealz reach"
-            metricCount="24,965"
-            metricUnit="Users"
-          />
-          <RemainingDealz totalDealz={10} remainingDealz={6} />
-        </div>
-      )}
+      <div className="flex items-stretch justify-between gap-6">
+        <DealzStats
+          icon={<IconPeople className="text-secondary" />}
+          iconClassName="bg-secondary-60"
+          metricName="Your dealz reach"
+          metricCount={reachCount}
+          metricUnit="Users"
+        />
+        <RemainingDealz
+          totalDealz={10}
+          remainingDealz={currentSubscription?.available_inventory?.slot}
+        />
+      </div>
       <div className="w-full py-8">
         <DealzList />
       </div>

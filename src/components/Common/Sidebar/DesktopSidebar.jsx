@@ -13,6 +13,7 @@ import UserSettingsMenu from "./UserSettingsMenu";
 import SwitchAgencyMenu from "./SwitchAgencyMenu";
 import IconWideArrowRight from "@/components/Icons/IconWideArrowRight";
 import Typography from "../Typography";
+import { SUBSCRIPTIONS } from "@/lib/constants";
 
 const DesktopSidebar = () => {
   const currentUser = useUser();
@@ -25,9 +26,7 @@ const DesktopSidebar = () => {
   useEffect(() => {
     if (typeof window !== "undefined" && navRef?.current) {
       const hotbarEle = document.getElementById("dealz-hotbar");
-      navRef.current.style.height = hotbarEle
-        ? "calc(100vh - 60px)"
-        : "100%";
+      navRef.current.style.height = hotbarEle ? "calc(100vh - 60px)" : "100%";
     }
   }, [router.pathname]);
 
@@ -44,11 +43,11 @@ const DesktopSidebar = () => {
   const [isSwitchAgencyPopupOpen, setIsSwitchAgencyPopupOpen] = useState(false);
 
   const openUserPopup = () => {
-    setIsUserPopupOpen(prevState => !prevState);
+    setIsUserPopupOpen((prevState) => !prevState);
   };
 
   const openSwitchAgencyPopup = () => {
-    setIsSwitchAgencyPopupOpen(prevState => !prevState);
+    setIsSwitchAgencyPopupOpen((prevState) => !prevState);
   };
 
   // Helper to map over NAV_ITEMS or ADMIN_NAV_ITEMS based on user role
@@ -61,7 +60,10 @@ const DesktopSidebar = () => {
       ref={navRef}
     >
       <div className="flex flex-col gap-12 justify-center items-center">
-        <div className="text-center cursor-pointer" onClick={isSuperAdminOrStaff ? openSwitchAgencyPopup : undefined}>
+        <div
+          className="text-center cursor-pointer flex flex-col items-center"
+          onClick={isSuperAdminOrStaff ? openSwitchAgencyPopup : undefined}
+        >
           {isSuperAdminOrStaff ? (
             <Image
               src="/dealz-logo.svg"
@@ -69,13 +71,17 @@ const DesktopSidebar = () => {
               height={26}
               alt="Dealz Logo"
             />
-            ) : (
+          ) : (
             <div className="p-1 mb-2 bg-black text-white w-6 h-6 flex items-center justify-center rounded">
-              {currentUser?.user?.agency_name ? currentUser?.user?.agency_name[0] : ""}
+              {currentUser?.user?.agency_name
+                ? currentUser?.user?.agency_name[0]
+                : ""}
             </div>
           )}
           <div className="flex items-center justify-center">
-            <Typography variant="caption" className="!text-xs">{currentUser?.user?.agency_name}</Typography>
+            <Typography variant="caption" className="!text-xs">
+              {currentUser?.user?.agency_name}
+            </Typography>
             {isSuperAdminOrStaff && <IconWideArrowRight />}
           </div>
         </div>
@@ -83,7 +89,6 @@ const DesktopSidebar = () => {
         {isSwitchAgencyPopupOpen && (
           <SwitchAgencyMenu isSuperAdminOrStaff={isSuperAdminOrStaff} />
         )}
-        
 
         <ul className="flex flex-col gap-8">
           {getNavItems().map((item, index) => (
@@ -99,14 +104,16 @@ const DesktopSidebar = () => {
                 aria-label={item.label}
               >
                 {item.icon}
-                <span className="text-xs font-medium text-center">{item.label}</span>
+                <span className="text-xs font-medium text-center">
+                  {item.label}
+                </span>
               </Link>
             </li>
           ))}
           {/* Display SidbarUpgradeCta only for non-superadmin or staff users with specific subscription */}
-          {!isSuperAdminOrStaff && currentSubscription?.subscription?.subscription_name !== "pro" && (
-            <SidbarUpgradeCta />
-          )}
+          {!isSuperAdminOrStaff &&
+            currentSubscription?.subscription?.subscription_name?.toLowerCase() !==
+              SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && <SidbarUpgradeCta />}
         </ul>
       </div>
 
@@ -135,16 +142,17 @@ const DesktopSidebar = () => {
               />
             ) : (
               <div className="w-12 h-12 flex items-center justify-center rounded-full text-sm bg-primary text-white">
-                {helper.general.getInitials(currentUser?.user?.first_name, currentUser?.user?.last_name)}
+                {helper.general.getInitials(
+                  currentUser?.user?.first_name,
+                  currentUser?.user?.last_name
+                )}
               </div>
             )}
           </div>
         </li>
       </ul>
       {/* Popup Menu */}
-      {isUserPopupOpen && (
-        <UserSettingsMenu />
-      )}
+      {isUserPopupOpen && <UserSettingsMenu />}
     </nav>
   );
 };

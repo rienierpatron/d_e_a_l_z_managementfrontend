@@ -18,6 +18,8 @@ import classNames from "classnames";
 import { PAGINATION } from "@/lib/constants";
 import IconArrowLeft from "@/components/Icons/IconArrowLeft";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
+import IconWideArrowUp from "@/components/Icons/IconWideArrowUp";
+import IconWideArrowDown from "@/components/Icons/IconWideArrowDown";
 
 const PaginationControls = ({ table, onPageChange, onPageSizeChange }) => {
   const currentPage = table.getState().pagination.pageIndex + 1; // pageIndex starts from 0
@@ -253,14 +255,14 @@ const CommonTable = ({
                     }}
                     onClick={() => handleSorting(header)}
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       {header.isPlaceholder
                         ? null
                         : header.column.columnDef.header}{" "}
                       {header.column.getIsSorted() === "asc" ? (
-                        <IconArrowLeft className="rotate-90" />
+                        <IconWideArrowUp />
                       ) : header.column.getIsSorted() === "desc" ? (
-                        <IconArrowLeft className="-rotate-90" />
+                        <IconWideArrowDown />
                       ) : (
                         ""
                       )}

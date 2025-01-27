@@ -93,9 +93,33 @@ function loadDelzStatusOptions() {
   return options;
 }
 
+
+/**
+ * Checks if a given string is a valid URL.
+ *
+ * @param {string} string - The string to check.
+ * @returns {boolean} - Returns `true` if the string is a valid URL, otherwise `false`.
+ *
+ * @example
+ * isValidURL("https://example.com"); // true
+ * isValidURL("not-a-url");          // false
+ * isValidURL("ftp://example.com");  // true
+ */
+function isValidURL(string) {
+  try {
+    // Attempt to create a URL object with the string
+    new URL(string);
+    return true;
+  } catch (_) {
+    // If it throws an error, it's not a valid URL
+    return false;
+  }
+}
+
 module.exports = {
   loadLocationAddress,
   removeDomain,
   previewFileName,
-  loadDelzStatusOptions
+  loadDelzStatusOptions,
+  isValidURL
 };

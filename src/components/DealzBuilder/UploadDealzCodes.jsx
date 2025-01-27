@@ -24,11 +24,6 @@ const UploadDealzCodes = ({ formData, setFormData, dealzId = "" }) => {
         couponCreationType: DEALZ.COUPON_CREATION_TYPE.upload,
         couponCodeType: DEALZ.COUPON_CODE_TYPE.universal,
       };
-      if (dealzId) {
-        params = {
-          dealzId,
-        };
-      }
       const res = await api.file.uploadFile(uploadType, file, params);
       if (res.status === "ok") {
         setUplodingDealzCodes(false);

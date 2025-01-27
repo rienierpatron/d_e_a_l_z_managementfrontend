@@ -16,7 +16,7 @@ import { formatDateToYYYYMMDD } from "@/lib/date";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
 
-const DealzBuilderStep4 = ({ formData, setFormData }) => {
+const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
   const [error, setError] = useState(null);
   const { valid_date_from, valid_date_to } = formData;
 
@@ -32,7 +32,7 @@ const DealzBuilderStep4 = ({ formData, setFormData }) => {
     });
   };
 
-  const handleNext = async() => {
+  const handleNext = async () => {
     const { hasError, errors } = await validateFormData(
       validationSchema,
       formData
@@ -98,9 +98,11 @@ const DealzBuilderStep4 = ({ formData, setFormData }) => {
       </div>
       <Typography
         variant="body"
-        className="!text-secondary underline font-medium cursor-pointer text-center mt-[60px]"
+        className="!text-secondary underline font-medium text-center mt-[60px]"
       >
-        2 Slots remaining from 5 slots
+        {`${
+          currentSubscription?.available_inventory?.slot ?? 0
+        } Slots remaining from 10 slots`}
       </Typography>
       <Button
         className="uppercase shadow-custom-primary mt-8"

@@ -16,15 +16,13 @@ import IconCrown from "@/components/Icons/IconCrown";
 import CustomDatePicker from "@/components/Common/DatePicker";
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
-import { useSubscription } from "../Subscriptions/GetSubscriptionDetails";
 import { formatDateToYYYYMMDD } from "@/lib/date";
 import { DEALZ, SUBSCRIPTIONS } from "@/lib/constants";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
 
-const DealzBuilderStep3 = ({ formData, setFormData }) => {
+const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
   const [error, setError] = useState(null);
-  const { currentSubscription } = useSubscription();
   const { slot_date, slot_time, daily_deal, weekly_deal, banner_image } =
     formData;
 
@@ -184,9 +182,11 @@ const DealzBuilderStep3 = ({ formData, setFormData }) => {
       </div>
       <Typography
         variant="body"
-        className="!text-secondary underline font-medium cursor-pointer text-center mt-[60px]"
+        className="!text-secondary underline font-medium text-center mt-[60px]"
       >
-        2 Slots remaining from 5 slots
+        {`${
+          currentSubscription?.available_inventory?.slot ?? 0
+        } Slots remaining from 10 slots`}
       </Typography>
       <Button
         className="uppercase shadow-custom-primary mt-8"

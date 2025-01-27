@@ -18,7 +18,6 @@ import IconDownload from "@/components/Icons/IconDownload";
 import FormRadio from "@/components/Common/FormRadio";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
 import { DEALZ } from "@/lib/constants";
-import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
 import UploadHeroImage from "./UploadHeroImage";
 import UploadDealzCodes from "./UploadDealzCodes";
 import { validateFormData, validations } from "@/lib/validations";
@@ -28,10 +27,14 @@ import { api } from "@/api";
 import FormInput from "../Common/FormInput";
 import IconCoupon from "../Icons/IconCoupon";
 
-const DealzBuilderStep1 = ({ formData, setFormData, dealzId }) => {
+const DealzBuilderStep1 = ({
+  formData,
+  setFormData,
+  dealzId,
+  currentSubscription,
+}) => {
   const { initial_message, offer_type, coupon_creation_type, code } = formData;
   const [error, setError] = useState(null);
-  const { currentSubscription } = useSubscription();
 
   const validationSchema = Yup.object().shape({
     initial_message: validations.stringRequiredWithMaxLength(115),
@@ -207,8 +210,6 @@ const DealzBuilderStep1 = ({ formData, setFormData, dealzId }) => {
                 setFormData({
                   ...formData,
                   coupon_creation_type: DEALZ.COUPON_CREATION_TYPE.automatic,
-                  coupon_code_file_url: null,
-                  csv_file_name: null,
                 })
               }
             />

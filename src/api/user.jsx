@@ -13,6 +13,7 @@ export async function getCurrentUser(showMessage = true) {
     method: "GET",
     headers: {
       Accept: "application/json",
+      "x-access-token": helper.cookie.getAccessToken(),
     },
     DONT_SHOW_ERROR: showMessage,
   });
@@ -47,10 +48,10 @@ export async function getAllAgencyUsers(showMessage = true) {
 export async function inviteAgencyUser(data, showMessage) {
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/invite`,
-    method: 'post',
+    method: "post",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
       "x-access-token": helper.cookie.getAccessToken(),
     },
     data,
@@ -67,10 +68,10 @@ export async function inviteAgencyUser(data, showMessage) {
 export async function inviteAllPendingAgencyUser(showMessage = true) {
   const response = await Axios({
     url: `${config.apiUrl}/agency/users/invite/resend/all`,
-    method: 'post',
+    method: "post",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
       "x-access-token": helper.cookie.getAccessToken(),
     },
   });
@@ -86,10 +87,10 @@ export async function inviteAllPendingAgencyUser(showMessage = true) {
 export async function inviteSelectedPendingAgencyUser(data, showMessage) {
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/invite/resend/selected`,
-    method: 'post',
+    method: "post",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
       "x-access-token": helper.cookie.getAccessToken(),
     },
     data,
@@ -106,11 +107,11 @@ export async function inviteSelectedPendingAgencyUser(data, showMessage) {
 export async function deleteAgencyUser(AgencyUserId, showMessage) {
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/${AgencyUserId}`,
-    method: 'delete',
+    method: "delete",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      "x-access-token": helper.cookie.getAccessToken()
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "x-access-token": helper.cookie.getAccessToken(),
     },
   });
   return helper.api.handleApiResponse(response, showMessage);

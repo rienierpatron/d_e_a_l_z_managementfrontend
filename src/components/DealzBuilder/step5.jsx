@@ -81,7 +81,7 @@ const DealzBuilderStep5 = ({
     delete payload.coupon_code_file_url;
     delete payload.step;
     if (
-      currentSubscription?.subscription?.subscription_name.toLowerCase() !==
+      currentSubscription?.subscription?.subscription_name?.toLowerCase() !==
       SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro
     ) {
       delete payload.slot_time;

@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { api } from '@/api';
-import { helper } from '@/helpers';
-import { useUser } from '@/context/UserContext';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { api } from "@/api";
+import { helper } from "@/helpers";
+import { useUser } from "@/context/UserContext";
 
 const EmailVerification = ({ verifyApiMethod, successMessage }) => {
   const currentUser = useUser();
-  const [isSuperAdminOrStaff, setIsSuperAdminOrStaff] = useState(null);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [userLoaded, setUserLoaded] = useState(false);
   const router = useRouter();
@@ -15,14 +14,6 @@ const EmailVerification = ({ verifyApiMethod, successMessage }) => {
   // Extract `code` from the URL query parameter
   const { query } = router;
   const code = query.code;
-
-  // Update `isSuperAdminOrStaff` when `currentUser` changes
-  useEffect(() => {
-    if (currentUser && currentUser.user) {
-      setIsSuperAdminOrStaff(currentUser.user.is_super_or_staff);
-      setUserLoaded(true);
-    }
-  }, [currentUser]); 
 
   // Trigger email verification once the `code` is available
   useEffect(() => {
@@ -40,17 +31,18 @@ const EmailVerification = ({ verifyApiMethod, successMessage }) => {
       // Making the API call using the provided `verifyApiMethod`
       const response = await api.auth[verifyApiMethod](data, false);
 
-      if (response && helper.cmpStr(response.status, 'ok')) {
+      if (response && helper.cmpStr(response.status, "ok")) {
         setMessage(successMessage);
         const accessToken = response.data.access_token;
-        
+
         if (accessToken) {
           helper.cookie.setAccessToken(accessToken);
-        }
-
-        // Wait for `isSuperAdminOrStaff` to be set before redirecting
-        if (userLoaded && isSuperAdminOrStaff !== null || isSuperAdminOrStaff !== undefined) {
-          redirectUser(isSuperAdminOrStaff);
+          const userData = await api.user.getCurrentUser(accessToken, false);
+          if (userData.status === "ok" && userData.data) {
+            userData.data.user.is_super_or_staff
+              ? router.push("/admin/dashboard")
+              : router.push("/dashboard");
+          }
         }
       }
     } catch (error) {
@@ -60,14 +52,6 @@ const EmailVerification = ({ verifyApiMethod, successMessage }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Function to handle redirection based on role
-  const redirectUser = (isSuperAdminOrStaff) => {
-    console.log(isSuperAdminOrStaff);
-    debugger;
-    const redirectUrl = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
-    router.push(redirectUrl);
   };
 
   // Handle the loading state

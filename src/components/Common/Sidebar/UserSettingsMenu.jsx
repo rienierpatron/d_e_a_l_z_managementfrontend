@@ -13,7 +13,7 @@ export default function UserSettingsMenu() {
       <ul className="pt-1">
         <li className="flex gap-2 pb-4 items-center border-b border-light-gray">
           {/* Profile Initials inside a Circle */}
-          <div className="p-1 bg-gradient-primary text-white w-10 h-10 flex items-center justify-center rounded-full">
+          <div className="flex-shrink-0 p-1 bg-gradient-primary text-white w-10 h-10 flex items-center justify-center rounded-full">
             {helper.general.getInitials(currentUser?.user?.first_name, currentUser?.user?.last_name)}
           </div>
 

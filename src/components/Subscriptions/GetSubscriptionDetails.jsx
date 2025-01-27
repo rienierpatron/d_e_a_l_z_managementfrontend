@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { helper } from "../../helpers";
 import { getSubscriptionDetails } from "@/api/subscriptions";
+import { useUser } from "@/context/UserContext";
 
 export const useSubscription = () => {
+  const { user } = useUser()
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const [error, setError] = useState(null);
 
@@ -23,8 +25,10 @@ export const useSubscription = () => {
   };
 
   useEffect(() => {
-    getCurrentSubscriptionDetails();
-  }, []); // Empty array means this will only run on mount
+    if (user && !user?.is_super_or_staff) {
+      getCurrentSubscriptionDetails();
+    }
+  }, [user]);
 
   return { currentSubscription, error };
 };

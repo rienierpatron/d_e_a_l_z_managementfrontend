@@ -132,7 +132,7 @@ const DesktopSidebar = () => {
             </li>
           ))}
           {/* Display SidbarUpgradeCta only for non-superadmin or staff users with specific subscription */}
-          {!isSuperAdminOrStaff &&
+          {!isSuperAdmin &&
             currentSubscription?.subscription?.subscription_name?.toLowerCase() !==
               SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && <SidbarUpgradeCta />}
         </ul>

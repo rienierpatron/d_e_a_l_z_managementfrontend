@@ -7,10 +7,13 @@ import React, { createContext, useState, useContext } from "react";
  * Internal dependencies
  */
 import { api } from "@/api";
+import { USER } from "@/lib/constants";
+import { useRouter } from "next/router";
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,8 +23,17 @@ export const UserProvider = ({ children }) => {
       setLoading(true);
       const userData = await api.user.getCurrentUser(false);
       if (userData.status === "ok") {
-        setUser(userData.data.user);
-        return;
+        const is_super_admin =
+          userData.data.user?.user_role?.role_name === USER.ROLES.SUPERADMIN;
+        setUser({ ...userData.data.user, is_super_admin });
+        if (
+          router.pathname.includes("/admin") &&
+          userData.data.user?.user_role?.role_name !== USER.ROLES.SUPERADMIN &&
+          userData.data.user?.user_role?.role_name !== USER.ROLES.STAFF
+        ) {
+          return router.replace("/dashboard");
+        }
+        return userData;
       }
       setUser(null);
     } catch (error) {

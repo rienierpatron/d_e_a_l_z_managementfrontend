@@ -42,14 +42,12 @@ export default function DealzView() {
 
   // Fetch agency users list
   const getDealzRecordDetails = async (dealzId) => {
-    console.log(dealzId);
     try {
       setIsLoading(true);
       const showMessage = false;
       const response = await getDealzSuperAdminRecordDetail(dealzId, showMessage);
       if (response && helper.cmpStr(response.status, "ok")) {
         setDealzDetails(response.data);
-        console.log(response.data);
       }
     } catch (error) {
       return helper.general.alert("error", {

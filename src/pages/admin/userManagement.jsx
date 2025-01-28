@@ -12,8 +12,8 @@ const AdminUserManagement = () => {
     const data = {
       first_name: userData.firstName,
       last_name: userData.lastName,
+      role: userData.userRole.value,
       email: userData.email,
-      role: "superadmin"
     };
 
     await inviteUser(data);

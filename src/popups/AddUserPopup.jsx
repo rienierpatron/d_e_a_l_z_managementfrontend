@@ -2,14 +2,22 @@
 import React, { useState } from "react";
 import Typography from "@/components/Common/Typography";
 import FormInput from "@/components/Common/FormInput";
+import FormSelect from "@/components/Common/FormSelect";
 import Button from "@/components/Common/Button";
 import Dialog from "@/components/Common/Dialog";
 import { helper } from "@/helpers";
+
+// Options for User role Selection
+export const USER_ROLE_OPTIONS = [
+  { label: "Staff", value: "staff" },
+  { label: "Super Admin", value: "superadmin" },
+];
 
 export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
   const [firstName, setFirstName] = useState(""); // State for first name input
   const [lastName, setLastName] = useState(""); // State for last name input
   const [email, setEmail] = useState(""); // State for email input
+  const [userRole, setUserRole] = useState([]);
   const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
@@ -19,7 +27,8 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
     const newErrors = {
       firstName: !firstName,
       lastName: !lastName,
-      email: !email || !helper.validateEmail(email), // Email validation helper
+      userRole: !userRole,
+      email: !email || !helper.validateEmail(email),
     };
 
     // Set errors and return if any errors are present
@@ -29,8 +38,12 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
     }
 
     // If validation passes, trigger the onSubmit callback
-    onSubmit({ firstName, lastName, email });
+    onSubmit({ firstName, lastName, userRole, email });
     togglePopup(); // Close the popup after successful submission
+  };
+
+  const handleUserRoleChange = (userRole) => {
+    setUserRole(userRole);
   };
 
   return (
@@ -117,6 +130,25 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
             fullWidth
             rounded
             isError={errors.lastName}
+          />
+        </div>
+
+        {/* For Superadmin only - User Role Field */}
+        <div>
+          <label htmlFor="user-role">
+            <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+              User role
+            </Typography>
+          </label>
+          <FormSelect
+            id="user-role"
+            name="user-role"
+            placeholder="User role"
+            options={USER_ROLE_OPTIONS}
+            value={userRole}
+            onChange={handleUserRoleChange}
+            rounded
+            icon="/icons/company-icon.svg"
           />
         </div>
 

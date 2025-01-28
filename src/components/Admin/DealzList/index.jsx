@@ -7,7 +7,6 @@ import React, { useState, useEffect } from "react";
  * Internal dependencies
  */
 import { api } from "@/api";
-import { helper } from "@/helpers";
 import CommonTable from "@/components/Common/CommonTable";
 import DealzStatusRenderer from "@/components/DealzStatusRenderer";
 import { PAGINATION } from "@/lib/constants";
@@ -15,7 +14,6 @@ import DealzFilter from "@/components/DealzFilter";
 import IconChart from "@/components/Icons/IconChart";
 import IconProfileCircle from "@/components/Icons/IconProfileCircle";
 import Typography from "@/components/Common/Typography";
-import { getAllSuperAdminDealzRecords } from "@/api/dealz";
 import PopoverMenu from "@/components/Common/PopoverMenu";
 import IconEdit from "@/components/Icons/IconEdit";
 import IconEye from "@/components/Icons/IconEye";
@@ -29,7 +27,6 @@ export default function DealzList({
   backNav, 
   showFilter = false,
   showNavigation = false}) {
-  const [allRecords, setAllRecords] = useState([]);
   const [dealzList, setDealzList] = useState([]);
   const [totalRecords, setTotalRecords] = useState(10);
   const [showPopover, setShowPopover] = useState(false);
@@ -73,7 +70,6 @@ export default function DealzList({
       }
       const res = await api.dealz.getAllSuperAdminDealzRecords(params, false);
       if (res.status === "ok") {
-        console.log(res?.data?.dealz[0].agency_user);
         setDealzList(res?.data?.dealz);
         setTotalRecords(res?.data?.totalOverallResult);
       }

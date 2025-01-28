@@ -17,10 +17,15 @@ import { SUBSCRIPTIONS } from "@/lib/constants";
 
 const DesktopSidebar = () => {
   const currentUser = useUser();
+  const isSuperAdmin = currentUser?.user?.is_super_admin;
   const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
-  const { currentSubscription, error } = useSubscription();
+  const { currentSubscription } = useSubscription();
   const router = useRouter();
   const navRef = useRef(null);
+  const userPopupRef = useRef(null);
+  const switchAgencyRef = useRef(null);
+  const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [isSwitchAgencyPopupOpen, setIsSwitchAgencyPopupOpen] = useState(false);
 
   // Adjust the sidebar height dynamically based on hotbar presence
   useEffect(() => {
@@ -30,17 +35,30 @@ const DesktopSidebar = () => {
     }
   }, [router.pathname]);
 
-  // useEffect(() => {
-  //   // Check the conditions when the component mounts or when the relevant props change
-  //   if (isSuperAdminOrStaff && isSuperAdminRoleName) {
-  //     setShowDealzLogo(true);
-  //   } else {
-  //     setShowDealzLogo(false);
-  //   }
-  // }, [isSuperAdminOrStaff, isSuperAdminRoleName]);
+  // Close the UserSettingsMenu when clicking outside
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const handleClickOutside = (event) => {
+        if (
+          userPopupRef.current &&
+          !userPopupRef.current.contains(event.target)
+        ) {
+          setIsUserPopupOpen(false);
+        }
+        if (
+          switchAgencyRef.current &&
+          !switchAgencyRef.current.contains(event.target)
+        ) {
+          setIsSwitchAgencyPopupOpen(false);
+        }
+      };
 
-  const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
-  const [isSwitchAgencyPopupOpen, setIsSwitchAgencyPopupOpen] = useState(false);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, []);
 
   const openUserPopup = () => {
     setIsUserPopupOpen((prevState) => !prevState);
@@ -51,7 +69,7 @@ const DesktopSidebar = () => {
   };
 
   // Helper to map over NAV_ITEMS or ADMIN_NAV_ITEMS based on user role
-  const getNavItems = () => (isSuperAdminOrStaff ? ADMIN_NAV_ITEMS : NAV_ITEMS);
+  const getNavItems = () => (isSuperAdmin ? ADMIN_NAV_ITEMS : NAV_ITEMS);
 
   return (
     <nav
@@ -64,7 +82,7 @@ const DesktopSidebar = () => {
           className="text-center cursor-pointer flex flex-col items-center"
           onClick={isSuperAdminOrStaff ? openSwitchAgencyPopup : undefined}
         >
-          {isSuperAdminOrStaff ? (
+          {isSuperAdmin ? (
             <Image
               src="/dealz-logo.svg"
               width={67}
@@ -87,7 +105,10 @@ const DesktopSidebar = () => {
         </div>
 
         {isSwitchAgencyPopupOpen && (
-          <SwitchAgencyMenu isSuperAdminOrStaff={isSuperAdminOrStaff} />
+          <SwitchAgencyMenu
+            isSuperAdminOrStaff={isSuperAdminOrStaff}
+            ref={switchAgencyRef}
+          />
         )}
 
         <ul className="flex flex-col gap-8">
@@ -111,7 +132,7 @@ const DesktopSidebar = () => {
             </li>
           ))}
           {/* Display SidbarUpgradeCta only for non-superadmin or staff users with specific subscription */}
-          {!isSuperAdminOrStaff &&
+          {!isSuperAdmin &&
             currentSubscription?.subscription?.subscription_name?.toLowerCase() !==
               SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && <SidbarUpgradeCta />}
         </ul>
@@ -152,7 +173,7 @@ const DesktopSidebar = () => {
         </li>
       </ul>
       {/* Popup Menu */}
-      {isUserPopupOpen && <UserSettingsMenu />}
+      {isUserPopupOpen && <UserSettingsMenu ref={userPopupRef} />}
     </nav>
   );
 };

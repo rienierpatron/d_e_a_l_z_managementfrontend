@@ -169,3 +169,15 @@ export const UPLOAD_TYPES = {
   dealz_banner: "dealz_banner",
   dealz_codes: "dealz_codes",
 };
+
+export const USER = {
+  ROLES: {
+    ADMIN: "admin",
+    STAFF: "staff",
+    SUPERADMIN: "superadmin",
+  },
+};
+
+export const AGENCY = {
+  SUPERADMIN_AGENCY_NAME: "Dealz Asia Management",
+};

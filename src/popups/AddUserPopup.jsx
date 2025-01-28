@@ -6,6 +6,7 @@ import FormSelect from "@/components/Common/FormSelect";
 import Button from "@/components/Common/Button";
 import Dialog from "@/components/Common/Dialog";
 import { helper } from "@/helpers";
+import { useUser } from "@/context/UserContext";
 
 // Options for User role Selection
 export const USER_ROLE_OPTIONS = [
@@ -14,10 +15,12 @@ export const USER_ROLE_OPTIONS = [
 ];
 
 export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
+  const currentUser = useUser();
+  const isSuperAdmin = currentUser?.user?.is_super_admin;
   const [firstName, setFirstName] = useState(""); // State for first name input
   const [lastName, setLastName] = useState(""); // State for last name input
   const [email, setEmail] = useState(""); // State for email input
-  const [userRole, setUserRole] = useState([]);
+  const [userRole, setUserRole] = useState([]); // State for user role input
   const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
@@ -134,23 +137,25 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
         </div>
 
         {/* For Superadmin only - User Role Field */}
-        <div>
-          <label htmlFor="user-role">
-            <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
-              User role
-            </Typography>
-          </label>
-          <FormSelect
-            id="user-role"
-            name="user-role"
-            placeholder="User role"
-            options={USER_ROLE_OPTIONS}
-            value={userRole}
-            onChange={handleUserRoleChange}
-            rounded
-            icon="/icons/company-icon.svg"
-          />
-        </div>
+        {isSuperAdmin && (
+          <div>
+            <label htmlFor="user-role">
+              <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+                User role
+              </Typography>
+            </label>
+            <FormSelect
+              id="user-role"
+              name="user-role"
+              placeholder="User role"
+              options={USER_ROLE_OPTIONS}
+              value={userRole}
+              onChange={handleUserRoleChange}
+              rounded
+              icon="/icons/company-icon.svg"
+            />
+          </div>
+        )}
 
         {/* Email Field */}
         <div>

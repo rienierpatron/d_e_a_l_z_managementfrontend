@@ -21,12 +21,15 @@ import IconTrash from "@/components/Icons/IconTrash";
 import IconVerticalDots from "@/components/Icons/IconVerticalDots";
 import Button from "@/components/Common/Button";
 import BackNavigation from "@/components/Common/BackNavigation";
+import { loadDelzStatusOptions } from "@/lib/utils";
+import { formatDateToYYYYMMDD } from "@/lib/date";
 
 export default function DealzList({
-  title, 
-  backNav, 
+  title,
+  backNav,
   showFilter = false,
-  showNavigation = false}) {
+  showNavigation = false,
+}) {
   const [dealzList, setDealzList] = useState([]);
   const [totalRecords, setTotalRecords] = useState(10);
   const [showPopover, setShowPopover] = useState(false);
@@ -35,18 +38,25 @@ export default function DealzList({
     pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
     pageIndex: 0,
   };
+  const [filters, setFilters] = useState({});
+  const [sorting, setSorting] = useState({
+    orderColumn: "",
+    orderDirection: "",
+  });
   const [pagination, setPagination] = useState(intialPaginationStatus);
 
   const menuItems = [
     {
       icon: <IconEdit width={16} height={16} />,
       label: "Edit",
-      onClick: (dealzId) => window.location.href = `/admin/dealz/edit?dealz_id=${dealzId}`,
+      onClick: (dealzId) =>
+        (window.location.href = `/admin/dealz/edit?dealz_id=${dealzId}`),
     },
     {
       icon: <IconEye width={16} height={16} />,
       label: "View",
-      onClick: (dealzId) => window.location.href = `/admin/dealz/view?dealz_id=${dealzId}`,
+      onClick: (dealzId) =>
+        (window.location.href = `/admin/dealz/view?dealz_id=${dealzId}`),
     },
     {
       icon: <IconTrash width={16} height={16} />,
@@ -56,18 +66,15 @@ export default function DealzList({
   ];
 
   // Fetch agency users list
-  const getAllDealzRecords = async (filters = {}) => {
+  const getAllDealzRecords = async () => {
     try {
       const params = {
         offset: (pagination.currentPage - 1) * pagination.pageSize,
         limit: pagination.pageSize,
+        ...filters,
+        orderColumn: sorting.orderColumn,
+        orderDirection: sorting.orderDirection,
       };
-      // Add filters to params if their values are not empty or undefined
-      for (const key in filters) {
-        if (filters[key]) {
-          params[key] = filters[key];
-        }
-      }
       const res = await api.dealz.getAllSuperAdminDealzRecords(params, false);
       if (res.status === "ok") {
         setDealzList(res?.data?.dealz);
@@ -78,10 +85,9 @@ export default function DealzList({
     }
   };
 
-  // Fetch users when component mounts
   useEffect(() => {
     getAllDealzRecords();
-  }, [pagination]);
+  }, [pagination, filters, sorting]);
 
   const columns = React.useMemo(
     () => [
@@ -91,25 +97,35 @@ export default function DealzList({
       },
       {
         header: "Agency",
-        accessorKey: "agency_user.agency.agency_name",
+        accessorKey: "agency_name",
+        Cell: ({ row: { original } }) => {
+          return original?.agency_user?.agency?.agency_name;
+        },
       },
       {
         header: "SLOT DATE",
-        accessorKey: "slot_date_time"
+        accessorKey: "slot_date",
+        Cell: ({ row: { original } }) => {
+          return original?.slot_date_time;
+        },
       },
       {
         header: "VALIDITY",
-        accessorKey: "validity_date",
+        accessorKey: "valid_date_from",
         Cell: ({ row: { original } }) => {
           return original.validity_date;
-        }
+        },
       },
       {
         header: "CREATED BY",
         accessorKey: "created_by",
         Cell: ({ row: { original } }) => {
-          return original.agency_user.user.first_name + ' ' + original.agency_user.user.last_name;
-        }
+          return (
+            original.agency_user.user.first_name +
+            " " +
+            original.agency_user.user.last_name
+          );
+        },
       },
       {
         header: "STATUS",
@@ -126,7 +142,7 @@ export default function DealzList({
           return (
             <PopoverMenu
               // menuItems={menuItems}
-              menuItems={menuItems.map(item => ({
+              menuItems={menuItems.map((item) => ({
                 ...item,
                 onClick: () => item.onClick(original.dealz_id), // Pass dealz_id dynamically
               }))}
@@ -151,7 +167,7 @@ export default function DealzList({
   );
 
   const handleApply = async (filterState) => {
-    // setPagination(intialPaginationStatus);
+    debugger
     const filters = {
       title: filterState?.title ?? "",
       status: filterState?.status?.value ?? "",
@@ -165,63 +181,66 @@ export default function DealzList({
       slot_date: filterState?.slot_date
         ? formatDateToYYYYMMDD(filterState.slot_date)
         : "",
+      code: filterState?.code ?? "",
     };
-    await fetchDealRecords(filters);
+    // Reset pagination and set new filters
+    setPagination(intialPaginationStatus);
+    setFilters(filters);
   };
 
   const filterFields = [
     {
-      id: "deal_title",
+      id: "title",
       type: "input",
       placeholder: "DEAL TITLE",
       icon: "/icons/tag-2-icon.svg",
-      className: "!pl-10 py-3 !h-auto !w-full",
+      className: "!pl-10 py-3 !h-auto !w-[200px]",
       iconClassName: "!left-3",
-      fullWidth: true
     },
     {
       id: "slot_date",
-      type: "input",
+      type: "datePicker",
       placeholder: "SLOT DATE",
-      icon: "/icons/slot-icon.svg",
-      className: "!pl-10 py-3 !h-auto !w-full",
-      iconClassName: "!left-3",
-      fullWidth: true
+      inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
+      className: "!w-[200px]",
     },
     {
       id: "start_date",
       type: "datePicker",
       placeholder: "START DATE",
       inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
-      className: "w-full",
+      className: "!w-[200px]",
+    },
+    {
+      id: "end_date",
+      type: "datePicker",
+      placeholder: "END DATE",
+      inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
+      className: "!w-[200px]",
     },
     {
       id: "code",
       type: "input",
       placeholder: "COUPON CODE",
       icon: "/icons/tag-2-icon.svg",
-      className: "!pl-10 py-3 !h-auto !w-full",
+      className: "!pl-10 py-3 !h-auto !w-[200px]",
       iconClassName: "!left-3",
-      fullWidth: true
     },
     {
       id: "created_by",
-      type: "select",
+      type: "input",
       placeholder: "CREATED BY",
       icon: <IconProfileCircle />,
-      options: [],
-      controlStyle: { paddingLeft: "40px" },
+      className: "!pl-10 py-3 !h-auto !w-[200px]",
+      iconClassName: "!left-3",
     },
     {
       id: "status",
       type: "select",
       placeholder: "STATUS",
       icon: <IconChart />,
-      options: [
-        { label: "Draft", value: "draft" },
-        { label: "Closed", value: "closed" },
-      ],
-      controlStyle: { paddingLeft: "40px" },
+      options: loadDelzStatusOptions(),
+      controlStyle: { paddingLeft: "40px", width: "200px" },
     },
   ];
 
@@ -229,38 +248,54 @@ export default function DealzList({
     <>
       <div className="w-full py-8">
         <div className="rounded-tl-2xl rounded-tr-2xl border border-light-blue p-6 flex flex-col gap-6">
-        {backNav ? (
-          <BackNavigation
-            text={title}
-            baseClassName="!mb-0 w-max"
-            className="text-2xl font-semibold"
+          {backNav ? (
+            <BackNavigation
+              text={title}
+              baseClassName="!mb-0 w-max"
+              className="text-2xl font-semibold"
+            />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Typography variant="subtitle">Recent DEALZ</Typography>
+            </div>
+          )}
+          <DealzFilter
+            fields={filterFields}
+            onApply={handleApply}
+            className="flex-wrap"
+            onClearFilter={() => {
+              setPagination({
+                ...pagination,
+                currentPage: 1,
+                pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
+              });
+              setFilters({});
+            }}
           />
-        ) : (
-          <div className="flex items-center gap-2">
-            <Typography variant="subtitle">Recent DEALZ</Typography>
-          </div>
-        )}
-          <DealzFilter fields={filterFields} onApply={handleApply} />
         </div>
-        <CommonTable 
+        <CommonTable
           columns={columns}
           data={dealzList?.length ? dealzList : []}
           totalCount={totalRecords}
           pageSize={pagination.pageSize}
-          paginationRequired={showFilter}
+          paginationRequired={true}
           sortingServerSide={true}
           paginationServerSide={true}
-          currentPage={pagination.currentPage - 1}
+          currentPage={pagination.currentPage}
           onPageChange={(newPage) =>
             setPagination({ ...pagination, currentPage: newPage })
           }
           onPageSizeChange={(pageSize) => {
             setPagination({ ...pagination, pageSize, currentPage: 1 });
           }}
-          onSortChange={(orderBy, order) => {}}
+          onSortChange={(orderBy, order) => {
+            setSorting({
+              orderColumn: orderBy,
+              orderDirection: order?.toUpperCase(),
+            });
+          }}
         />
       </div>
-
     </>
   );
 }

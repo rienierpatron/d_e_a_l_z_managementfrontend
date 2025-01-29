@@ -201,7 +201,7 @@ export default function CommonUserManagement({
     <div className="w-full p-5 h-full">
       <div>
         <div className="p-5 border border-b-0 rounded-t-xl flex flex-1 justify-between items-center">
-          <h2 className="text-3xl">
+          <h2 className="text-2xl font-semibold">
             {loading ? "Loading..." : `${allUsers?.length || 0} Licensed Users`}
           </h2>
           <div className="flex items-center gap-4">

@@ -9,6 +9,7 @@ import React, { createContext, useState, useContext } from "react";
 import { api } from "@/api";
 import { USER } from "@/lib/constants";
 import { useRouter } from "next/router";
+import { PUBLIC_ROUTES } from "@/lib/routes";
 
 const UserContext = createContext();
 
@@ -27,11 +28,19 @@ export const UserProvider = ({ children }) => {
           userData.data.user?.user_role?.role_name === USER.ROLES.SUPERADMIN;
         setUser({ ...userData.data.user, is_super_admin });
         if (
-          router.pathname.includes("/admin") &&
+          (router.pathname.includes("/admin") ||
+            PUBLIC_ROUTES.includes(router.pathname)) &&
           userData.data.user?.user_role?.role_name !== USER.ROLES.SUPERADMIN &&
           userData.data.user?.user_role?.role_name !== USER.ROLES.STAFF
         ) {
           return router.replace("/dashboard");
+        }
+        if (
+          PUBLIC_ROUTES.includes(router.pathname) &&
+          (userData.data.user?.user_role?.role_name === USER.ROLES.SUPERADMIN ||
+            userData.data.user?.user_role?.role_name === USER.ROLES.STAFF)
+        ) {
+          return router.replace("/admin/dashboard");
         }
         return userData;
       }

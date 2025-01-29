@@ -68,3 +68,12 @@ export const ROUTES_HEADING_MAPPER = {
   "/admin/dealz/edit?dealz_id=[dealz_id]": "DEALZ Details",
   "/admin/dealz/view?dealz_id=[dealz_id]": "DEALZ Details",
 };
+
+export const PUBLIC_ROUTES = [
+  "/login",
+  "/signup",
+  "/confirmation",
+  "/verification/login",
+  "/verification/email",
+  "/verification/invite",
+];

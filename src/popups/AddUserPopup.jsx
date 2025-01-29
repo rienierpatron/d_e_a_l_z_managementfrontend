@@ -1,5 +1,5 @@
 // AddUserPopup.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Typography from "@/components/Common/Typography";
 import FormInput from "@/components/Common/FormInput";
 import FormSelect from "@/components/Common/FormSelect";
@@ -14,7 +14,12 @@ export const USER_ROLE_OPTIONS = [
   { label: "Super Admin", value: "superadmin" },
 ];
 
-export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
+export default function AddUserPopup({
+  isPopupOpen,
+  togglePopup,
+  onSubmit,
+  isLoading = false,
+}) {
   const currentUser = useUser();
   const isSuperAdmin = currentUser?.user?.is_super_admin;
   const [firstName, setFirstName] = useState(""); // State for first name input
@@ -42,24 +47,32 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
 
     // If validation passes, trigger the onSubmit callback
     onSubmit({ firstName, lastName, userRole, email });
-    togglePopup(); // Close the popup after successful submission
   };
 
   const handleUserRoleChange = (userRole) => {
     setUserRole(userRole);
   };
 
+  useEffect(() => {
+    return () => {
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setErrors({});
+    };
+  }, [isPopupOpen]);
+
   return (
     <Dialog
       show={isPopupOpen}
       onClose={togglePopup}
       header={
-      <>
-        <Typography variant="title">Add New User</Typography>
-        <Typography variant="body" className="!text-dark-gray mt-[10px]">
-          Add a colleague to the Chaaat platform in one simple step
-        </Typography>
-      </>
+        <>
+          <Typography variant="title">Add New User</Typography>
+          <Typography variant="body" className="!text-dark-gray mt-[10px]">
+            Add a colleague to the Chaaat platform in one simple step
+          </Typography>
+        </>
       }
       headerClassName="text-xl font-semibold mb-4"
       footer={
@@ -70,8 +83,9 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
             iconPosition="left"
             variant="primary"
             outlined
-            fullWidth  
+            fullWidth
             isRound
+            disabled={isLoading}
           >
             Cancel
           </Button>
@@ -80,12 +94,13 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
             variant="primary"
             icon="/icons/add-w-icon.svg"
             iconPosition="left"
-            fullWidth  
+            fullWidth
             isRound
+            isLoading={isLoading}
+            disabled={isLoading}
           >
             Invite
-          </Button> 
-          
+          </Button>
         </div>
       }
       footerClassName="border-t border-gray-200"
@@ -94,7 +109,10 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
         {/* First Name Field */}
         <div>
           <label htmlFor="first-name">
-            <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+            <Typography
+              variant="caption"
+              className="text-gray-700 uppercase mb-[12px]"
+            >
               First Name
             </Typography>
           </label>
@@ -112,12 +130,14 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
             isError={errors.firstName}
           />
         </div>
-        
 
         {/* Last Name Field */}
         <div>
           <label htmlFor="last-name">
-            <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+            <Typography
+              variant="caption"
+              className="text-gray-700 uppercase mb-[12px]"
+            >
               Last Name
             </Typography>
           </label>
@@ -140,7 +160,10 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
         {isSuperAdmin && (
           <div>
             <label htmlFor="user-role">
-              <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
+              <Typography
+                variant="caption"
+                className="text-gray-700 uppercase mb-[12px]"
+              >
                 User role
               </Typography>
             </label>
@@ -160,8 +183,11 @@ export default function AddUserPopup({ isPopupOpen, togglePopup, onSubmit }) {
         {/* Email Field */}
         <div>
           <label htmlFor="email">
-            <Typography variant="caption" className="text-gray-700 uppercase mb-[12px]">
-            Email
+            <Typography
+              variant="caption"
+              className="text-gray-700 uppercase mb-[12px]"
+            >
+              Email
             </Typography>
           </label>
           <FormInput

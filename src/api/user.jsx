@@ -45,7 +45,7 @@ export async function getAllAgencyUsers(showMessage = true) {
  * @param {boolean} [showMessage=true]
  * @returns {Promise<{data: {}, status: string}>}
  */
-export async function inviteAgencyUser(data, showMessage) {
+export async function inviteAgencyUser(data, showMessage = true) {
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/invite`,
     method: "post",
@@ -54,6 +54,7 @@ export async function inviteAgencyUser(data, showMessage) {
       "Content-Type": "application/json",
       "x-access-token": helper.cookie.getAccessToken(),
     },
+    DONT_SHOW_ERROR: showMessage,
     data,
   });
   return helper.api.handleApiResponse(response, showMessage);
@@ -104,7 +105,7 @@ export async function inviteSelectedPendingAgencyUser(data, showMessage) {
  * @param {boolean} [showMessage=true]
  * @returns {Promise<{data: {}, status: string}>}
  */
-export async function deleteAgencyUser(AgencyUserId, showMessage) {
+export async function deleteAgencyUser(AgencyUserId, showMessage = true) {
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/${AgencyUserId}`,
     method: "delete",
@@ -113,6 +114,7 @@ export async function deleteAgencyUser(AgencyUserId, showMessage) {
       "Content-Type": "application/json",
       "x-access-token": helper.cookie.getAccessToken(),
     },
+    DONT_SHOW_ERROR: showMessage,
   });
   return helper.api.handleApiResponse(response, showMessage);
 }

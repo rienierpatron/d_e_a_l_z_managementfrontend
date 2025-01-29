@@ -6,6 +6,7 @@ import { helper } from "@/helpers";
 
 const AdminUserManagement = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   
   // This function will handle the new user submission
   const handleNewUserSubmit = async (userData) => {
@@ -22,15 +23,16 @@ const AdminUserManagement = () => {
   // This function will call the invite API
   const inviteUser = async (data) => {
     try {
+      setIsLoading(true)
       const response = await inviteAgencyUser(data);
       if (response && helper.cmpStr(response.status, "ok")) {
-        helper.general.alert("success", { message: "User invited successfully!" });
         setIsPopupOpen(false);
       } else {
-        helper.general.alert("error", { message: "Failed to invite user." });
+        setIsLoading(false)
       }
     } catch (error) {
       helper.general.alert("error", { message: "Error inviting user." });
+      setIsLoading(false)
     }
   };
 
@@ -40,6 +42,7 @@ const AdminUserManagement = () => {
         handleNewUserSubmit={handleNewUserSubmit}
         isPopupOpen={isPopupOpen}
         setIsPopupOpen={setIsPopupOpen}
+        isLoading={isLoading}
       />
     </div>
   );

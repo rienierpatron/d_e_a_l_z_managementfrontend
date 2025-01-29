@@ -5,6 +5,7 @@ import { helper } from "@/helpers"; // Assuming helper is used for alerts
 
 export default function UserManagement() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   // This function will handle the new user submission
   const handleNewUserSubmit = async (userData) => {
@@ -20,25 +21,27 @@ export default function UserManagement() {
   // This function will call the invite API
   const inviteUser = async (data) => {
     try {
+      setIsLoading(true)
       const response = await inviteAgencyUser(data); // API call to invite user
       if (response && helper.cmpStr(response.status, "ok")) {
-        helper.general.alert("success", { message: "User invited successfully!" });
+        setIsLoading(false)
         setIsPopupOpen(false); // Close the popup after successful invite
       } else {
-        helper.general.alert("error", { message: "Failed to invite user." });
+        setIsLoading(false)
       }
     } catch (error) {
       helper.general.alert("error", { message: "Error inviting user." });
+      setIsLoading(false)
     }
   };
 
   return (
     <div>
-      {/* Pass isPopupOpen and setIsPopupOpen as props */}
       <CommonUserManagement
         handleNewUserSubmit={handleNewUserSubmit}
         isPopupOpen={isPopupOpen}
         setIsPopupOpen={setIsPopupOpen}
+        isLoading={isLoading}
       />
     </div>
   );

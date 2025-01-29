@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 const CustomDatePicker = ({
   maxDate,
+  minDate,
   backgroundColor = "white",
   rounded = false,
   value = null,
@@ -34,7 +35,8 @@ const CustomDatePicker = ({
   return (
     <Datepicker
       id={id}
-      maxDate={maxDate ? maxDate : new Date()}
+      maxDate={maxDate}
+      minDate={minDate ? minDate : new Date()}
       className={className}
       value={value}
       placeholder={placeholder}

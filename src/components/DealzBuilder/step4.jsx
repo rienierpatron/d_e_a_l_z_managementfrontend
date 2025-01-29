@@ -22,7 +22,18 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
 
   const validationSchema = Yup.object().shape({
     valid_date_from: validations.stringRequiredField,
-    valid_date_to: validations.stringRequiredField,
+    valid_date_to: validations.stringRequiredField.test(
+      "is-after-start-date",
+      "End date must be after or equal to start date",
+      function (value) {
+        const { valid_date_from } = this.parent;
+        return (
+          !valid_date_from ||
+          !value ||
+          new Date(value) >= new Date(valid_date_from)
+        );
+      }
+    ),
   });
 
   const handlBack = () => {
@@ -56,7 +67,7 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
         onClick={handlBack}
       />
       <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex justify-between gap-4">
           <div className="w-full">
             <CustomDatePicker
               id="valid_date_from"

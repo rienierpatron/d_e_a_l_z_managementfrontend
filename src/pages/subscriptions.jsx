@@ -2,7 +2,7 @@
  * External dependencies
  */
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 /**
  * Internal dependencies
@@ -14,15 +14,16 @@ import AddOnsCard from "@/components/Subscriptions/AddOnsCard";
 import PlanCard from "@/components/Subscriptions/PlanCard";
 import { SUBSCRIPTIONS } from "@/lib/constants";
 import { helper } from "@/helpers";
-import {
-  getSubscriptionDetails,
-  getSubscriptionPlans,
-} from "@/api/subscriptions";
+import { getSubscriptionPlans } from "@/api/subscriptions";
+import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
+import { api } from "@/api";
 
 export default function Subscriptions() {
+  const router = useRouter();
   const [planList, setPlanList] = useState([]);
   const [fetchingList, setFetchingList] = useState(false);
-  const [currentSubscription, setCurrentSubscription] = useState(null);
+  const { currentSubscription } = useSubscription();
+  const [loading, setLoading] = useState(false);
 
   const getSubscriptionPlanList = async () => {
     try {
@@ -44,39 +45,66 @@ export default function Subscriptions() {
     }
   };
 
-  const getCurrentSubscriptionDetails = async () => {
+  useEffect(() => {
+    getSubscriptionPlanList();
+  }, []);
+
+  const handleUpdateBillingDetails = async () => {
     try {
-      const showMessage = false;
-      const res = await getSubscriptionDetails(showMessage);
+      setLoading(true);
+      const res = await api.subscription.getCustomerPortalLink();
       if (res && helper.cmpStr(res.status, "ok")) {
-        setCurrentSubscription(res.data);
+        setLoading(false);
+        router.push(res.data.stripe_customer_portal_link);
+        return;
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       return helper.general.alert("error", {
         message: "Something went wrong.",
       });
     }
   };
 
-  useEffect(() => {
-    getSubscriptionPlanList();
-    getCurrentSubscriptionDetails();
-  }, []);
+  const handleClickContactUs = () => {
+    window.location.href = "mailto:support@dealz.asia";
+  };
 
   return (
     <div className="w-full p-10">
-      <div className="flex flex-1 justify-between border border-light-gray p-6 rounded-2xl">
-        <div>
-          <Typography className="pb-2 text-[18px] font-medium text-midnight-blue">
-            Your current plan is until March 4, 2025
-          </Typography>
-          <Typography variant="body">
-            <Link href="/" className="text-primary underline">
+      <div className="flex flex-1 justify-between border border-light-gray p-6 rounded-2xl items-center">
+        {currentSubscription &&
+        !helper.isEmpty(currentSubscription?.subscription) ? (
+          <div>
+            <Typography className="pb-2 text-[18px] font-medium text-midnight-blue">
+              Your current plan is until{" "}
+              {new Date(
+                currentSubscription.subscription.period_end
+              ).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </Typography>
+            <Button
+              outlined
+              borderless
+              variant="primary"
+              className="!p-0 underline"
+              onClick={handleUpdateBillingDetails}
+              isLoading={loading}
+              disabled={loading}
+            >
               Click to update your billing details
-            </Link>
+            </Button>
+          </div>
+        ) : (
+          <Typography variant="caption" className="!font-semibold">
+            You are not currently subscribed to any plan.
           </Typography>
-        </div>
-        <div className="flex gap-2">
+        )}
+        <div className="flex gap-2 ml-auto">
           <CancelSubscriptionCta currentSubscription={currentSubscription} />
           <Button
             icon="/icons/call-icon.svg"
@@ -84,6 +112,7 @@ export default function Subscriptions() {
             isRound
             outlined
             className="!py-[10px]"
+            onClick={handleClickContactUs}
           >
             Contact Us
           </Button>

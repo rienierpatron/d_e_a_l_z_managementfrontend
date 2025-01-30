@@ -115,7 +115,10 @@ const DesktopSidebar = () => {
           {getNavItems().map((item, index) => (
             <li
               className={classNames(
-                "cursor-pointer text-dark-gray hover:text-primary"
+                "cursor-pointer text-dark-gray hover:text-primary",
+                {
+                  "text-primary": router.pathname === item.path,
+                }
               )}
               key={index}
             >
@@ -123,6 +126,7 @@ const DesktopSidebar = () => {
                 href={item.path}
                 className="flex items-center justify-center gap-2 flex-col"
                 aria-label={item.label}
+                target={item?.target ?? "_self"}
               >
                 {item.icon}
                 <span className="text-xs font-medium text-center">
@@ -139,7 +143,12 @@ const DesktopSidebar = () => {
       </div>
 
       <ul className="flex flex-col gap-8 justify-center items-center">
-        <li className="cursor-pointer">
+        <li
+          className="cursor-pointer"
+          onClick={() => {
+            window.location.href = "mailto:support@dealz.asia";
+          }}
+        >
           <div className="flex items-center justify-center" aria-label="Help">
             <IconMessageQuestion className="hover:text-primary" />
           </div>
@@ -173,7 +182,9 @@ const DesktopSidebar = () => {
         </li>
       </ul>
       {/* Popup Menu */}
-      {isUserPopupOpen && <UserSettingsMenu ref={userPopupRef} />}
+      {isUserPopupOpen && (
+        <UserSettingsMenu ref={userPopupRef} isSuperAdmin={isSuperAdmin} />
+      )}
     </nav>
   );
 };

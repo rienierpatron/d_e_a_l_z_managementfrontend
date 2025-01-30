@@ -34,7 +34,7 @@ const PlanCard = ({
   const [loading, setLoading] = useState(false);
 
   const className = classNames(
-    "relative max-w-[393px] border rounded-2xl p-[24px] pt-[56px] w-full text-center flex flex-col gap-8 items-center flex-wrap",
+    "relative max-w-[393px] border rounded-2xl p-[24px] pt-[56px] w-full text-center flex flex-col gap-8 items-center flex-wrap z-0",
     {
       "border-2 border-transparent rounded-3xl shadow-[0px_4px_48px_0px_rgba(96,112,233,0.10)]":
         isActivePlan,
@@ -121,19 +121,30 @@ const PlanCard = ({
           return <li key={index}>&#8226; {item}</li>;
         })}
       </ul>
-      <Button
-        className="w-full mt-auto z-10"
-        variant="primary"
-        outlined={!isActivePlan}
-        isRound
-        icon={<IconArrowRight />}
-        iconPosition="right"
-        onClick={handleChoosePlan}
-        isLoading={loading}
-        disabled={disabled || loading}
-      >
-        Choose Plan
-      </Button>
+      {isActivePlan ? (
+        <Button
+          className="w-full mt-auto z-10"
+          variant="primary"
+          isRound
+          disabled={true}
+        >
+          Current Plan
+        </Button>
+      ) : (
+        <Button
+          className="w-full mt-auto z-10"
+          variant="primary"
+          outlined={!isActivePlan}
+          isRound
+          icon={<IconArrowRight />}
+          iconPosition="right"
+          onClick={handleChoosePlan}
+          isLoading={loading}
+          disabled={disabled || loading}
+        >
+          Choose Plan
+        </Button>
+      )}
     </div>
   );
 };

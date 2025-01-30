@@ -30,8 +30,9 @@ export const NAV_ITEMS = [
   // },
   {
     icon: <IconChaaatLogo />,
-    path: "/dashboard",
+    path: "https://www.chaaat.io/",
     label: "Retarget",
+    target: "_blank"
   },
 ];
 
@@ -64,6 +65,7 @@ export const ROUTES_HEADING_MAPPER = {
   "/subscriptions": "Subscriptions",
   "/admin/dashboard": "Dashboard",
   "/admin/calendar": "Calendar",
+  "/userManagement": "User Management",
   "/admin/userManagement": "User Management",
   "/admin/dealz/edit?dealz_id=[dealz_id]": "DEALZ Details",
   "/admin/dealz/view?dealz_id=[dealz_id]": "DEALZ Details",

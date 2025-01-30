@@ -6,8 +6,8 @@ import { helper } from "@/helpers";
 
 const AdminUserManagement = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   // This function will handle the new user submission
   const handleNewUserSubmit = async (userData) => {
     const data = {
@@ -23,28 +23,28 @@ const AdminUserManagement = () => {
   // This function will call the invite API
   const inviteUser = async (data) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const response = await inviteAgencyUser(data);
       if (response && helper.cmpStr(response.status, "ok")) {
         setIsPopupOpen(false);
+        setIsLoading(false);
       } else {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } catch (error) {
       helper.general.alert("error", { message: "Error inviting user." });
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
   return (
-    <div>
-      <CommonUserManagement
-        handleNewUserSubmit={handleNewUserSubmit}
-        isPopupOpen={isPopupOpen}
-        setIsPopupOpen={setIsPopupOpen}
-        isLoading={isLoading}
-      />
-    </div>
+    <CommonUserManagement
+      handleNewUserSubmit={handleNewUserSubmit}
+      isPopupOpen={isPopupOpen}
+      setIsPopupOpen={setIsPopupOpen}
+      isLoading={isLoading}
+      isSuperAdmin={true}
+    />
   );
 };
 

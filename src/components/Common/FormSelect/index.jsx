@@ -20,6 +20,7 @@ const FormSelect = React.forwardRef(
       onChange,
       isError = false,
       wrapperClass = '',
+      value,
       ...props
     },
     ref

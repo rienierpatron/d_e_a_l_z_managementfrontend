@@ -18,15 +18,16 @@ import { useUser } from "@/context/UserContext";
 export default function Signup() {
   const currentUser = useUser();
   const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [userData, setUserData] = useState({
+  const intialData = {
     firstName: "",
     lastName: "",
     email: "",
     companyName: "",
-    businessType: "",
-  });
-
+    businessType: null,
+  };
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [userData, setUserData] = useState(intialData);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     firstName: false,
     lastName: false,
@@ -37,6 +38,7 @@ export default function Signup() {
 
   const [authType, setAuthType] = useState("email");
   const [socialPayload, setSocialPayload] = useState(null);
+  const [formKey, setFormKey] = useState(Date.now());
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -92,11 +94,14 @@ export default function Signup() {
         social_payload: socialPayload.social_payload,
       };
     }
-
+    setIsLoading(true);
     const response = await api.auth.register(data, false);
+    setIsLoading(false);
     if (response && helper.cmpStr(response.status, 'ok')) {
       if (authType === "email") {
         setIsPopupOpen(!isPopupOpen);
+        setUserData({ ...intialData }); // Reset form data
+        setFormKey(Date.now()); // Change key to force re-render
       } else {
         const accessToken = response.data.access_token;
         if (accessToken) {
@@ -104,10 +109,6 @@ export default function Signup() {
           window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
         }
       }
-    } else {
-      return helper.general.alert("error", {
-        message: "Something went wrong.",
-      });
     }
   };
 
@@ -158,6 +159,7 @@ export default function Signup() {
           {/* Right Section */}
           <div className="flex-1 flex py-8 items-center justify-center bg-background-blue">
             <form
+              key={formKey} // Key added to force re-render on userData change
               onSubmit={handleSubmit}
               className="w-full max-w-md py-8 px-4 h-full flex flex-col justify-center overflow-auto scrollbar-hide md:block"
             >
@@ -246,6 +248,7 @@ export default function Signup() {
                     rounded
                     icon="/icons/company-icon.svg"
                     isError={errors.businessType}
+                    value={BUSINESS_TYPE_OPTIONS.find((e) => e.value === userData.businessType)}
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
@@ -277,6 +280,8 @@ export default function Signup() {
                 fullWidth  
                 isRound
                 type="submit"
+                isLoading={isLoading}
+                disabled={isLoading}
               >
                 Sign Up
               </Button>

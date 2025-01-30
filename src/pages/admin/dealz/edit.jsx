@@ -303,7 +303,7 @@ export default function DealzEdit() {
       <div className="flex justify-between">
         <div>
           <a
-            href={dealzDetails.coupons[0].code}
+            href={dealzDetails.coupons?.[0]?.code}
             download
           >
             <div className="relative p-4 mt-2 rounded-2xl border border-light-gray w-max">

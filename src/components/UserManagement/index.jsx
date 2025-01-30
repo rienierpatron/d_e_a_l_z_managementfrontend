@@ -17,7 +17,8 @@ export default function CommonUserManagement({
   isPopupOpen,
   setIsPopupOpen,
   showFilter = false,
-  isLoading = false
+  isLoading = false,
+  isSuperAdmin = false,
 }) {
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -86,7 +87,7 @@ export default function CommonUserManagement({
     if (!isPopupOpen) {
       getAgencyUserList();
     }
-  }, [isPopupOpen])
+  }, [isPopupOpen]);
 
   // Toggle popup state
   const togglePopup = () => {
@@ -184,17 +185,19 @@ export default function CommonUserManagement({
         header: "Actions",
         accessorKey: "actions",
         headerSorting: false,
-        Cell: ({ row: { original } }) => (
-          <button
-            onClick={() => deleteUser(original.agency_user_id)}
-            className="text-red-600 hover:text-red-800"
-          >
-            <Image src="/icons/trash-icon.svg" width={20} height={20} />
-          </button>
-        ),
+        Cell: ({ row: { original } }) => {
+          return allUsers?.length > 1 ? (
+            <button
+              onClick={() => deleteUser(original.agency_user_id)}
+              className="text-red-600 hover:text-red-800"
+            >
+              <Image src="/icons/trash-icon.svg" width={20} height={20} />
+            </button>
+          ) : null;
+        },
       },
     ],
-    [selectedUsers]
+    [selectedUsers, allUsers]
   );
 
   return (
@@ -258,6 +261,7 @@ export default function CommonUserManagement({
         togglePopup={togglePopup}
         onSubmit={handleNewUserSubmit}
         isLoading={isLoading}
+        isSuperAdmin={isSuperAdmin}
       />
     </div>
   );

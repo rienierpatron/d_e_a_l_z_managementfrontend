@@ -14,8 +14,8 @@ const HotBar = () => {
   // Logic to determine content based on the current route
   const renderContent = () => {
     switch (router.pathname) {
-      case "/subscriptions":
-        return <ComingSoon />;
+      // case "/subscriptions":
+      //   return <ComingSoon />;
       default:
         return null;
     }

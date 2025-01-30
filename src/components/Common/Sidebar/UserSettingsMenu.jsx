@@ -4,10 +4,10 @@ import { helper } from "@/helpers";
 import Typography from "../../Common/Typography";
 import Image from "next/image";
 import { forwardRef } from "react";
+import IconCrown from "@/components/Icons/IconCrown";
 
-const UserSettingsMenu = forwardRef((_, ref) => {
+const UserSettingsMenu = forwardRef(({ isSuperAdmin }, ref) => {
   const currentUser = useUser();
-  const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
 
   return (
     <div
@@ -36,9 +36,7 @@ const UserSettingsMenu = forwardRef((_, ref) => {
         </li>
         <li className="pt-3">
           <Link
-            href={
-              isSuperAdminOrStaff ? "/admin/userManagement" : "/userManagement"
-            }
+            href={isSuperAdmin ? "/admin/userManagement" : "/userManagement"}
             className="flex items-center gap-2"
             aria-label="User Management"
           >
@@ -48,6 +46,20 @@ const UserSettingsMenu = forwardRef((_, ref) => {
             </Typography>
           </Link>
         </li>
+        {!isSuperAdmin && (
+          <li className="pt-3">
+            <Link
+              href="/subscriptions"
+              className="flex items-center gap-2"
+              aria-label="Subscriptions"
+            >
+              <IconCrown />
+              <Typography variant="caption" className="!text-black">
+                Subscriptions
+              </Typography>
+            </Link>
+          </li>
+        )}
         <li className="pt-3">
           <Link
             href="/logout"

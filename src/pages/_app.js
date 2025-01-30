@@ -82,6 +82,7 @@ import DocumentHead from "@/components/Common/DocumentHead";
 import HttpInterceptors from "@/layouts/HttpInterceptors";
 import { helper } from "@/helpers";
 import { UserProvider } from "@/context/UserContext";
+import Favicon from "@/components/Common/Favicon";
 
 function DealzManagement({ Component, pageProps }) {
   // State to manage logged-in status
@@ -107,6 +108,7 @@ function DealzManagement({ Component, pageProps }) {
 
   return (
     <UserProvider>
+      <Favicon />
       <Layout>
         <DocumentHead />
         <HttpInterceptors />

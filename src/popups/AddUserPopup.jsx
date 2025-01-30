@@ -6,7 +6,6 @@ import FormSelect from "@/components/Common/FormSelect";
 import Button from "@/components/Common/Button";
 import Dialog from "@/components/Common/Dialog";
 import { helper } from "@/helpers";
-import { useUser } from "@/context/UserContext";
 
 // Options for User role Selection
 export const USER_ROLE_OPTIONS = [
@@ -19,13 +18,12 @@ export default function AddUserPopup({
   togglePopup,
   onSubmit,
   isLoading = false,
+  isSuperAdmin = false,
 }) {
-  const currentUser = useUser();
-  const isSuperAdmin = currentUser?.user?.is_super_admin;
   const [firstName, setFirstName] = useState(""); // State for first name input
   const [lastName, setLastName] = useState(""); // State for last name input
   const [email, setEmail] = useState(""); // State for email input
-  const [userRole, setUserRole] = useState([]); // State for user role input
+  const [userRole, setUserRole] = useState(null); // State for user role input
   const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
@@ -35,7 +33,7 @@ export default function AddUserPopup({
     const newErrors = {
       firstName: !firstName,
       lastName: !lastName,
-      userRole: !userRole,
+      userRole: isSuperAdmin ? !userRole : false,
       email: !email || !helper.validateEmail(email),
     };
 
@@ -59,6 +57,7 @@ export default function AddUserPopup({
       setLastName("");
       setEmail("");
       setErrors({});
+      setUserRole(null);
     };
   }, [isPopupOpen]);
 
@@ -176,6 +175,7 @@ export default function AddUserPopup({
               onChange={handleUserRoleChange}
               rounded
               icon="/icons/company-icon.svg"
+              isError={errors && errors.userRole}
             />
           </div>
         )}

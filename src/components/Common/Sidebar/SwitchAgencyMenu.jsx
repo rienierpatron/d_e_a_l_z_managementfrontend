@@ -76,7 +76,9 @@ const SwitchAgencyMenu = forwardRef((_, ref) => {
       <Typography variant="caption">Switch Agency</Typography>
       <ul className="pt-1 flex flex-col gap-2">
         {agencyList.length === 0 ? (
-          <li className="py-2 text-center">No agencies available</li>
+          <li className="py-2">
+            <Typography variant="caption" className="!text-black">No agencies available</Typography>
+          </li>
         ) : (
           agencyList.map((agency, index) => (
             <li

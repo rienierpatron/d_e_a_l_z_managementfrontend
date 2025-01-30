@@ -91,6 +91,17 @@ export default function DealzList({
         headerSorting: false,
       },
       {
+        header: "CREATED BY",
+        accessorKey: "created_by",
+        Cell: ({ row: { original } }) => {
+          return (
+            original.agency_user?.user?.first_name +
+            " " +
+            original?.agency_user?.user?.last_name
+          );
+        },
+      },
+      {
         header: "STATUS",
         accessorKey: "status",
         Cell: ({ row: { original } }) => {

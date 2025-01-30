@@ -235,7 +235,6 @@ export async function getReachCount(showMessage = true) {
  * @param {string} [params.valid_date_to=''] - The end date for valid date filter
  * @param {string} [params.slot_date=''] - The slot date for valid date filter
  * @param {string} [params.agency_id=''] - The agency ID filter
- * @param {string} [params.code=''] - The coupon code
  * @param {boolean} [showMessage=true] - Whether to show a success or error message
  * @returns {Promise<{data: Object[], status: string}>} - The response data and status from the API
  */
@@ -253,7 +252,6 @@ export async function getAllSuperAdminDealzRecords(params = {}, showMessage = tr
       agency_id = '',
       created_by = '',
       slot_date = '',
-      code = ''
     } = params;
 
     const requestParams = {};
@@ -269,7 +267,6 @@ export async function getAllSuperAdminDealzRecords(params = {}, showMessage = tr
     if (agency_id) requestParams.agency_id = agency_id;
     if (created_by) requestParams.created_by = created_by;
     if (slot_date) requestParams.slot_date = slot_date;
-    if (code) requestParams.code = code;
 
     const response = await Axios({
       url: `${config.apiUrl}/staff/dealz/records`,

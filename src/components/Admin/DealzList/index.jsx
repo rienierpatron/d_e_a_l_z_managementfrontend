@@ -167,7 +167,6 @@ export default function DealzList({
   );
 
   const handleApply = async (filterState) => {
-    debugger
     const filters = {
       title: filterState?.title ?? "",
       status: filterState?.status?.value ?? "",
@@ -181,7 +180,6 @@ export default function DealzList({
       slot_date: filterState?.slot_date
         ? formatDateToYYYYMMDD(filterState.slot_date)
         : "",
-      code: filterState?.code ?? "",
     };
     // Reset pagination and set new filters
     setPagination(intialPaginationStatus);
@@ -217,14 +215,6 @@ export default function DealzList({
       placeholder: "END DATE",
       inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
       className: "!w-[200px]",
-    },
-    {
-      id: "code",
-      type: "input",
-      placeholder: "COUPON CODE",
-      icon: "/icons/tag-2-icon.svg",
-      className: "!pl-10 py-3 !h-auto !w-[200px]",
-      iconClassName: "!left-3",
     },
     {
       id: "created_by",

@@ -82,7 +82,7 @@ const SwitchAgencyMenu = forwardRef((_, ref) => {
             <li
               key={index}
               className={classNames(
-                "flex gap-2 py-2 px-3 items-center cursor-pointer",
+                "flex gap-2 py-2 px-2 items-center cursor-pointer",
                 {
                   "!cursor-default bg-light-gray rounded-md":
                     user.agency_id === agency.agency_id,
@@ -102,7 +102,7 @@ const SwitchAgencyMenu = forwardRef((_, ref) => {
         <div className="w-full border-t border-light-gray"></div>
         <li
           className={classNames(
-            "flex py-2 px-3 gap-2 items-center cursor-pointer",
+            "flex py-2 px-2 gap-2 items-center cursor-pointer",
             {
               "!cursor-default bg-light-gray rounded-md":
                 user.agency_id === superAdminAgency?.agency_id,

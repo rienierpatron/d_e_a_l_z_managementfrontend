@@ -87,6 +87,13 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
                 "bg-white text-primary": daily_deal === true,
               }
             )}
+            onClick={() =>
+              setFormData({
+                ...formData,
+                daily_deal: true,
+                weekly_deal: false
+              })
+            }
           >
             <IconStar />
             <Typography variant="small">Create a daily deal</Typography>
@@ -96,10 +103,17 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
               "flex items-center gap-1 cursor-pointer w-full justify-center p-2 hover:bg-white hover:text-primary rounded-[32px]",
               {
                 "bg-white text-primary": weekly_deal === true,
-                "!cursor-not-allowed hover:text-midnight-blue hover:bg-[#F1F3F6]":
-                  !allowWeeklyDeal(),
+                // "!cursor-not-allowed hover:text-midnight-blue hover:bg-[#F1F3F6]":
+                //   !allowWeeklyDeal(),
               }
             )}
+            onClick={() =>
+              setFormData({
+                ...formData,
+                weekly_deal: true,
+                daily_deal: false
+              })
+            }
           >
             <IconCrown />
             <Typography variant="small" className="">

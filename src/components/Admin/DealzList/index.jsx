@@ -23,6 +23,7 @@ import Button from "@/components/Common/Button";
 import BackNavigation from "@/components/Common/BackNavigation";
 import { loadDelzStatusOptions } from "@/lib/utils";
 import { formatDateToYYYYMMDD } from "@/lib/date";
+import IconBuilding from "@/components/Icons/IconBuilding";
 
 export default function DealzList({
   title,
@@ -180,6 +181,7 @@ export default function DealzList({
       slot_date: filterState?.slot_date
         ? formatDateToYYYYMMDD(filterState.slot_date)
         : "",
+      agency_name: filterState?.agency_name ?? "",
     };
     // Reset pagination and set new filters
     setPagination(intialPaginationStatus);
@@ -192,6 +194,14 @@ export default function DealzList({
       type: "input",
       placeholder: "DEAL TITLE",
       icon: "/icons/tag-2-icon.svg",
+      className: "!pl-10 py-3 !h-auto !w-[200px]",
+      iconClassName: "!left-3",
+    },
+    {
+      id: "agency_name",
+      type: "input",
+      placeholder: "AGENCY NAME",
+      icon: <IconBuilding />,
       className: "!pl-10 py-3 !h-auto !w-[200px]",
       iconClassName: "!left-3",
     },

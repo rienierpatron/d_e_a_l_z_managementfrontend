@@ -252,6 +252,7 @@ export async function getAllSuperAdminDealzRecords(params = {}, showMessage = tr
       agency_id = '',
       created_by = '',
       slot_date = '',
+      agency_name = ''
     } = params;
 
     const requestParams = {};
@@ -267,6 +268,7 @@ export async function getAllSuperAdminDealzRecords(params = {}, showMessage = tr
     if (agency_id) requestParams.agency_id = agency_id;
     if (created_by) requestParams.created_by = created_by;
     if (slot_date) requestParams.slot_date = slot_date;
+    if (agency_name) requestParams.agency_name = agency_name
 
     const response = await Axios({
       url: `${config.apiUrl}/staff/dealz/records`,

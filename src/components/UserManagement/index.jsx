@@ -24,18 +24,27 @@ export default function CommonUserManagement({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const intialPaginationStatus = {
+  const intialPaginationState = {
     currentPage: 1,
     pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
-    pageIndex: 0,
   };
-  const [pagination, setPagination] = useState(intialPaginationStatus);
+  const [sorting, setSorting] = useState({
+    orderColumn: "",
+    orderDirection: "",
+  });
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [pagination, setPagination] = useState(intialPaginationState);
 
   // Fetch agency users list
   const getAgencyUserList = async () => {
     try {
-      const showMessage = false;
-      const response = await getAllAgencyUsers(showMessage);
+      const params = {
+        offset: (pagination.currentPage - 1) * pagination.pageSize,
+        limit: pagination.pageSize,
+        orderColumn: sorting.orderColumn,
+        orderDirection: sorting.orderDirection,
+      };
+      const response = await getAllAgencyUsers(params, false);
       if (response && helper.cmpStr(response.status, "ok")) {
         const agencyUsers = response.data.agency_users.map((userItem) => ({
           ...userItem,
@@ -44,8 +53,10 @@ export default function CommonUserManagement({
           email: userItem.user.email,
         }));
         setAllUsers(agencyUsers);
+        setTotalRecords(response?.data?.totalOverallResult);
       }
     } catch (error) {
+      console.log(error);
       return helper.general.alert("error", {
         message: "Something went wrong.",
       });
@@ -81,11 +92,11 @@ export default function CommonUserManagement({
   // Fetch users when component mounts
   useEffect(() => {
     getAgencyUserList();
-  }, []);
+  }, [sorting, pagination]);
 
   useEffect(() => {
     if (!isPopupOpen) {
-      getAgencyUserList();
+      setPagination(intialPaginationState)
     }
   }, [isPopupOpen]);
 
@@ -148,7 +159,10 @@ export default function CommonUserManagement({
       },
       {
         header: "Name",
-        accessorKey: "name",
+        accessorKey: "first_name",
+        Cell: ({ row: { original } }) => {
+          return original?.user?.full_name || original?.user?.first_name;
+        },
       },
       {
         header: "User Type",
@@ -239,18 +253,24 @@ export default function CommonUserManagement({
           <CommonTable
             columns={columns}
             data={allUsers?.length ? allUsers : []}
-            totalCount={allUsers?.length}
             pageSize={pagination.pageSize}
-            paginationRequired={showFilter}
+            paginationRequired={true}
             paginationServerSide={true}
-            currentPage={pagination.currentPage - 1}
+            sortingServerSide={true}
+            totalCount={totalRecords}
+            currentPage={pagination.currentPage}
             onPageChange={(newPage) =>
               setPagination({ ...pagination, currentPage: newPage })
             }
             onPageSizeChange={(pageSize) => {
               setPagination({ ...pagination, pageSize, currentPage: 1 });
             }}
-            onSortChange={(orderBy, order) => {}}
+            onSortChange={(orderBy, order) => {
+              setSorting({
+                orderColumn: orderBy,
+                orderDirection: order?.toUpperCase(),
+              });
+            }}
           />
         )}
       </div>

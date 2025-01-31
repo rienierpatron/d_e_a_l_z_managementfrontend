@@ -27,7 +27,20 @@ export async function getCurrentUser(showMessage = true) {
  * @param {boolean} [showMessage=true]
  * @returns {Promise<{data: {}, status: string}>}
  */
-export async function getAllAgencyUsers(showMessage = true) {
+export async function getAllAgencyUsers(params = {}, showMessage = true) {
+  const {
+    limit = 10,
+    offset = 0,
+    orderColumn = "",
+    orderDirection = "",
+  } = params;
+  const requestParams = {};
+
+  if (limit) requestParams.limit = limit;
+  if (offset) requestParams.offset = offset;
+  if (orderColumn) requestParams.orderColumn = orderColumn;
+  if (orderDirection) requestParams.orderDirection = orderDirection;
+
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/list`,
     method: "GET",
@@ -35,6 +48,8 @@ export async function getAllAgencyUsers(showMessage = true) {
       Accept: "application/json",
       "x-access-token": helper.cookie.getAccessToken(),
     },
+    params: requestParams,
+    DONT_SHOW_ERROR: showMessage,
   });
   return helper.api.handleApiResponse(response, showMessage);
 }

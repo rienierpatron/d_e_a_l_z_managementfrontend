@@ -22,7 +22,7 @@ export default function HttpInterceptors() {
         return response;
       },
       async (error) => {
-        const dontShowError = error.response?.config?.DONT_SHOW_ERROR;
+        const dontShowError = error.response?.config?.DONT_SHOW_ERROR ?? true;
         return await helper.api.handleApiResponse(error.response, !dontShowError);
       }
     );

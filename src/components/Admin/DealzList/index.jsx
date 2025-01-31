@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import { api } from "@/api";
 import CommonTable from "@/components/Common/CommonTable";
 import DealzStatusRenderer from "@/components/DealzStatusRenderer";
-import { PAGINATION } from "@/lib/constants";
+import { PAGINATION, USER } from "@/lib/constants";
 import DealzFilter from "@/components/DealzFilter";
 import IconChart from "@/components/Icons/IconChart";
 import IconProfileCircle from "@/components/Icons/IconProfileCircle";
@@ -25,6 +25,7 @@ import { loadDelzStatusOptions } from "@/lib/utils";
 import { formatDateToYYYYMMDD } from "@/lib/date";
 import IconBuilding from "@/components/Icons/IconBuilding";
 import DeleteDealConfirmationDialog from "@/components/DeleteDealConfirmationDialog";
+import { useUser } from "@/context/UserContext";
 
 export default function DealzList({
   title,
@@ -32,6 +33,7 @@ export default function DealzList({
   showFilter = false,
   showNavigation = false,
 }) {
+  const { user } = useUser();
   const [showDeleteWarningDialog, setShowDeleteWarningDialog] = useState(null);
   const [dealzList, setDealzList] = useState([]);
   const [totalRecords, setTotalRecords] = useState(10);
@@ -89,8 +91,14 @@ export default function DealzList({
   };
 
   useEffect(() => {
-    getAllDealzRecords();
-  }, [pagination, filters, sorting]);
+    if (
+      user &&
+      (user?.user_role?.role_name === USER.ROLES.SUPERADMIN ||
+        user?.user_role?.role_name === USER.ROLES.STAFF)
+    ) {
+      getAllDealzRecords();
+    }
+  }, [pagination, filters, sorting, user]);
 
   const columns = React.useMemo(
     () => [
@@ -149,9 +157,21 @@ export default function DealzList({
            * - Customer can only edit draft and revision dealz
            */
 
+          const currentRowMenuItems = menuItems.slice();
+      
+          // Conditionally remove the "Delete" menu item if the status is 'pending'
+          if (["pending"].includes(original.status)) {
+            const deleteIndex = currentRowMenuItems.findIndex(
+              (item) => item.label === "Delete"
+            );
+            if (deleteIndex !== -1) {
+              currentRowMenuItems.splice(deleteIndex, 1); // Remove the "Delete" item
+            }
+          }
+
           return (
             <PopoverMenu
-              menuItems={menuItems}
+              menuItems={currentRowMenuItems}
               arrow={false}
               show={showPopover === original.dealz_id}
               placement="auto"

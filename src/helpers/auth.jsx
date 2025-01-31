@@ -15,5 +15,6 @@ export function isAuthenticated() {
 }
 
 export async function redirectToLogin() {
+  helper.cookie.deleteAccessToken()
   window.location.href = '/login'
 }

@@ -40,8 +40,10 @@ const SwitchAgencyMenu = forwardRef((_, ref) => {
   };
 
   useEffect(() => {
-    getAgencyUserList();
-  }, []);
+    if (user) {
+      getAgencyUserList();
+    }
+  }, [user]);
 
   const handleSwitchAgencyClick = async (agencyId) => {
     try {
@@ -56,8 +58,8 @@ const SwitchAgencyMenu = forwardRef((_, ref) => {
           const userData = await fetchUserData();
           if (userData && userData?.data?.user) {
             userData.data.user.user_role.role_name === USER.ROLES.SUPERADMIN
-              ? window.location.href = "/admin/dashboard"
-              : window.location.href = "/dashboard"
+              ? (window.location.href = "/admin/dashboard")
+              : (window.location.href = "/dashboard");
           }
         }
       }
@@ -77,7 +79,9 @@ const SwitchAgencyMenu = forwardRef((_, ref) => {
       <ul className="pt-1 flex flex-col gap-2">
         {agencyList.length === 0 ? (
           <li className="py-2">
-            <Typography variant="caption" className="!text-black">No agencies available</Typography>
+            <Typography variant="caption" className="!text-black">
+              No agencies available
+            </Typography>
           </li>
         ) : (
           agencyList.map((agency, index) => (

@@ -53,13 +53,13 @@ export default function DealzList({
       icon: <IconEdit width={16} height={16} />,
       label: "Edit",
       onClick: (dealzId) =>
-        (window.location.href = `/admin/dealz/edit?dealz_id=${dealzId}`),
+        (window.location.href = `/admin/dealz/edit?dealz_id=${dealzId.dealz_id}`),
     },
     {
       icon: <IconEye width={16} height={16} />,
       label: "View",
       onClick: (dealzId) =>
-        (window.location.href = `/admin/dealz/view?dealz_id=${dealzId}`),
+        (window.location.href = `/admin/dealz/view?dealz_id=${dealzId.dealz_id}`),
     },
     {
       icon: <IconTrash width={16} height={16} />,

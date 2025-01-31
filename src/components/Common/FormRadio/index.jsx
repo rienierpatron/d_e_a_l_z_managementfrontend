@@ -7,7 +7,7 @@ import { Radio } from "flowbite-react";
 /**
  * Internal dependencies
  */
-import FormLabel from "@/components/common/FormLabel";
+import FormLabel from "../FormLabel";
 
 const FormRadio = ({
   id,

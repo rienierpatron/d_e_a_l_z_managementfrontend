@@ -33,7 +33,7 @@ export default function DealzList({
   const router = useRouter();
   const [dealzList, setDealzList] = useState([]);
   const [showPopover, setShowPopover] = useState(false);
-  const [totalRecords, setTotalRecords] = useState(10);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [showEditWarningDialog, setShowEditWarningDialog] = useState(null);
   const [showDeleteWarningDialog, setShowDeleteWarningDialog] = useState(null);
   const intialPaginationStatus = {

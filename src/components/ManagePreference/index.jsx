@@ -34,6 +34,7 @@ import FormSelectAsync from "@/components/Common/FormSelectAsync";
 import { loadLocationAddress } from "@/lib/utils";
 import { api } from "@/api";
 import { useUser } from "@/context/UserContext";
+import IconTrash from "@/components/Icons/IconTrash";
 
 const ManagePreference = () => {
   const [showDialog, setShowDialog] = useState(false);
@@ -73,6 +74,15 @@ const ManagePreference = () => {
     audience_location: validations.stringRequiredField,
     business_goal: validations.stringRequiredField,
   });
+
+  const handleDeleteLocationAddress = (index) => {
+    const updatedLocationAddess =
+      formData?.business_location_address?.filter((_, i) => i !== index) || [];
+    setFormData({
+      ...formData,
+      business_location_address: updatedLocationAddess,
+    });
+  };
 
   const fetchAgencyPreference = async () => {
     try {
@@ -285,22 +295,34 @@ const ManagePreference = () => {
               {business_location_address?.length &&
                 business_location_address.map((location, i) => {
                   return (
-                    <div>
-                      <FormSelectAsync
-                        id={`business_location_address[${i}]`}
-                        name={`business_location_address[${i}]`}
-                        loadOptions={(label) => loadLocationAddress(label)}
-                        value={location}
-                        rounded
-                        icon={<IconLocation />}
-                        placeholder="Select location address"
-                        onChange={(option) => onChangeLocation(option, i)}
-                        onKeyDown={handleKeyDown}
-                        className="mb-2"
-                        isError={
-                          error && error[`business_location_address[${i}]`]
-                        }
-                      />
+                    <div className="w-full">
+                      <div className="flex items-center gap-4">
+                        <FormSelectAsync
+                          id={`business_location_address[${i}]`}
+                          name={`business_location_address[${i}]`}
+                          loadOptions={(label) => loadLocationAddress(label)}
+                          value={location}
+                          rounded
+                          icon={<IconLocation />}
+                          placeholder="Select location address"
+                          onChange={(option) => onChangeLocation(option, i)}
+                          onKeyDown={handleKeyDown}
+                          className="mb-2"
+                          isError={
+                            error && error[`business_location_address[${i}]`]
+                          }
+                        />
+                        {business_location_address.length > 1 && (
+                          <IconTrash
+                            className="flex-shrink-0 cursor-pointer text-red"
+                            height={24}
+                            width={24}
+                            onClick={() => {
+                              handleDeleteLocationAddress(i);
+                            }}
+                          />
+                        )}
+                      </div>
                       {error && error[`business_location_address[${i}]`] && (
                         <FormInputValidation
                           isError

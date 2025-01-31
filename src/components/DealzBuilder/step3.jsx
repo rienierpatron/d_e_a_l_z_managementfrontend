@@ -27,7 +27,17 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
     formData;
 
   const validationSchema = Yup.object().shape({
-    slot_date: validations.stringRequiredField,
+    slot_date: validations.stringRequiredField.test(
+      "is-future-date",
+      "Cannot select a past date.",
+      (value) => {
+        if (!value) return false;
+        const selectedDate = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate >= today;
+      }
+    ),
   });
 
   const handlBack = () => {

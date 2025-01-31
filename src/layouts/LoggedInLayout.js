@@ -20,15 +20,15 @@ export default function LoggedInLayout({ children }) {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col">
       <HotBar />
       <div>
         <CustomSidebar />
-        <main className="ml-[115px] bg-white flex flex-col w-main">
+        <div className="ml-[115px] bg-white flex flex-col w-main">
           <Header />
           {children}
-        </main>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

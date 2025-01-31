@@ -83,6 +83,7 @@ import HttpInterceptors from "@/layouts/HttpInterceptors";
 import { helper } from "@/helpers";
 import { UserProvider } from "@/context/UserContext";
 import Favicon from "@/components/Common/Favicon";
+import { PUBLIC_ROUTES } from "@/lib/routes";
 
 function DealzManagement({ Component, pageProps }) {
   // State to manage logged-in status
@@ -91,9 +92,12 @@ function DealzManagement({ Component, pageProps }) {
 
   const checkAuthentication = async () => {
     try {
+      const isAuthenticated = helper.auth.isAuthenticated();
+      setLoggedIn(isAuthenticated)
       // Wait for the Promise to resolve
-      const isAuthenticated = await helper.auth.isAuthenticated();
-      setLoggedIn(isAuthenticated);
+      if (!isAuthenticated && !PUBLIC_ROUTES.includes(router.pathname)) {
+        router.replace("/login")
+      }
     } catch (error) {
       console.error('Error checking authentication:', error);
     }
@@ -101,7 +105,7 @@ function DealzManagement({ Component, pageProps }) {
 
   useEffect(() => {
     checkAuthentication();
-  });
+  },[router.pathname]);
 
   // Determine which layout to use based on authentication status
   const Layout = loggedIn ? LoggedInLayout : LoggedOutLayout;

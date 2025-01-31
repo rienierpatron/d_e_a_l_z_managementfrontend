@@ -4,7 +4,7 @@ import { helper } from ".";
  * checks if user is authenticated by checking for access token in cookie
  * @returns {boolean}
  */
-export async function isAuthenticated() {
+export function isAuthenticated() {
   try {
     const accessToken = helper.cookie.getAccessToken();
     return !!accessToken;

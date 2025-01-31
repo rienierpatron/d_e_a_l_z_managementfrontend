@@ -70,6 +70,29 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
     return false;
   };
 
+  const getValidMondayDate = (date) => {
+    if (!date || isNaN(date.getTime())) {
+      // If date is null or invalid, return the current date or handle it accordingly
+      return new Date();
+    }
+
+    // Function to check if the date is Monday
+    const isMonday = (date) => date.getDay() === 1;
+
+    // If the selected date is not a Monday, adjust it to the previous Monday
+    if (!isMonday(date)) {
+      const getPreviousMonday = (date) => {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = day === 0 ? -6 : 1 - day; // If Sunday, go back 6 days to the previous Monday
+        d.setDate(d.getDate() + diff);
+        return d;
+      };
+      return getPreviousMonday(date);
+    }
+    return date;
+  };
+
   return (
     <div>
       <BackNavigation
@@ -121,6 +144,13 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
             </Typography>
           </div>
         </div>
+        {weekly_deal === true && (
+          <div>
+            <Typography variant="caption" className="bg-[linear-gradient(-80deg,#4177F4_11.43%,#F945B1_82.92%)] bg-clip-text text-transparent !font-bold">
+              Slot date for Weekly Deals can only be set on Mondays.
+            </Typography>
+          </div>
+        )}
         <FormFieldset className="!mb-0">
           <CustomDatePicker
             id="slot_date"
@@ -130,9 +160,16 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
             value={slot_date ? new Date(slot_date) : null}
             placeholder="Select date"
             onChange={(date) => {
+              let validateDate = date;  // Default to the selected date
+
+              // Check if weekly_deal is true and adjust the date to the previous Monday if necessary
+              if (weekly_deal === true) {
+                validateDate = getValidMondayDate(date);
+              }
+
               setFormData({
                 ...formData,
-                slot_date: formatDateToYYYYMMDD(date),
+                slot_date: formatDateToYYYYMMDD(validateDate),
               });
             }}
           />

@@ -160,7 +160,7 @@ export default function DealzList({
           const currentRowMenuItems = menuItems.slice();
       
           // Conditionally remove the "Delete" menu item if the status is 'pending'
-          if (["pending"].includes(original.status)) {
+          if (["pending", "approved"].includes(original.status)) {
             const deleteIndex = currentRowMenuItems.findIndex(
               (item) => item.label === "Delete"
             );

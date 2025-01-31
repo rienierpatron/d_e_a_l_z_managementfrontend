@@ -56,8 +56,8 @@ const SwitchAgencyMenu = forwardRef((_, ref) => {
           const userData = await fetchUserData();
           if (userData && userData?.data?.user) {
             userData.data.user.user_role.role_name === USER.ROLES.SUPERADMIN
-              ? router.replace("/admin/dashboard")
-              : router.replace("/dashboard");
+              ? window.location.href = "/admin/dashboard"
+              : window.location.href = "/dashboard"
           }
         }
       }

@@ -57,6 +57,14 @@ export const DEALZ_STATUS = {
   closed: "Closed",
 };
 
+export const DEALZ_STATUS_VALUE = {
+  draft: "draft",
+  pending: "pending",
+  approved: "approved",
+  revision: "revision",
+  closed: "closed",
+};
+
 export const DEALZ_STATUS_COLOR_MAPPING = {
   draft: "#0E99EF",
   pending: "#9B61DC",

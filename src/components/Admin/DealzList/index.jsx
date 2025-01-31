@@ -24,6 +24,7 @@ import BackNavigation from "@/components/Common/BackNavigation";
 import { loadDelzStatusOptions } from "@/lib/utils";
 import { formatDateToYYYYMMDD } from "@/lib/date";
 import IconBuilding from "@/components/Icons/IconBuilding";
+import DeleteDealConfirmationDialog from "@/components/DeleteDealConfirmationDialog";
 
 export default function DealzList({
   title,
@@ -31,6 +32,7 @@ export default function DealzList({
   showFilter = false,
   showNavigation = false,
 }) {
+  const [showDeleteWarningDialog, setShowDeleteWarningDialog] = useState(null);
   const [dealzList, setDealzList] = useState([]);
   const [totalRecords, setTotalRecords] = useState(10);
   const [showPopover, setShowPopover] = useState(false);
@@ -62,7 +64,7 @@ export default function DealzList({
     {
       icon: <IconTrash width={16} height={16} />,
       label: "Delete",
-      onClick: () => console.log("Delete clicked"),
+      onClick: (row) => setShowDeleteWarningDialog(row.dealz_id),
     },
   ];
 
@@ -140,17 +142,21 @@ export default function DealzList({
         accessorKey: "actions",
         headerSorting: false,
         Cell: ({ row: { original } }) => {
+          /**
+           * Notes:
+           * - Only Super amdin can delete all type of dealz
+           * - Customer can only delete draft dealz
+           * - Customer can only edit draft and revision dealz
+           */
+
           return (
             <PopoverMenu
-              // menuItems={menuItems}
-              menuItems={menuItems.map((item) => ({
-                ...item,
-                onClick: () => item.onClick(original.dealz_id), // Pass dealz_id dynamically
-              }))}
+              menuItems={menuItems}
               arrow={false}
               show={showPopover === original.dealz_id}
               placement="auto"
               onClose={() => setShowPopover(null)}
+              rowData={original}
             >
               <Button
                 borderless
@@ -166,6 +172,21 @@ export default function DealzList({
     ],
     [showPopover]
   );
+
+  const deleteDealRecords = async () => {
+    try {
+      const res = await api.dealz.deleteDeal({
+        dealzId: showDeleteWarningDialog,
+        isStaff: true,
+      });
+      if (res.status === "ok") {
+        setShowDeleteWarningDialog(null);
+        getAllDealzRecords();
+      }
+    } catch (error) {
+      console.log("Error in deleting deal record", error);
+    }
+  };
 
   const handleApply = async (filterState) => {
     const filters = {
@@ -296,6 +317,11 @@ export default function DealzList({
           }}
         />
       </div>
+      <DeleteDealConfirmationDialog
+        open={showDeleteWarningDialog}
+        onClose={() => setShowDeleteWarningDialog(null)}
+        onSubmit={() => deleteDealRecords()}
+      />
     </>
   );
 }

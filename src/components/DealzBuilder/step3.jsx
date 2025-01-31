@@ -114,7 +114,7 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
               setFormData({
                 ...formData,
                 daily_deal: true,
-                weekly_deal: false
+                weekly_deal: false,
               })
             }
           >
@@ -134,7 +134,7 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
               setFormData({
                 ...formData,
                 weekly_deal: true,
-                daily_deal: false
+                daily_deal: false,
               })
             }
           >
@@ -146,7 +146,10 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
         </div>
         {weekly_deal === true && (
           <div>
-            <Typography variant="caption" className="bg-[linear-gradient(-80deg,#4177F4_11.43%,#F945B1_82.92%)] bg-clip-text text-transparent !font-bold">
+            <Typography
+              variant="caption"
+              className="bg-[linear-gradient(-80deg,#4177F4_11.43%,#F945B1_82.92%)] bg-clip-text text-transparent !font-bold"
+            >
               Slot date for Weekly Deals can only be set on Mondays.
             </Typography>
           </div>
@@ -160,7 +163,7 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
             value={slot_date ? new Date(slot_date) : null}
             placeholder="Select date"
             onChange={(date) => {
-              let validateDate = date;  // Default to the selected date
+              let validateDate = date; // Default to the selected date
 
               // Check if weekly_deal is true and adjust the date to the previous Monday if necessary
               if (weekly_deal === true) {
@@ -237,7 +240,9 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
       >
         {`${
           currentSubscription?.available_inventory?.slot ?? 0
-        } Slots remaining from 10 slots`}
+        } Slots remaining from ${
+          currentSubscription?.available_inventory?.allowed_slot ?? 0
+        } slots`}
       </Typography>
       <Button
         className="uppercase shadow-custom-primary mt-8"

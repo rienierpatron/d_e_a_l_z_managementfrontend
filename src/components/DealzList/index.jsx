@@ -113,7 +113,14 @@ export default function DealzList({
         accessorKey: "actions",
         headerSorting: false,
         Cell: ({ row: { original } }) => {
-          const currentRowMenuItems = menuItems.slice(); // Create a shallow copy of menuItems
+          /**
+           * Notes:
+           * - Only Super amdin can delete all type of dealz
+           * - Customer can only delete draft dealz
+           * - Customer can only edit draft and revision dealz
+           */
+
+          const currentRowMenuItems = menuItems.slice();
 
           // Conditionally remove the "Edit" menu item if the status is not 'draft' or 'revision'
           if (!["draft", "revision"].includes(original.status)) {
@@ -122,6 +129,16 @@ export default function DealzList({
             );
             if (editIndex !== -1) {
               currentRowMenuItems.splice(editIndex, 1); // Remove the "Edit" item
+            }
+          }
+
+          // Conditionally remove the "Delete" menu item if the status is not 'draft'
+          if (!["draft"].includes(original.status)) {
+            const deleteIndex = currentRowMenuItems.findIndex(
+              (item) => item.label === "Delete"
+            );
+            if (deleteIndex !== -1) {
+              currentRowMenuItems.splice(deleteIndex, 1); // Remove the "Delete" item
             }
           }
 
@@ -219,7 +236,10 @@ export default function DealzList({
 
   const deleteDealRecords = async () => {
     try {
-      const res = await api.dealz.deleteDeal(showDeleteWarningDialog);
+      const res = await api.dealz.deleteDeal({
+        dealzId: showDeleteWarningDialog,
+        isStaff: false,
+      });
       if (res.status === "ok") {
         setShowDeleteWarningDialog(null);
         fetchDealRecords();
@@ -296,7 +316,7 @@ export default function DealzList({
                 currentPage: 1,
                 pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
               });
-              setFilters({})
+              setFilters({});
             }}
           />
         )}

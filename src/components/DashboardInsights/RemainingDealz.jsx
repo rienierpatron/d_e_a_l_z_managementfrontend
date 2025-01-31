@@ -44,7 +44,7 @@ const RemainingDealz = ({ totalDealz, remainingDealz = 0 }) => {
       </div>
       <div className="grid grid-cols-5 gap-x-6 gap-y-3 w-max">
         {organizedDeals.map((ele) => {
-          return ele.used ? <IconColoredCoupon /> : <IconCouponWide />;
+          return ele.used ? <IconCouponWide /> : <IconColoredCoupon />;
         })}
       </div>
       <Button

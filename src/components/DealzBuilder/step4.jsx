@@ -129,7 +129,9 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
       >
         {`${
           currentSubscription?.available_inventory?.slot ?? 0
-        } Slots remaining from 10 slots`}
+        } Slots remaining from ${
+          currentSubscription?.available_inventory?.allowed_slot ?? 0
+        } slots`}
       </Typography>
       <Button
         className="uppercase shadow-custom-primary mt-8"

@@ -16,7 +16,12 @@ export const useSubscription = () => {
       const showMessage = false;
       const res = await getSubscriptionDetails(showMessage);
       if (res && helper.cmpStr(res.status, "ok")) {
-        setCurrentSubscription(res.data);
+        const _currentSubscription = res.data;
+        if (helper.notEmpty(_currentSubscription?.available_inventory)) {
+          _currentSubscription.available_inventory["allowed_slot"] =
+            _currentSubscription?.total_inventory?.slot ?? 0;
+        }
+        setCurrentSubscription(_currentSubscription);
       }
     } catch (error) {
       return helper.general.alert("error", {

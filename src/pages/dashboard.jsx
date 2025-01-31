@@ -15,13 +15,13 @@ import { api } from "@/api";
 
 const Dashboard = () => {
   const { currentSubscription } = useSubscription();
-  const [reachCount, setReachCount] = useState(0)
+  const [reachCount, setReachCount] = useState(0);
 
   const getReachCount = async () => {
     try {
       const res = await api.dealz.getReachCount(false);
       if (res.status === "ok") {
-        setReachCount(res.data?.reach_count ?? 0)
+        setReachCount(res.data?.reach_count ?? 0);
       }
     } catch (error) {
       console.log(error);
@@ -29,7 +29,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    getReachCount()
+    getReachCount();
   }, []);
 
   return (
@@ -43,7 +43,9 @@ const Dashboard = () => {
           metricUnit="Users"
         />
         <RemainingDealz
-          totalDealz={10}
+          totalDealz={
+            currentSubscription?.available_inventory?.allowed_slot ?? 0
+          }
           remainingDealz={currentSubscription?.available_inventory?.slot}
         />
       </div>

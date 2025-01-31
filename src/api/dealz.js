@@ -49,15 +49,15 @@ export async function getDealRecords(params = {}, showMessage = true) {
     const {
       limit = 10,
       offset = 0,
-      orderColumn = '',
-      orderDirection = '',
-      status = '',
-      title = '',
-      valid_date_from = '',
-      valid_date_to = '',
-      agency_id = '',
-      created_by = '',
-      slot_date = '',
+      orderColumn = "",
+      orderDirection = "",
+      status = "",
+      title = "",
+      valid_date_from = "",
+      valid_date_to = "",
+      agency_id = "",
+      created_by = "",
+      slot_date = "",
     } = params;
 
     const requestParams = {};
@@ -90,7 +90,6 @@ export async function getDealRecords(params = {}, showMessage = true) {
     throw new Error(`Failed to fetch deal records: ${error.message}`);
   }
 }
-
 
 /**
  * View a deal by its ID
@@ -147,18 +146,25 @@ export async function editDeal(dealzId, payload, showMessage = true) {
 
 /**
  * Delete a deal
- * @param {string|number} dealzId - The ID of the deal to delete
+ * @param {object} params
+ * @param {string} [params.dealzId=''] - The ID of the deal to delete
+ * @param {boolean} [params.isStaff=false] - Represent staff,superadmin or customer
  * @param {boolean} [showMessage=true] - Whether to show a success or error message
  * @returns {Promise<{data: object, status: string}>}
  */
-export async function deleteDeal(dealzId, showMessage = true) {
+export async function deleteDeal({ dealzId, isStaff }, showMessage = true) {
   if (!dealzId) {
     throw new Error("Invalid dealzId provided.");
   }
 
+  let url = `${config.apiUrl}/dealz/${dealzId}`;
+  if (isStaff) {
+    url = `${config.apiUrl}/staff/dealz/${dealzId}`;
+  }
+
   try {
     const response = await Axios({
-      url: `${config.apiUrl}/dealz/${dealzId}`,
+      url: url,
       method: "DELETE",
       headers: {
         Accept: "application/json",
@@ -222,7 +228,7 @@ export async function getReachCount(showMessage = true) {
   }
 }
 
- /* Get super admin list of deal records 
+/* Get super admin list of deal records
  * @param {Object} params - The query parameters for the API request
  * @param {string} [params.limit=10] - The number of records to return
  * @param {string} [params.offset=0] - The starting point for the records
@@ -238,21 +244,24 @@ export async function getReachCount(showMessage = true) {
  * @param {boolean} [showMessage=true] - Whether to show a success or error message
  * @returns {Promise<{data: Object[], status: string}>} - The response data and status from the API
  */
-export async function getAllSuperAdminDealzRecords(params = {}, showMessage = true) {
+export async function getAllSuperAdminDealzRecords(
+  params = {},
+  showMessage = true
+) {
   try {
     const {
       limit = 10,
       offset = 0,
-      orderColumn = '',
-      orderDirection = '',
-      status = '',
-      title = '',
-      valid_date_from = '',
-      valid_date_to = '',
-      agency_id = '',
-      created_by = '',
-      slot_date = '',
-      agency_name = ''
+      orderColumn = "",
+      orderDirection = "",
+      status = "",
+      title = "",
+      valid_date_from = "",
+      valid_date_to = "",
+      agency_id = "",
+      created_by = "",
+      slot_date = "",
+      agency_name = "",
     } = params;
 
     const requestParams = {};
@@ -268,13 +277,13 @@ export async function getAllSuperAdminDealzRecords(params = {}, showMessage = tr
     if (agency_id) requestParams.agency_id = agency_id;
     if (created_by) requestParams.created_by = created_by;
     if (slot_date) requestParams.slot_date = slot_date;
-    if (agency_name) requestParams.agency_name = agency_name
+    if (agency_name) requestParams.agency_name = agency_name;
 
     const response = await Axios({
       url: `${config.apiUrl}/staff/dealz/records`,
       method: "GET",
       headers: {
-        Accept: "application/json"
+        Accept: "application/json",
       },
       params: requestParams, // Pass only non-empty params
       DONT_SHOW_ERROR: showMessage,
@@ -289,16 +298,19 @@ export async function getAllSuperAdminDealzRecords(params = {}, showMessage = tr
 
 /**
  * Fetches the details of a specific dealz record.
- * 
- * This function makes a GET request to the `/staff/dealz/{dealz_id}` endpoint 
+ *
+ * This function makes a GET request to the `/staff/dealz/{dealz_id}` endpoint
  * to retrieve the details of a single dealz record identified by the provided `dealz_id`.
  * The access token is included in the headers for authentication.
- * 
+ *
  * @param {string} dealz_id - The unique identifier for the dealz record.
  * @param {boolean} [showMessage=false] - Whether or not to display any messages based on the response.
  * @returns {Promise<{data: {}, status: string}>} - The API response with `data` and `status`.
  */
-export async function getDealzSuperAdminRecordDetail(dealz_id, showMessage = false) {
+export async function getDealzSuperAdminRecordDetail(
+  dealz_id,
+  showMessage = false
+) {
   const response = await Axios({
     url: `${config.apiUrl}/staff/dealz/${dealz_id}`,
     method: "GET",
@@ -312,23 +324,27 @@ export async function getDealzSuperAdminRecordDetail(dealz_id, showMessage = fal
 
 /**
  * Updates a specific dealz record with new data.
- * 
- * This function makes a PUT request to the `/staff/dealz/{dealz_id}` endpoint 
+ *
+ * This function makes a PUT request to the `/staff/dealz/{dealz_id}` endpoint
  * to update a dealz record identified by `dealz_id`. The updated data is provided
  * in the `data` object, and the CSRF token is included in the headers to protect against CSRF attacks.
- * 
+ *
  * @param {object} data - The data to update the dealz record with.
  * @param {string} dealz_id - The unique identifier for the dealz record.
  * @param {boolean} [showMessage=true] - Whether or not to display any messages based on the response.
  * @returns {Promise<{data: {}, status: string}>} - The API response with `data` and `status`.
  */
-export async function updateSuperAdminDealzRecord(data, dealz_id, showMessage = true) {
+export async function updateSuperAdminDealzRecord(
+  data,
+  dealz_id,
+  showMessage = true
+) {
   const response = await Axios({
     url: `${config.apiUrl}/staff/dealz/${dealz_id}`,
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
       "x-access-token": helper.cookie.getAccessToken(),
     },
     data,
@@ -338,23 +354,27 @@ export async function updateSuperAdminDealzRecord(data, dealz_id, showMessage = 
 
 /**
  * Updates status of Dealz Record
- * 
- * This function makes a PUT request to the `/staff/dealz/{dealz_id}` endpoint 
+ *
+ * This function makes a PUT request to the `/staff/dealz/{dealz_id}` endpoint
  * to update a dealz record identified by `dealz_id`. The updated data is provided
  * in the `data` object, and the CSRF token is included in the headers to protect against CSRF attacks.
- * 
+ *
  * @param {object} data - The data to update the dealz record with.
  * @param {string} dealz_id - The unique identifier for the dealz record.
  * @param {boolean} [showMessage=true] - Whether or not to display any messages based on the response.
  * @returns {Promise<{data: {}, status: string}>} - The API response with `data` and `status`.
  */
-export async function updateSuperAdminStatusDealzRecord(data, dealz_id, showMessage = true) {
+export async function updateSuperAdminStatusDealzRecord(
+  data,
+  dealz_id,
+  showMessage = true
+) {
   const response = await Axios({
     url: `${config.apiUrl}/staff/dealz/status/${dealz_id}`,
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
       "x-access-token": helper.cookie.getAccessToken(),
     },
     data,

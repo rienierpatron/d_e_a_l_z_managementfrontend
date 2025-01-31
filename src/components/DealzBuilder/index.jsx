@@ -3,7 +3,7 @@
  */
 import { useEffect, useState } from "react";
 import classNames from "classnames";
-
+import { useRouter } from "next/router";
 /**
  * Internal dependencies
  */
@@ -14,12 +14,13 @@ import DealzBuilderStep2 from "@/components/DealzBuilder/step2";
 import DealzBuilderStep3 from "@/components/DealzBuilder/step3";
 import DealzBuilderStep4 from "@/components/DealzBuilder/step4";
 import DealzBuilderStep5 from "@/components/DealzBuilder/step5";
-import { DEALZ } from "@/lib/constants";
+import { DEALZ, DEALZ_STATUS, DEALZ_STATUS_VALUE } from "@/lib/constants";
 import { api } from "@/api";
 import { getDealzFormattedData } from "./utils";
 import { useSubscription } from "../Subscriptions/GetSubscriptionDetails";
 
 const DealzBuilder = ({ dealzId = "", mode = "" }) => {
+  const router = useRouter();
   const TOTAL_STEPS = 5;
   const initialState = {
     step: 1,
@@ -51,6 +52,13 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
       const res = await api.dealz.viewDealById(dealzId);
       if (res.status === "ok") {
         const formattedData = getDealzFormattedData(res.data);
+        if (
+          mode === "edit" &&
+          res.data?.dealz?.status === DEALZ_STATUS_VALUE.pending
+        ) {
+          router.push(`/dealz/view/${dealzId}`);
+          return;
+        }
         if (mode === "view") {
           formattedData.step = 5;
         }

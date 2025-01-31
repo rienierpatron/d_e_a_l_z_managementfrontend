@@ -39,7 +39,7 @@ export default function DealzEdit() {
   const router = useRouter();
   const [dealzId, setDealzId] = useState(null);
   const [dealzDetails, setDealzDetails] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date("2024-12-25"));
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlotTime, setSelectedSlotTime] = useState({ label: '', value: '' });
   const [dealzReached, setDealzReached] = useState(0);
   const [showSlotNotAvailableWarningDialog, setShowSlotNotAvailableDialog] = useState(false);
@@ -311,24 +311,24 @@ export default function DealzEdit() {
       {/* Customer Reach and File Upload Section */}
       <div className="flex justify-between">
         <div>
-        {dealzDetails.coupons?.[0]?.code.startsWith('http') ? (
-          <a href={dealzDetails.coupons?.[0]?.code} download>
-            <div className="relative p-4 mt-2 rounded-2xl border border-light-gray w-max">
-              <Image
-                src="/icons/csv-preview.svg"
-                width={48}
-                height={48}
-                alt="CSV Preview"
-              />
+          {dealzDetails.coupons?.[0]?.code.startsWith('http') ? (
+            <a href={dealzDetails.coupons?.[0]?.code} download>
+              <div className="relative p-4 mt-2 rounded-2xl border border-light-gray w-max">
+                <Image
+                  src="/icons/csv-preview.svg"
+                  width={48}
+                  height={48}
+                  alt="CSV Preview"
+                />
+              </div>
+              <Typography variant="caption">Coupon.csv</Typography>
+            </a>
+          ) : (
+            <div className="flex items-center">
+              <Typography variant="caption" className="pr-1">Generated Coupon Code:</Typography>
+              <Typography>{dealzDetails.coupons?.[0]?.code}</Typography>
             </div>
-            <Typography variant="caption">Coupon.csv</Typography>
-          </a>
-        ) : (
-          <div className="flex items-center">
-            <Typography variant="caption" className="pr-1">Generated Coupon Code:</Typography>
-            <Typography>{dealzDetails.coupons?.[0]?.code}</Typography>
-          </div>
-        )}
+          )}
         </div>
         <div>
           <Typography variant="caption" className="uppercase pb-2">Total Number of Customers Reached for This DEALZ Broadcast</Typography>

@@ -10,6 +10,8 @@ import IconCoupon from "@/components/Icons/IconCoupon";
 import IconCalendar from "@/components/Icons/IconCalendar";
 import IconDollar from "@/components/Icons/IconDollar";
 import IconCouponWide from "@/components/Icons/IconCouponWide";
+import IconCompany from "@/components/Icons/IconCompany";
+import IconGlobe from "@/components/Icons/IconGlobe";
 import CustomDatePicker from "@/components/Common/DatePicker";
 import FormInput from "@/components/Common/FormInput";
 import Image from "next/image";
@@ -245,11 +247,18 @@ export default function DealzEdit() {
 
       {/* Deal Information Section */}
       <div className="grid grid-cols-2 gap-4 pb-5">
+        <DealInfoCard icon={IconCompany} label="Agency Name">{dealzDetails.dealz?.agency_user?.agency?.agency_name}</DealInfoCard>
+        <DealInfoCard icon={IconCoupon} label="DEALZ Type">
+          {dealzDetails.dealz?.daily_deal
+            ? "Daily Dealz"
+            : dealzDetails.dealz?.weekly_deal
+            ? "Weekly Deal"
+            : "No Deal Type"}
+        </DealInfoCard>
         <DealInfoCard icon={IconCoupon} label="DEALZ Code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
-        <DealInfoCard icon={IconCalendar} label="Agency Name">{dealzDetails.dealz?.agency_user?.agency?.agency_name}</DealInfoCard>
         <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
-        <DealInfoCard icon={IconCalendar} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard>
-        
+        <DealInfoCard icon={IconGlobe} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard>
+
         {/* Validity */}
         <div className="flex gap-2 items-center">
           <IconCalendar className="text-dark-gray" />
@@ -258,7 +267,6 @@ export default function DealzEdit() {
         </div>
 
         <DealInfoCard icon={IconCoupon} label="Coupon created method">{dealzDetails.dealz?.coupon_creation_type}</DealInfoCard>
-        <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
 
         {/* Slot Selection */}
         <div className="flex gap-2 items-center w-full">
@@ -286,6 +294,7 @@ export default function DealzEdit() {
           </div>
         </div>
       </div>
+      <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
 
       {/* Deal Wording Section */}
       <div className="p-4 border border-light-gray rounded-xl my-6">
@@ -302,15 +311,24 @@ export default function DealzEdit() {
       {/* Customer Reach and File Upload Section */}
       <div className="flex justify-between">
         <div>
-          <a
-            href={dealzDetails.coupons?.[0]?.code}
-            download
-          >
+        {dealzDetails.coupons?.[0]?.code.startsWith('http') ? (
+          <a href={dealzDetails.coupons?.[0]?.code} download>
             <div className="relative p-4 mt-2 rounded-2xl border border-light-gray w-max">
-              <Image src="/icons/csv-preview.svg" width={48} height={48} alt="CSV Preview" />
+              <Image
+                src="/icons/csv-preview.svg"
+                width={48}
+                height={48}
+                alt="CSV Preview"
+              />
             </div>
             <Typography variant="caption">Coupon.csv</Typography>
           </a>
+        ) : (
+          <div className="flex items-center">
+            <Typography variant="caption" className="pr-1">Generated Coupon Code:</Typography>
+            <Typography>{dealzDetails.coupons?.[0]?.code}</Typography>
+          </div>
+        )}
         </div>
         <div>
           <Typography variant="caption" className="uppercase pb-2">Total Number of Customers Reached for This DEALZ Broadcast</Typography>

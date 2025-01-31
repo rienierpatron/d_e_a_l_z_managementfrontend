@@ -21,14 +21,22 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
   const { valid_date_from, valid_date_to } = formData;
 
   const validationSchema = Yup.object().shape({
-    valid_date_from: validations.stringRequiredField.test(
-      "is-before-slot-date",
-      "Start date from cannot be later than slot date",
-      function (value) {
-        const { slot_date } = this.parent;
-        return !slot_date || !value || new Date(value) <= new Date(slot_date);
-      }
-    ),
+    valid_date_from: validations.stringRequiredField
+      .test("is-future-date", "Cannot select a past date.", (value) => {
+        if (!value) return false;
+        const selectedDate = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate >= today;
+      })
+      .test(
+        "is-before-slot-date",
+        "Start date from cannot be later than slot date",
+        function (value) {
+          const { slot_date } = this.parent;
+          return !slot_date || !value || new Date(value) <= new Date(slot_date);
+        }
+      ),
     valid_date_to: validations.stringRequiredField
       .test(
         "is-after-start-date",

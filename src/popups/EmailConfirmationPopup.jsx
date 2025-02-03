@@ -3,7 +3,7 @@ import Image from "next/image";
 import Dialog from "@/components/Common/Dialog";
 import Button from "@/components/Common/Button";
 
-export default function EmailConfirmationPopup({ isPopupOpen, togglePopup, email }) {
+export default function EmailConfirmationPopup({ isPopupOpen, togglePopup }) {
   return (
     <Dialog
       show={isPopupOpen}
@@ -15,11 +15,11 @@ export default function EmailConfirmationPopup({ isPopupOpen, togglePopup, email
           onClick={togglePopup}
           // className="bg-primary text-white border-0 focus:outline-none hover:bg-pink-500"
           variant="primary"
-          fullWidth  
+          fullWidth
           isRound
         >
           Close
-        </Button>    
+        </Button>
       }
     >
       <div className="flex flex-col items-center">
@@ -30,9 +30,13 @@ export default function EmailConfirmationPopup({ isPopupOpen, togglePopup, email
           height={88}
           className="rounded-lg mb-4"
         />
-        <p className="text-gray-600 mb-6 text-center">
-          We have sent you a mail at your email address: <strong>{email}</strong>
-        </p>
+        <div
+          className="text-gray-600 mb-6 text-center"
+          style={{ maxWidth: "500px" }}
+        >
+          Please check your email! We've sent you an account activation link to
+          get started.
+        </div>
       </div>
     </Dialog>
   );

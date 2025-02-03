@@ -295,7 +295,7 @@ const ManagePreference = () => {
               {business_location_address?.length &&
                 business_location_address.map((location, i) => {
                   return (
-                    <div className="w-full">
+                    <div className="w-full" key={i}>
                       <div className="flex items-center gap-4">
                         <FormSelectAsync
                           id={`business_location_address[${i}]`}

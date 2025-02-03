@@ -70,6 +70,7 @@ export default function DealzList({
       {
         header: "DEALZ TITLE",
         accessorKey: "title",
+        className: "font-medium",
       },
       {
         header: "SLOT",

@@ -160,6 +160,7 @@ export default function CommonUserManagement({
       {
         header: "Name",
         accessorKey: "first_name",
+        className: "font-medium",
         Cell: ({ row: { original } }) => {
           return original?.user?.full_name || original?.user?.first_name;
         },
@@ -219,7 +220,7 @@ export default function CommonUserManagement({
       <div>
         <div className="p-5 border border-b-0 rounded-t-xl flex flex-1 justify-between items-center">
           <h2 className="text-2xl font-semibold">
-            {loading ? "Loading..." : `${allUsers?.length || 0} Licensed Users`}
+            {loading ? "Loading..." : `${allUsers?.length || 0} Licenses Users`}
           </h2>
           <div className="flex items-center gap-4">
             <Button

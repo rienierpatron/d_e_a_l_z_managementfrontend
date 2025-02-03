@@ -299,7 +299,7 @@ const CommonTable = ({
                   return (
                     <td
                       key={cell.id}
-                      className={`px-4 whitespace-normal py-4 text-base font-medium text-midnight-blue`}
+                      className={classNames(`px-4 whitespace-normal py-4 text-sm text-midnight-blue`, cell.column.columnDef?.className)}
                       style={{
                         maxWidth: cell.column.columnDef.headerWidth,
                         width: cell.column.columnDef.headerWidth,

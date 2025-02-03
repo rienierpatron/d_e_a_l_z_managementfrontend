@@ -65,15 +65,8 @@ export default function AddUserPopup({
     <Dialog
       show={isPopupOpen}
       onClose={togglePopup}
-      header={
-        <>
-          <Typography variant="title">Add New User</Typography>
-          <Typography variant="body" className="!text-dark-gray mt-[10px]">
-            Add a colleague to the Chaaat platform in one simple step
-          </Typography>
-        </>
-      }
-      headerClassName="text-xl font-semibold mb-4"
+      header={<Typography variant="title">Add New User</Typography>}
+      headerClassName="text-xl font-semibold"
       footer={
         <div className="flex flex-1 justify-between gap-4 mt-4">
           <Button

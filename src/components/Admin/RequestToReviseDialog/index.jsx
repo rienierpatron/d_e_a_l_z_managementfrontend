@@ -83,7 +83,7 @@ const RequestToReviseDialog = ({ open, onSubmit, onClose, reviseFields, onRevise
           <FormInput
             type="text"
             placeholder="Enter text"
-            value="Request for Revise"
+            value="Revision Request"
             disabled
             rounded
             fullWidth

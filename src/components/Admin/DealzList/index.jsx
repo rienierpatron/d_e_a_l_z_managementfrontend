@@ -105,6 +105,7 @@ export default function DealzList({
       {
         header: "DEALZ NAME",
         accessorKey: "title",
+        className: "font-medium"
       },
       {
         header: "Agency",
@@ -287,7 +288,7 @@ export default function DealzList({
 
   return (
     <>
-      <div className="w-full py-8">
+      <div className="w-full">
         <div className="rounded-tl-2xl rounded-tr-2xl border border-light-blue p-6 flex flex-col gap-6">
           {backNav ? (
             <BackNavigation

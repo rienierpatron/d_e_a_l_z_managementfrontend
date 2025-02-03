@@ -21,43 +21,29 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
   const { valid_date_from, valid_date_to } = formData;
 
   const validationSchema = Yup.object().shape({
-    valid_date_from: validations.stringRequiredField
-      .test("is-future-date", "Cannot select a past date.", (value) => {
+    valid_date_from: validations.stringRequiredField.test(
+      "is-future-date",
+      "Cannot select a past date.",
+      (value) => {
         if (!value) return false;
         const selectedDate = new Date(value);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return selectedDate >= today;
-      })
-      .test(
-        "is-before-slot-date",
-        "Start date from cannot be later than slot date",
-        function (value) {
-          const { slot_date } = this.parent;
-          return !slot_date || !value || new Date(value) <= new Date(slot_date);
-        }
-      ),
-    valid_date_to: validations.stringRequiredField
-      .test(
-        "is-after-start-date",
-        "End date must be after or equal to start date",
-        function (value) {
-          const { valid_date_from } = this.parent;
-          return (
-            !valid_date_from ||
-            !value ||
-            new Date(value) >= new Date(valid_date_from)
-          );
-        }
-      )
-      .test(
-        "is-after-slot-date",
-        "End date to cannot be earlier than slot date",
-        function (value) {
-          const { slot_date } = this.parent;
-          return !slot_date || !value || new Date(value) >= new Date(slot_date);
-        }
-      ),
+      }
+    ),
+    valid_date_to: validations.stringRequiredField.test(
+      "is-after-start-date",
+      "End date must be after or equal to start date",
+      function (value) {
+        const { valid_date_from } = this.parent;
+        return (
+          !valid_date_from ||
+          !value ||
+          new Date(value) >= new Date(valid_date_from)
+        );
+      }
+    ),
   });
 
   const handlBack = () => {

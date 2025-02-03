@@ -187,7 +187,7 @@ export default function DealzEdit() {
       const data = {
         "status": "revision",
         "to": reviseFields.reviseEmail,
-        "subject": "Request for Revise",
+        "subject": "Revision Request",
         "message": reviseFields.reviseReason
       }
       updateDealzRecordStatus(data, dealzId);

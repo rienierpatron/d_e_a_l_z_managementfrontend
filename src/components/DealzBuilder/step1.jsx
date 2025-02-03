@@ -59,6 +59,9 @@ const DealzBuilderStep1 = ({
   };
 
   const handleChange = (name, value) => {
+    if (name === "initial_message" && value.length > 115) {
+      return;
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -118,7 +121,7 @@ const DealzBuilderStep1 = ({
             <FormInputValidation isError text={error["initial_message"]} />
           )}
           <Typography variant="caption" className="text-right mt-4">
-            Max. 115 characters
+            Character: {initial_message?.length ?? 0}/115
           </Typography>
         </FormFieldset>
         <FormFieldset className="!mb-0">

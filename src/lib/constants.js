@@ -5,7 +5,6 @@ export const PAGINATION = {
 
 export const BUSINESS_TYPE_OPTIONS = [
   { label: "Restaurant", value: "restaurant" },
-  { label: "Hospital", value: "hospital" },
   { label: "Gym", value: "gym" },
   { label: "Retail", value: "retail" },
   { label: "Beauty", value: "beauty" },
@@ -68,7 +67,7 @@ export const DEALZ_STATUS_VALUE = {
 export const DEALZ_STATUS_COLOR_MAPPING = {
   draft: "#0E99EF",
   pending: "#9B61DC",
-  approved: "#F47418",
+  approved: "#299736",
   revision: "#EF0E0E",
   closed: "#14A555",
 };
@@ -91,8 +90,7 @@ export const SUBSCRIPTIONS = {
       planTitle: "Starter",
       promotionText: "Early Bird Special",
       priceCurrency: "HKD",
-      priceAmount: "$1888",
-      priceOldAmount: "$3888",
+      priceAmount: "$3888",
       pricePeriod: "Per month",
       benefits: [
         "5 Slots per month",
@@ -104,8 +102,7 @@ export const SUBSCRIPTIONS = {
       planTitle: "Pro",
       promotionText: "Early Bird Special",
       priceCurrency: "HKD",
-      priceAmount: "$3999",
-      priceOldAmount: "$5888",
+      priceAmount: "$5999",
       pricePeriod: "Per month",
       benefits: [
         "10 Slots per month",

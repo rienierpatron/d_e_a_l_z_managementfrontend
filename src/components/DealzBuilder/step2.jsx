@@ -37,6 +37,9 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
   });
 
   const handleChange = (name, value) => {
+    if (name === "followup_message" && value.length > 200) {
+      return;
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -91,7 +94,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
             <FormInputValidation isError text={error["followup_message"]} />
           )}
           <Typography variant="caption" className="text-right mt-4">
-            Max. 200 characters
+            Character: {followup_message?.length ?? 0}/200
           </Typography>
         </FormFieldset>
         <FormFieldset className="!mb-0">

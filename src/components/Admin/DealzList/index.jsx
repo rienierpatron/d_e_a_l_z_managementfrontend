@@ -236,7 +236,7 @@ export default function DealzList({
       type: "input",
       placeholder: "DEALZ title",
       icon: "/icons/tag-2-icon.svg",
-      className: "!pl-10 py-3 !h-auto !text-[12px] xl:w-[140px] 3xl:w-[200px]",
+      className: "!pl-10 py-3 !h-auto xl:w-[140px] 3xl:w-[200px]",
       iconClassName: "!left-3",
     },
     {
@@ -244,7 +244,7 @@ export default function DealzList({
       type: "input",
       placeholder: "AGENCY",
       icon: <IconBuilding />,
-      className: "!pl-10 py-3 !h-auto !text-[12px] xl:w-[140px] 3xl:w-[200px]",
+      className: "!pl-10 py-3 !h-auto xl:w-[140px] 3xl:w-[200px]",
       iconClassName: "!left-3",
     },
     {

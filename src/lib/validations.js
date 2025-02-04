@@ -11,7 +11,7 @@ export const validations = {
       .max(maxLength, `Value must be at most ${maxLength} characters.`),
   optionalLink: Yup.string()
     .nullable()
-    .url("Please enter a valid URL")
+    .url("Please enter a valid http or https URL")
     .optional(),
   audienceGender: Yup.array().min(1, "At least one gender is required"),
   audienceLocation: Yup.array().min(1, "At least one location is required"),

@@ -81,7 +81,21 @@ const previewDealzDateRange = (startDate, endDate) => {
   }
 };
 
+/**
+ * Formats a given date string into "D MMM, YYYY" format.
+ * Example: "2025-02-08" → "8 Feb, 2025"
+ *
+ * @param {string} dateString - The date string in "YYYY-MM-DD" format.
+ * @returns {string} - The formatted date string in "D MMM, YYYY" format.
+ */
+function previewSlotDate(dateString) {
+  const date = new Date(dateString);
+  const options = { day: 'numeric', month: 'short', year: 'numeric' };
+  return date.toLocaleDateString('en-GB', options).replace(/ (\d{4})$/, ', $1');
+}
+
 module.exports = {
   formatDateToYYYYMMDD,
   previewDealzDateRange,
+  previewSlotDate
 };

@@ -143,7 +143,11 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
         )}
       </div>
       <MobilePreview
-        message={formData.initial_message}
+        message={
+          step === 1 || mode === "view"
+            ? formData?.initial_message
+            : formData?.followup_message
+        }
         image={formData?.banner_image}
       />
     </div>

@@ -18,10 +18,11 @@ import IconSave from "@/components/Icons/IconSave";
 import IconClipboardClick from "@/components/Icons/IconClipboardClick";
 import { DEALZ, SUBSCRIPTIONS } from "@/lib/constants";
 import IconPercentage from "@/components/Icons/IconPercentage";
-import { previewDealzDateRange } from "@/lib/date";
+import { previewDealzDateRange, previewSlotDate } from "@/lib/date";
 import { previewFileName } from "@/lib/utils";
 import { api } from "@/api";
 import SaveWarningDialog from "@/components/SaveWarningDialog";
+import IconCalendar from "../Icons/IconCalendar";
 
 const DealzBuilderStep5 = ({
   formData,
@@ -29,7 +30,7 @@ const DealzBuilderStep5 = ({
   mode,
   dealzId = "",
   initialState,
-  currentSubscription
+  currentSubscription,
 }) => {
   const {
     title,
@@ -43,7 +44,9 @@ const DealzBuilderStep5 = ({
     csv_file_name,
     coupon_code_file_url,
     coupon_creation_type,
+    slot_date,
   } = formData;
+
   const isViewMode = mode === "view";
   const [saveWarningDialog, setSaveWarningDialog] = useState(null);
 
@@ -203,6 +206,19 @@ const DealzBuilderStep5 = ({
                 </div>
                 <Typography className="!font-medium" variant="body">
                   {link}
+                </Typography>
+              </div>
+            )}
+            {slot_date && (
+              <div className="flex justify-between items-center">
+                <div className="flex gap-[6px]">
+                  <IconCalendar />
+                  <Typography variant="caption" className="uppercase">
+                    slot date
+                  </Typography>
+                </div>
+                <Typography className="!font-medium" variant="body">
+                  {previewSlotDate(slot_date)}
                 </Typography>
               </div>
             )}

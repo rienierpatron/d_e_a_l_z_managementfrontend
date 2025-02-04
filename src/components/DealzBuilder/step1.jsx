@@ -123,7 +123,16 @@ const DealzBuilderStep1 = ({
           </Typography>
         </FormFieldset>
         <FormFieldset className="!mb-0">
-          <FormLabel>Deal</FormLabel>
+          <FormLabel
+            info={
+              <div className="p-2 text-midnight-blue max-w-[300px]">
+                Choose the type of deal to offer, such as a discount in dollars,
+                percentage, or other (e.g., buy-one-get-one deal)
+              </div>
+            }
+          >
+            Deal
+          </FormLabel>
           <div className="flex gap-4">
             <Button
               className={classNames(
@@ -175,7 +184,16 @@ const DealzBuilderStep1 = ({
           currentSubscription?.available_inventory?.banner > 0 && (
             <div className="bg-primary-40 rounded-2xl px-6 py-4">
               <div className="flex items-center justify-between mb-4">
-                <FormLabel className="!mb-0">Hero deal</FormLabel>
+                <FormLabel
+                  className="!mb-0"
+                  info={
+                    <div className="p-2 text-midnight-blue max-w-[300px]">
+                      Upload an image for the deal
+                    </div>
+                  }
+                >
+                  Hero deal
+                </FormLabel>
                 <Typography className="!text-gold text-sm bg-white p-2 rounded-md w-max">
                   Add-on
                 </Typography>
@@ -185,7 +203,17 @@ const DealzBuilderStep1 = ({
           )}
         <FormFieldset className="mb-0">
           <div className="flex items-center justify-between">
-            <FormLabel className="!mb-0">Type of coupon</FormLabel>
+            <FormLabel
+              className="!mb-0"
+              info={
+                <div className="p-2 text-midnight-blue max-w-[300px]">
+                  Choose the type of coupon: generate a new coupon or upload an
+                  existing one.
+                </div>
+              }
+            >
+              Type of coupon
+            </FormLabel>
             <Button
               className="underline !p-0"
               icon={<IconDownload />}

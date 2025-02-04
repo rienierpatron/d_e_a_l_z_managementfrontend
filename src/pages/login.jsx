@@ -119,7 +119,7 @@ export default function Login() {
               Enter details you used during your registration
             </Typography>
             <div className="mb-[40px]">
-              <FormLabel htmlFor="email" className="uppercase">
+              <FormLabel htmlFor="email">
                 Email
               </FormLabel>
               <FormInput
@@ -157,14 +157,14 @@ export default function Login() {
               Don't have an account?{" "}
               <Link
                 href="/signup"
-                className="text-secondary underline uppercase"
+                className="text-secondary underline"
               >
                 Sign Up
               </Link>
             </Typography>
             <Typography
               variant="caption"
-              className="py-10 text-center uppercase"
+              className="py-10 text-center"
             >
               Or Log In using
             </Typography>

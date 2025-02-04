@@ -173,8 +173,8 @@ export default function Signup() {
               <div className="flex flex-col gap-6">
                 <div className="flex gap-4 flex-col md:flex-row">
                   <FormFieldset className="!mb-0">
-                    <FormLabel htmlFor="first-name" className="uppercase">
-                      First Name
+                    <FormLabel htmlFor="first-name">
+                      First name
                     </FormLabel>
                     <FormInput
                       type="text"
@@ -193,8 +193,8 @@ export default function Signup() {
                     />
                   </FormFieldset>
                   <FormFieldset className="!mb-0">
-                    <FormLabel htmlFor="last-name" className="uppercase">
-                      Last Name
+                    <FormLabel htmlFor="last-name">
+                      Last name
                     </FormLabel>
                     <FormInput
                       type="text"
@@ -214,8 +214,8 @@ export default function Signup() {
                   </FormFieldset>
                 </div>
                 <FormFieldset className="!mb-0">
-                  <FormLabel htmlFor="company-name" className="uppercase">
-                    Company Name
+                  <FormLabel htmlFor="company-name">
+                    Company name
                   </FormLabel>
                   <FormInput
                     type="text"
@@ -234,13 +234,13 @@ export default function Signup() {
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
-                  <FormLabel htmlFor="business-type" className="uppercase">
-                    Business Type
+                  <FormLabel htmlFor="business-type">
+                    Business type
                   </FormLabel>
                   <FormSelect
                     id="business-type"
                     name="business-type"
-                    placeholder="Select Business Type"
+                    placeholder="Select business type"
                     options={BUSINESS_TYPE_OPTIONS}
                     onChange={(selectedOption) =>
                       setUserData({ ...userData, businessType: selectedOption.value })
@@ -252,7 +252,7 @@ export default function Signup() {
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
-                  <FormLabel htmlFor="email" className="uppercase">
+                  <FormLabel htmlFor="email">
                     Email
                   </FormLabel>
                   <FormInput
@@ -289,11 +289,11 @@ export default function Signup() {
               {/* Already Have Account */}
               <Typography variant="caption" className="font-normal text-center mt-4">
                 Already have an account?{" "}
-                <Link href="/login" className="text-secondary uppercase underline">Log In</Link>
+                <Link href="/login" className="text-secondary underline">Log In</Link>
               </Typography>
 
               {/* Social Signup */}
-              <Typography variant="caption" className="py-10 text-center uppercase">
+              <Typography variant="caption" className="py-10 text-center">
                 Or Sign Up using
               </Typography>
               <CustomGoogleLogin onLoginSuccess={onGoogleSignupSuccess}/>

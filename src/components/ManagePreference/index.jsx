@@ -272,9 +272,7 @@ const ManagePreference = () => {
       >
         <form>
           <FormFieldset className="mb-[32px]">
-            <FormLabel htmlFor="business_type">
-              Business type
-            </FormLabel>
+            <FormLabel htmlFor="business_type">Business type</FormLabel>
             <FormSelect
               id="business_type"
               name="business_type"
@@ -318,15 +316,13 @@ const ManagePreference = () => {
             )}
           </FormFieldset>
           <FormFieldset className="mb-[32px]">
-            <FormLabel className="w-full">
-              <div className="flex items-center justify-between w-full">
-                <span>How many locations does the business have?</span>
-                <IconAdd
-                  className="cursor-pointer"
-                  onClick={handleAddMoreLocationAddress}
-                />
-              </div>
-            </FormLabel>
+            <div className="flex items-center justify-between w-full text-sm text-dark-gray mb-[12px]">
+              <span>How many locations does the business have?</span>
+              <IconAdd
+                className="cursor-pointer"
+                onClick={handleAddMoreLocationAddress}
+              />
+            </div>
             <div className="flex flex-col gap-2">
               {business_location_address?.length &&
                 business_location_address.map((location, i) => {
@@ -371,10 +367,7 @@ const ManagePreference = () => {
             </div>
           </FormFieldset>
           <FormFieldset className="mb-[32px]">
-            <FormLabel
-              className="w-full"
-              htmlFor="audience_age_range"
-            >
+            <FormLabel className="w-full" htmlFor="audience_age_range">
               Target audience
             </FormLabel>
             <div className="flex gap-4 justify-between items-center flex-col">

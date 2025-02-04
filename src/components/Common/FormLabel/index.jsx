@@ -10,7 +10,7 @@ import { Popover } from "flowbite-react";
  */
 import IconInfoOutlined from "@/components/Icons/IconInfoOutlined";
 
-const FormLabel = ({ children, required, className, info, ...props }) => {
+const FormLabel = ({ children, required, className, info, infoWrapperClass, ...props }) => {
   return (
     <label
       {...props}
@@ -19,7 +19,7 @@ const FormLabel = ({ children, required, className, info, ...props }) => {
         "text-sm text-dark-gray mb-[12px] flex gap-[6px]"
       )}
     >
-      <div className="w-full">
+      <div>
         {children}
         {required && <span className="text-red ml-[6px]">*</span>}
       </div>
@@ -29,7 +29,10 @@ const FormLabel = ({ children, required, className, info, ...props }) => {
           content={info}
           placement="auto"
           arrow={false}
-          className="bg-white shadow-custom-label-info focus-visible:outline-none rounded-3xl text-[12px]"
+          className={classNames(
+            "bg-white shadow-custom-label-info focus-visible:outline-none text-[12px] z-10 rounded-xl",
+            infoWrapperClass
+          )}
         >
           <IconInfoOutlined className="cursor-pointer" />
         </Popover>

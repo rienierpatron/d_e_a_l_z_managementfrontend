@@ -204,7 +204,16 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
         {currentSubscription?.subscription?.subscription_name?.toLowerCase() ===
           SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && (
           <FormFieldset className="!mb-0">
-            <FormLabel className="!mb-6">Pick time of day</FormLabel>
+            <FormLabel
+              className="!mb-6"
+              info={
+                <div className="p-2 text-midnight-blue max-w-[300px]">
+                  Select the time of day for the deal to be sent as a broadcast.
+                </div>
+              }
+            >
+              Pick time of day
+            </FormLabel>
             <div className="flex items-center gap-3">
               <Button
                 className={classNames(

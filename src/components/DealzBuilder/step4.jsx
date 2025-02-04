@@ -15,6 +15,7 @@ import CustomDatePicker from "@/components/Common/DatePicker";
 import { formatDateToYYYYMMDD } from "@/lib/date";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
+import FormLabel from "@/components/Common/FormLabel";
 
 const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
   const [error, setError] = useState(null);
@@ -70,12 +71,23 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
 
   return (
     <div>
-      <BackNavigation
-        text="Valid between"
-        className="text-xl"
-        baseClassName="my-8"
-        onClick={handlBack}
-      />
+      <div className="flex my-8 items-center">
+        <BackNavigation
+          text="Valid between"
+          className="text-xl"
+          baseClassName="!mb-0"
+          onClick={handlBack}
+        />
+        <FormLabel
+          className="!mb-0"
+          info={
+            <div className="p-2 text-midnight-blue max-w-[300px]">
+              Select the start and end dates to define the validity period for
+              the deal.
+            </div>
+          }
+        ></FormLabel>
+      </div>
       <div className="flex flex-col gap-6">
         <div className="flex justify-between gap-4">
           <div className="w-full">

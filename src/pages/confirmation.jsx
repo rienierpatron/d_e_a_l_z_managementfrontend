@@ -43,14 +43,14 @@ export default function Confiramtion() {
 
             <Typography variant="caption" className="text-left">
               Not your email?{" "}
-              <Link href="/login" className="text-secondary underline uppercase">
+              <Link href="/login" className="text-secondary underline">
                 Try again
               </Link>
             </Typography>
 
             <Typography variant="caption" className="mt-[24px] text-left">
               Didn't receive an email? Wait a few more seconds or{" "}
-              <Link href="mailto:support@dealz.asia" className="text-secondary underline uppercase">
+              <Link href="mailto:support@dealz.asia" className="text-secondary underline">
                 Contact Us
               </Link>
             </Typography>

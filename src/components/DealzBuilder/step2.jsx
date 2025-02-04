@@ -78,9 +78,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
       />
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">
-          <FormLabel>
-            Add text for follow up message
-          </FormLabel>
+          <FormLabel>Add text for follow up message</FormLabel>
           <FormTextArea
             className="bg-light-blue !text-dark-gray text-sm font-normal"
             icon="/icons/tag-2-icon.svg"
@@ -98,9 +96,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
           </Typography>
         </FormFieldset>
         <FormFieldset className="!mb-0">
-          <FormLabel>
-            Add link to follow up message
-          </FormLabel>
+          <FormLabel>Add link to follow up message</FormLabel>
           <FormInput
             className="bg-light-blue"
             icon="/icons/global.svg"
@@ -119,7 +115,16 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
         </FormFieldset>
         <div className="flex gap-6">
           <FormFieldset className="!mb-0 w-full">
-            <FormLabel>DEALZ title</FormLabel>
+            <FormLabel
+              info={
+                <div className="p-2 text-midnight-blue max-w-[300px]">
+                  Enter a descriptive title for the deal to identify it
+                  internally.
+                </div>
+              }
+            >
+              DEALZ title
+            </FormLabel>
             <FormInput
               className="bg-light-blue"
               icon="/icons/tag-2-icon.svg"
@@ -138,7 +143,15 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
           </FormFieldset>
           {offer_type && offer_type !== DEALZ.OFFER_TYPE.Other && (
             <FormFieldset className="!mb-0 w-full">
-              <FormLabel>Deal</FormLabel>
+              <FormLabel
+                info={
+                  <div className="p-2 text-midnight-blue max-w-[300px]">
+                    Enter the discount value
+                  </div>
+                }
+              >
+                Deal
+              </FormLabel>
               <FormInput
                 className="bg-light-blue"
                 icon={
@@ -178,6 +191,11 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
               labelClassName="!text-sm"
               checked={DEALZ.COUPON_CODE_TYPE.universal === coupon_code_type}
               value={coupon_code_type}
+              info={
+                <div className="p-2 text-midnight-blue max-w-[300px]">
+                  Enter code that can be used by all users for this deal.
+                </div>
+              }
             />
             {/* <FormRadio
               id="personalized-code"

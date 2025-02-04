@@ -78,7 +78,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
       />
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">
-          <FormLabel className="uppercase">
+          <FormLabel>
             Add text for follow up message
           </FormLabel>
           <FormTextArea
@@ -98,8 +98,8 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
           </Typography>
         </FormFieldset>
         <FormFieldset className="!mb-0">
-          <FormLabel className="uppercase">
-            Add Link to follow up message
+          <FormLabel>
+            Add link to follow up message
           </FormLabel>
           <FormInput
             className="bg-light-blue"
@@ -119,7 +119,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
         </FormFieldset>
         <div className="flex gap-6">
           <FormFieldset className="!mb-0 w-full">
-            <FormLabel className="uppercase">DEALZ Title</FormLabel>
+            <FormLabel>DEALZ title</FormLabel>
             <FormInput
               className="bg-light-blue"
               icon="/icons/tag-2-icon.svg"
@@ -138,7 +138,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
           </FormFieldset>
           {offer_type && offer_type !== DEALZ.OFFER_TYPE.Other && (
             <FormFieldset className="!mb-0 w-full">
-              <FormLabel className="uppercase">Deal</FormLabel>
+              <FormLabel>Deal</FormLabel>
               <FormInput
                 className="bg-light-blue"
                 icon={
@@ -175,7 +175,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
               id={DEALZ.COUPON_CODE_TYPE.universal}
               name="coupon_code_type"
               label="Universal code"
-              labelClassName="uppercase !text-sm"
+              labelClassName="!text-sm"
               checked={DEALZ.COUPON_CODE_TYPE.universal === coupon_code_type}
               value={coupon_code_type}
             />

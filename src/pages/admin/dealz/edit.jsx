@@ -30,7 +30,7 @@ export const SLOT_TIME_OPTIONS = [
 const DealInfoCard = ({ icon: Icon, label, children }) => (
   <div className="flex gap-2 items-center">
     <Icon className="text-dark-gray" />
-    <Typography variant="caption" className="uppercase">{label}</Typography>
+    <Typography variant="caption">{label}</Typography>
     <div className="capitalize">{children}</div>
   </div>
 );
@@ -247,22 +247,22 @@ export default function DealzEdit() {
 
       {/* Deal Information Section */}
       <div className="grid grid-cols-2 gap-4 pb-5">
-        <DealInfoCard icon={IconCompany} label="Agency Name">{dealzDetails.dealz?.agency_user?.agency?.agency_name}</DealInfoCard>
-        <DealInfoCard icon={IconCoupon} label="DEALZ Type">
+        <DealInfoCard icon={IconCompany} label="Agency name">{dealzDetails.dealz?.agency_user?.agency?.agency_name}</DealInfoCard>
+        <DealInfoCard icon={IconCoupon} label="DEALZ type">
           {dealzDetails.dealz?.daily_deal
             ? "Daily Dealz"
             : dealzDetails.dealz?.weekly_deal
             ? "Weekly Deal"
             : "No Deal Type"}
         </DealInfoCard>
-        <DealInfoCard icon={IconCoupon} label="DEALZ Code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
+        <DealInfoCard icon={IconCoupon} label="DEALZ code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
         <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
-        <DealInfoCard icon={IconGlobe} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard>
+        <DealInfoCard icon={IconGlobe} label="Website or booking link">{dealzDetails.dealz?.link}</DealInfoCard>
 
         {/* Validity */}
         <div className="flex gap-2 items-center">
           <IconCalendar className="text-dark-gray" />
-          <Typography variant="caption" className="uppercase">Validity</Typography>
+          <Typography variant="caption">Validity</Typography>
           <div>{dealzDetails.dealz?.validity_date}</div>
         </div>
 
@@ -271,7 +271,7 @@ export default function DealzEdit() {
         {/* Slot Selection */}
         <div className="flex gap-2 items-center w-full">
           <IconCouponWide className="text-dark-gray" />
-          <Typography variant="caption" className="uppercase">Slot</Typography>
+          <Typography variant="caption">Slot</Typography>
           <div className="flex flex-nowrap items-center">
             <CustomDatePicker
               id="slot-date"
@@ -298,13 +298,13 @@ export default function DealzEdit() {
 
       {/* Deal Wording Section */}
       <div className="p-4 border border-light-gray rounded-xl my-6">
-        <Typography variant="caption" className="uppercase pb-2">Wording for the Deal</Typography>
+        <Typography variant="caption" className="pb-2">Wording for the deal</Typography>
         <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.initial_message}</Typography>
       </div>
 
       {/* Follow-Up Wording Section */}
       <div className="p-4 border border-light-gray rounded-xl my-6">
-        <Typography variant="caption" className="uppercase pb-2">Wording for the follow-up message</Typography>
+        <Typography variant="caption" className="pb-2">Wording for the follow-up message</Typography>
         <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.followup_message}</Typography>
       </div>
 
@@ -325,13 +325,13 @@ export default function DealzEdit() {
             </a>
           ) : (
             <div className="flex items-center">
-              <Typography variant="caption" className="pr-1">Generated Coupon Code:</Typography>
+              <Typography variant="caption" className="pr-1">Generated coupon code:</Typography>
               <Typography>{dealzDetails.coupons?.[0]?.code}</Typography>
             </div>
           )}
         </div>
         <div>
-          <Typography variant="caption" className="uppercase pb-2">Total Number of Customers Reached for This DEALZ Broadcast</Typography>
+          <Typography variant="caption" className="pb-2">Total number of customers reached for this DEALZ broadcast</Typography>
           <FormInput
             type="text"
             placeholder="Total no. of DEALZ reached"

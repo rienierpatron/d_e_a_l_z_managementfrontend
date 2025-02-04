@@ -103,7 +103,7 @@ export default function DealzList({
   const columns = React.useMemo(
     () => [
       {
-        header: "DEALZ NAME",
+        header: "DEALZ name",
         accessorKey: "title",
         className: "font-medium"
       },
@@ -115,21 +115,21 @@ export default function DealzList({
         },
       },
       {
-        header: "SLOT DATE",
+        header: "Slot date",
         accessorKey: "slot_date",
         Cell: ({ row: { original } }) => {
           return original?.slot_date_time;
         },
       },
       {
-        header: "VALIDITY",
+        header: "Validity",
         accessorKey: "valid_date_from",
         Cell: ({ row: { original } }) => {
           return original.validity_date;
         },
       },
       {
-        header: "CREATED BY",
+        header: "Created by",
         accessorKey: "created_by",
         Cell: ({ row: { original } }) => {
           return (
@@ -140,14 +140,14 @@ export default function DealzList({
         },
       },
       {
-        header: "STATUS",
+        header: "Status",
         accessorKey: "status",
         Cell: ({ row: { original } }) => {
           return <DealzStatusRenderer status={original.status} />;
         },
       },
       {
-        header: "ACTIONS",
+        header: "Actions",
         accessorKey: "actions",
         headerSorting: false,
         Cell: ({ row: { original } }) => {
@@ -234,7 +234,7 @@ export default function DealzList({
     {
       id: "title",
       type: "input",
-      placeholder: "DEAL TITLE",
+      placeholder: "DEALZ title",
       icon: "/icons/tag-2-icon.svg",
       className: "!pl-10 py-3 !h-auto !w-[200px]",
       iconClassName: "!left-3",
@@ -242,7 +242,7 @@ export default function DealzList({
     {
       id: "agency_name",
       type: "input",
-      placeholder: "AGENCY NAME",
+      placeholder: "Agency name",
       icon: <IconBuilding />,
       className: "!pl-10 py-3 !h-auto !w-[200px]",
       iconClassName: "!left-3",
@@ -250,28 +250,28 @@ export default function DealzList({
     {
       id: "slot_date",
       type: "datePicker",
-      placeholder: "SLOT DATE",
+      placeholder: "Slot date",
       inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
       className: "!w-[200px]",
     },
     {
       id: "start_date",
       type: "datePicker",
-      placeholder: "START DATE",
+      placeholder: "Start date",
       inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
       className: "!w-[200px]",
     },
     {
       id: "end_date",
       type: "datePicker",
-      placeholder: "END DATE",
+      placeholder: "End date",
       inputClassName: "!rounded-[32px] !pl-10 !py-3 !h-[50px]",
       className: "!w-[200px]",
     },
     {
       id: "created_by",
       type: "input",
-      placeholder: "CREATED BY",
+      placeholder: "Created by",
       icon: <IconProfileCircle />,
       className: "!pl-10 py-3 !h-auto !w-[200px]",
       iconClassName: "!left-3",
@@ -279,7 +279,7 @@ export default function DealzList({
     {
       id: "status",
       type: "select",
-      placeholder: "STATUS",
+      placeholder: "Status",
       icon: <IconChart />,
       options: loadDelzStatusOptions(),
       controlStyle: { paddingLeft: "40px", width: "200px" },

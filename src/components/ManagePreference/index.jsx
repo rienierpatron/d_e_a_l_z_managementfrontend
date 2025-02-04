@@ -272,8 +272,8 @@ const ManagePreference = () => {
       >
         <form>
           <FormFieldset className="mb-[32px]">
-            <FormLabel className="uppercase" htmlFor="business_type">
-              Business Type
+            <FormLabel htmlFor="business_type">
+              Business type
             </FormLabel>
             <FormSelect
               id="business_type"
@@ -294,9 +294,9 @@ const ManagePreference = () => {
             )}
           </FormFieldset>
           <FormFieldset className="mb-[32px]">
-            <FormLabel className="uppercase w-full">
+            <FormLabel className="w-full">
               <div className="flex items-center justify-between w-full">
-                <span>Business Location</span>
+                <span>Business location</span>
               </div>
             </FormLabel>
             <FormSelect
@@ -318,7 +318,7 @@ const ManagePreference = () => {
             )}
           </FormFieldset>
           <FormFieldset className="mb-[32px]">
-            <FormLabel className="uppercase w-full">
+            <FormLabel className="w-full">
               <div className="flex items-center justify-between w-full">
                 <span>How many locations does the business have?</span>
                 <IconAdd
@@ -372,10 +372,10 @@ const ManagePreference = () => {
           </FormFieldset>
           <FormFieldset className="mb-[32px]">
             <FormLabel
-              className="uppercase w-full"
+              className="w-full"
               htmlFor="audience_age_range"
             >
-              Target Audience
+              Target audience
             </FormLabel>
             <div className="flex gap-4 justify-between items-center flex-col">
               <div className="w-full">
@@ -444,7 +444,7 @@ const ManagePreference = () => {
             </div>
           </FormFieldset>
           <FormFieldset>
-            <FormLabel className="uppercase w-full" htmlFor="business_goal">
+            <FormLabel className="w-full" htmlFor="business_goal">
               What is the businesses goal with DEALZ?
             </FormLabel>
             <FormSelect

@@ -141,7 +141,7 @@ const DealzBuilderStep5 = ({
                 {title}
               </Typography>
               <Typography variant="small" className="text-dark-gray">
-                Your Next Favorite Deal Awaits
+                Your next favorite deal awaits
               </Typography>
             </div>
             {coupon_code_file_url &&
@@ -167,8 +167,8 @@ const DealzBuilderStep5 = ({
             <div className="flex justify-between items-center">
               <div className="flex gap-[6px]">
                 <IconCoupon />
-                <Typography variant="caption" className="uppercase">
-                  DEALZ Type
+                <Typography variant="caption">
+                  DEALZ type
                 </Typography>
               </div>
               <Typography className="!font-medium" variant="body">
@@ -183,7 +183,7 @@ const DealzBuilderStep5 = ({
                   ) : (
                     <IconDollar />
                   )}
-                  <Typography variant="caption" className="uppercase">
+                  <Typography variant="caption">
                     {offer_type === DEALZ.OFFER_TYPE.Percentage
                       ? "Discount"
                       : "Dollar"}
@@ -200,8 +200,8 @@ const DealzBuilderStep5 = ({
               <div className="flex justify-between items-center">
                 <div className="flex gap-[6px]">
                   <Image src="/icons/global.svg" width={20} height={20} />
-                  <Typography variant="caption" className="uppercase">
-                    website or booking link
+                  <Typography variant="caption">
+                    Website or booking link
                   </Typography>
                 </div>
                 <Typography className="!font-medium" variant="body">
@@ -213,8 +213,8 @@ const DealzBuilderStep5 = ({
               <div className="flex justify-between items-center">
                 <div className="flex gap-[6px]">
                   <IconCalendar />
-                  <Typography variant="caption" className="uppercase">
-                    slot date
+                  <Typography variant="caption">
+                    Slot date
                   </Typography>
                 </div>
                 <Typography className="!font-medium" variant="body">
@@ -226,8 +226,8 @@ const DealzBuilderStep5 = ({
               <div className="flex justify-between items-center">
                 <div className="flex gap-[6px]">
                   <Image src="/icons/global.svg" width={20} height={20} />
-                  <Typography variant="caption" className="uppercase">
-                    schedule
+                  <Typography variant="caption">
+                    Schedule
                   </Typography>
                 </div>
                 <Typography className="!font-medium" variant="body">
@@ -236,16 +236,16 @@ const DealzBuilderStep5 = ({
               </div>
             )}
             <div className="bg-white rounded-2xl p-6">
-              <Typography variant="caption" className="text-xs uppercase mb-4">
-                wording for their deal
+              <Typography variant="caption" className="text-xs mb-4">
+                Wording for their deal
               </Typography>
               <Typography variant="caption" className="text-midnight-blue">
                 {initial_message}
               </Typography>
             </div>
             <div className="bg-white rounded-2xl p-6">
-              <Typography variant="caption" className="text-xs uppercase mb-4">
-                wording for the follow up message
+              <Typography variant="caption" className="text-xs mb-4">
+                Wording for the follow up message
               </Typography>
               <Typography variant="caption" className="text-midnight-blue">
                 {followup_message}

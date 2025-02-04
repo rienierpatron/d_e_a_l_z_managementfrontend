@@ -77,7 +77,7 @@ const UploadHeroImage = ({ formData, setFormData }) => {
             icon={<IconUploadFile />}
             className="flex-col border-dashed rounded-2xl"
           >
-            Upload Image
+            Upload image
           </Button>
         </FilePicker>
       )}

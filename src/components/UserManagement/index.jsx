@@ -166,7 +166,7 @@ export default function CommonUserManagement({
         },
       },
       {
-        header: "User Type",
+        header: "User type",
         accessorKey: "user_type",
         headerSorting: false,
       },

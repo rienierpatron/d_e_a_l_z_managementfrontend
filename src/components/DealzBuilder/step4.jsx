@@ -71,7 +71,7 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
   return (
     <div>
       <BackNavigation
-        text="Valid Between"
+        text="Valid between"
         className="text-xl"
         baseClassName="my-8"
         onClick={handlBack}

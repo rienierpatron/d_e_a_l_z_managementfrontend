@@ -32,8 +32,8 @@ const RemainingDealz = ({ totalDealz, remainingDealz = 0 }) => {
   return (
     <div className="border border-light-gray rounded-2xl px-6 py-8 flex flex-col gap-6 w-full relative">
       <div className="flex items-center justify-between">
-        <Typography className="uppercase font-medium" variant="caption">
-          Deal Remaining
+        <Typography className="font-medium" variant="caption">
+          Deal remaining
         </Typography>
         <Typography className="font-semibold" variant="heading">
           {remainingDealz}/

@@ -103,9 +103,9 @@ export default function AddUserPopup({
           <label htmlFor="first-name">
             <Typography
               variant="caption"
-              className="text-gray-700 uppercase mb-[12px]"
+              className="text-gray-700 mb-[12px]"
             >
-              First Name
+              First name
             </Typography>
           </label>
           <FormInput
@@ -128,9 +128,9 @@ export default function AddUserPopup({
           <label htmlFor="last-name">
             <Typography
               variant="caption"
-              className="text-gray-700 uppercase mb-[12px]"
+              className="text-gray-700 mb-[12px]"
             >
-              Last Name
+              Last name
             </Typography>
           </label>
           <FormInput
@@ -154,7 +154,7 @@ export default function AddUserPopup({
             <label htmlFor="user-role">
               <Typography
                 variant="caption"
-                className="text-gray-700 uppercase mb-[12px]"
+                className="text-gray-700 mb-[12px]"
               >
                 User role
               </Typography>
@@ -178,7 +178,7 @@ export default function AddUserPopup({
           <label htmlFor="email">
             <Typography
               variant="caption"
-              className="text-gray-700 uppercase mb-[12px]"
+              className="text-gray-700 mb-[12px]"
             >
               Email
             </Typography>

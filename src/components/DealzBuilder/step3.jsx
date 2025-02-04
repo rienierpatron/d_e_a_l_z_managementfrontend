@@ -106,7 +106,7 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
   return (
     <div>
       <BackNavigation
-        text="Select Slot Date"
+        text="Select slot date"
         className="text-xl"
         baseClassName="my-8"
         onClick={handlBack}
@@ -160,7 +160,7 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
               variant="caption"
               className="bg-[linear-gradient(-80deg,#4177F4_11.43%,#F945B1_82.92%)] bg-clip-text text-transparent !font-bold"
             >
-              Slot date for Weekly Deals can only be set on Mondays.
+              Slot date for weekly DEALZ can only be set on mondays.
             </Typography>
           </div>
         )}
@@ -204,7 +204,7 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
         {currentSubscription?.subscription?.subscription_name?.toLowerCase() ===
           SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && (
           <FormFieldset className="!mb-0">
-            <FormLabel className="uppercase !mb-6">Pick time of day</FormLabel>
+            <FormLabel className="!mb-6">Pick time of day</FormLabel>
             <div className="flex items-center gap-3">
               <Button
                 className={classNames(

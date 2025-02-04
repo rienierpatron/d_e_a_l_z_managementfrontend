@@ -105,9 +105,7 @@ const DealzBuilderStep1 = ({
       </Typography>
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">
-          <FormLabel className="uppercase">
-            Enter deal one liner for broadcast
-          </FormLabel>
+          <FormLabel>Enter deal one liner for broadcast</FormLabel>
           <FormTextArea
             className="bg-light-blue !text-dark-gray text-sm font-normal"
             icon="/icons/tag-2-icon.svg"
@@ -125,7 +123,7 @@ const DealzBuilderStep1 = ({
           </Typography>
         </FormFieldset>
         <FormFieldset className="!mb-0">
-          <FormLabel className="uppercase">Deal</FormLabel>
+          <FormLabel>Deal</FormLabel>
           <div className="flex gap-4">
             <Button
               className={classNames(
@@ -177,7 +175,7 @@ const DealzBuilderStep1 = ({
           currentSubscription?.available_inventory?.banner > 0 && (
             <div className="bg-primary-40 rounded-2xl px-6 py-4">
               <div className="flex items-center justify-between mb-4">
-                <FormLabel className="uppercase !mb-0">hero deal</FormLabel>
+                <FormLabel className="!mb-0">Hero deal</FormLabel>
                 <Typography className="!text-gold text-sm bg-white p-2 rounded-md w-max">
                   Add-on
                 </Typography>
@@ -187,7 +185,7 @@ const DealzBuilderStep1 = ({
           )}
         <FormFieldset className="mb-0">
           <div className="flex items-center justify-between">
-            <FormLabel className="uppercase !mb-0">Type of Coupon</FormLabel>
+            <FormLabel className="!mb-0">Type of coupon</FormLabel>
             <Button
               className="underline !p-0"
               icon={<IconDownload />}
@@ -204,7 +202,7 @@ const DealzBuilderStep1 = ({
             <FormRadio
               id="automatic"
               name="coupon_creation_type"
-              label="Create DEALZ Codes"
+              label="Create DEALZ codes"
               labelClassName="text-midnight-blue !text-base"
               checked={
                 DEALZ.COUPON_CREATION_TYPE.automatic === coupon_creation_type
@@ -254,11 +252,11 @@ const DealzBuilderStep1 = ({
         {coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.automatic && (
           <div className="flex items-center">
             <FormFieldset className="mb-0">
-              <FormLabel className="uppercase">Coupon code</FormLabel>
+              <FormLabel>Coupon code</FormLabel>
               <FormInput
                 className="bg-light-blue"
                 icon={<IconCoupon />}
-                placeholder="Coupon Code"
+                placeholder="Coupon code"
                 fullWidth
                 rounded
                 name="code"

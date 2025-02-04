@@ -235,10 +235,10 @@ export default function DealzEdit() {
           </Button>
           <Button
             icon="/icons/save-icon.svg"
-            className={`px-[16px] py-[0] border-0 !bg-light-gray ${dealzDetails.dealz?.status === "approved" || dealzDetails.dealz?.status === "revision" ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`px-[16px] py-[0] border-0 !bg-light-gray ${dealzDetails.dealz?.status === "revision" ? "opacity-50 cursor-not-allowed" : ""}`}
             isRound
             onClick={() => setShowSaveDetailsWarningDialog(true)}
-            disabled={dealzDetails.dealz?.status === "approved" || dealzDetails.dealz?.status === "revision"}
+            disabled={dealzDetails.dealz?.status === "revision"}
           >
             Save
           </Button>

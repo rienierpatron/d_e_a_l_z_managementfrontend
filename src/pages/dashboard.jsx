@@ -28,20 +28,20 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    getReachCount();
-  }, []);
+  // useEffect(() => {
+  //   getReachCount();
+  // }, []);
 
   return (
     <div className="px-10 py-8 h-full">
       <div className="flex items-stretch justify-between gap-6">
-        <DealzStats
+        {/* <DealzStats
           icon={<IconPeople className="text-secondary" />}
           iconClassName="bg-secondary-60"
           metricName="Your dealz reach"
           metricCount={reachCount}
           metricUnit="Users"
-        />
+        /> */}
         <RemainingDealz
           totalDealz={
             currentSubscription?.available_inventory?.allowed_slot ?? 0

@@ -45,9 +45,9 @@ const ManagePreference = () => {
     business_type: "",
     business_location: "",
     business_location_address: [""],
-    audience_age_range: "",
-    audience_gender: "",
-    audience_location: "",
+    audience_age_range: [],
+    audience_gender: [],
+    audience_location: [],
     business_goal: "",
     all_business_location: "",
   };
@@ -69,9 +69,9 @@ const ManagePreference = () => {
     business_type: validations.stringRequiredField,
     business_location: validations.stringRequiredField,
     business_location_address: validations.businessLocationAddress,
-    audience_age_range: validations.stringRequiredField,
-    audience_gender: validations.stringRequiredField,
-    audience_location: validations.stringRequiredField,
+    audience_age_range: validations.audienceAgeRange,
+    audience_gender: validations.audienceGender,
+    audience_location: validations.audienceLocation,
     business_goal: validations.stringRequiredField,
   });
 
@@ -84,6 +84,53 @@ const ManagePreference = () => {
     });
   };
 
+  const generatePreferenceData = (agency_preference) => {
+    const business_location =
+      agency_preference?.agency_biz_locations?.[0] || null;
+    const agencyPrference = {
+      business_type: agency_preference.business_type,
+      business_goal: agency_preference.business_goal,
+      all_business_location: agency_preference?.agency_biz_locations,
+      business_location: business_location?.location,
+      business_location_address: business_location
+        ? business_location.biz_location_addresses
+        : [""],
+      audience_age_range: [],
+      audience_gender: [],
+      audience_location: [],
+    };
+    if (agency_preference?.audience_age_range) {
+      const audience_age_range =
+        agency_preference.audience_age_range.split(",");
+      agencyPrference["audience_age_range"] = audience_age_range.map((ele) => {
+        return {
+          label: ele,
+          value: ele,
+        };
+      });
+    }
+    if (agency_preference?.audience_gender) {
+      const audience_gender = agency_preference.audience_gender.split(",");
+      agencyPrference["audience_gender"] = audience_gender.map((ele) => {
+        return {
+          label: GENDER.find((item) => item.value === ele)?.label,
+          value: ele,
+        };
+      });
+    }
+    if (agency_preference?.audience_location) {
+      const audience_location = agency_preference.audience_location.split(",");
+      agencyPrference["audience_location"] = audience_location.map((ele) => {
+        return {
+          label: ele,
+          value: ele,
+        };
+      });
+    }
+
+    return agencyPrference;
+  };
+
   const fetchAgencyPreference = async () => {
     try {
       setIsLoading(true);
@@ -93,21 +140,10 @@ const ManagePreference = () => {
       );
       if (res.status === "ok" && res?.data?.agency_preference) {
         setIsLoading(false);
-        const agency_preference = res.data.agency_preference;
-        const business_location =
-          agency_preference?.agency_biz_locations?.[0] || null;
-        setFormData({
-          business_type: agency_preference.business_type,
-          audience_age_range: agency_preference.audience_age_range,
-          audience_gender: agency_preference.audience_gender,
-          audience_location: agency_preference.audience_location,
-          business_location: business_location?.location,
-          business_location_address: business_location
-            ? business_location.biz_location_addresses
-            : [""],
-          business_goal: agency_preference.business_goal,
-          all_business_location: agency_preference?.agency_biz_locations,
-        });
+        const formattedData = generatePreferenceData(
+          res.data.agency_preference
+        );
+        setFormData(formattedData);
       }
     } catch (error) {
       setIsLoading(false);
@@ -341,22 +377,19 @@ const ManagePreference = () => {
             >
               Target Audience
             </FormLabel>
-            <div className="flex gap-4 justify-between items-center">
-              <div>
+            <div className="flex gap-4 justify-between items-center flex-col">
+              <div className="w-full">
                 <FormSelect
                   id="audience_age_range"
                   name="audience_age_range"
                   options={AGE_RANGE}
                   rounded
+                  isMulti
                   icon={<IconUserTag />}
                   placeholder="Age range"
                   onKeyDown={handleKeyDown}
-                  onChange={(option) =>
-                    onChange("audience_age_range", option?.value)
-                  }
-                  value={AGE_RANGE.find(
-                    (ele) => ele.value === audience_age_range
-                  )}
+                  onChange={(option) => onChange("audience_age_range", option)}
+                  value={audience_age_range}
                   isError={error && error["audience_age_range"]}
                 />
                 {error && error["audience_age_range"] && (
@@ -366,19 +399,18 @@ const ManagePreference = () => {
                   />
                 )}
               </div>
-              <div>
+              <div className="w-full">
                 <FormSelect
                   id="audience_gender"
                   name="audience_gender"
                   options={GENDER}
                   rounded
+                  isMulti
                   icon={<IconProfileCircle />}
                   placeholder="Gender"
                   onKeyDown={handleKeyDown}
-                  onChange={(option) =>
-                    onChange("audience_gender", option?.value)
-                  }
-                  value={GENDER.find((ele) => ele.value === audience_gender)}
+                  onChange={(option) => onChange("audience_gender", option)}
+                  value={audience_gender}
                   isError={error && error["audience_gender"]}
                 />
                 {error && error["audience_gender"] && (
@@ -388,21 +420,18 @@ const ManagePreference = () => {
                   />
                 )}
               </div>
-              <div>
+              <div className="w-full">
                 <FormSelect
                   id="audience_location"
                   name="audience_location"
                   options={BUSINESS_LOCATION}
                   rounded
+                  isMulti
                   icon={<IconLocation />}
                   placeholder="Location"
                   onKeyDown={handleKeyDown}
-                  onChange={(option) =>
-                    onChange("audience_location", option?.value)
-                  }
-                  value={BUSINESS_LOCATION.find(
-                    (ele) => ele.value === audience_location
-                  )}
+                  onChange={(option) => onChange("audience_location", option)}
+                  value={audience_location}
                   isError={error && error["audience_location"]}
                 />
                 {error && error["audience_location"] && (

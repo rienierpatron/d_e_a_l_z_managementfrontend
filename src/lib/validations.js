@@ -13,6 +13,9 @@ export const validations = {
     .nullable()
     .url("Please enter a valid URL")
     .optional(),
+  audienceGender: Yup.array().min(1, "At least one gender is required"),
+  audienceLocation: Yup.array().min(1, "At least one location is required"),
+  audienceAgeRange: Yup.array().min(1, "At least one age range is required"),
   businessType: Yup.string().required("Business type is required"),
   businessLocationAddress: Yup.array()
     .of(

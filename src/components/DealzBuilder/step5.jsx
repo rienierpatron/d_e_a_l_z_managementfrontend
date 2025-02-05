@@ -23,6 +23,7 @@ import { previewFileName } from "@/lib/utils";
 import { api } from "@/api";
 import SaveWarningDialog from "@/components/SaveWarningDialog";
 import IconCalendar from "../Icons/IconCalendar";
+import { helper } from "@/helpers";
 
 const DealzBuilderStep5 = ({
   formData,
@@ -99,11 +100,30 @@ const DealzBuilderStep5 = ({
       if (res.status === "ok") {
         setIsLoading(null);
         return router.push("/calendar");
+      } else {
+        setIsLoading(null);
+        if (
+          res &&
+          res?.data?.status === "error" &&
+          res.data.message ===
+            "Please subscribe to the subscription plan in order to submit DEALZ for review."
+        ) {
+          helper.general.alert("error", {
+            message: (
+              <span>
+                {res.data.message}{" "}
+                <a href="/subscriptions" className="text-secondary underline">
+                  Subscribe Now
+                </a>
+              </span>
+            ),
+          });
+        }
       }
       setIsLoading(null);
     } catch (error) {
       setIsLoading(null);
-      console.log("Error in upload file", error);
+      console.log(error);
     }
   };
 
@@ -167,9 +187,7 @@ const DealzBuilderStep5 = ({
             <div className="flex justify-between items-center">
               <div className="flex gap-[6px]">
                 <IconCoupon />
-                <Typography variant="caption">
-                  DEALZ type
-                </Typography>
+                <Typography variant="caption">DEALZ type</Typography>
               </div>
               <Typography className="!font-medium" variant="body">
                 Unique codes
@@ -213,9 +231,7 @@ const DealzBuilderStep5 = ({
               <div className="flex justify-between items-center">
                 <div className="flex gap-[6px]">
                   <IconCalendar />
-                  <Typography variant="caption">
-                    Slot date
-                  </Typography>
+                  <Typography variant="caption">Slot date</Typography>
                 </div>
                 <Typography className="!font-medium" variant="body">
                   {previewSlotDate(slot_date)}
@@ -226,9 +242,7 @@ const DealzBuilderStep5 = ({
               <div className="flex justify-between items-center">
                 <div className="flex gap-[6px]">
                   <Image src="/icons/global.svg" width={20} height={20} />
-                  <Typography variant="caption">
-                    Schedule
-                  </Typography>
+                  <Typography variant="caption">Schedule</Typography>
                 </div>
                 <Typography className="!font-medium" variant="body">
                   {previewDealzDateRange(valid_date_from, valid_date_to)}

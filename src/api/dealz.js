@@ -21,6 +21,15 @@ export async function createDeal(payload, showMessage = true) {
       DONT_SHOW_ERROR: showMessage,
     });
 
+    if (
+      response &&
+      response?.data?.status === "error" &&
+      response.data.message ===
+        "Please subscribe to the subscription plan in order to submit DEALZ for review."
+    ) {
+      showMessage = false;
+    }
+
     return helper.api.handleApiResponse(response, showMessage);
   } catch (error) {
     console.error("Error creating deal:", error);
@@ -140,6 +149,15 @@ export async function editDeal(dealzId, payload, showMessage = true) {
       data: payload,
       DONT_SHOW_ERROR: showMessage,
     });
+
+    if (
+      response &&
+      response?.data?.status === "error" &&
+      response.data.message ===
+        "Please subscribe to the subscription plan in order to submit DEALZ for review."
+    ) {
+      showMessage = false;
+    }
 
     return helper.api.handleApiResponse(response, showMessage);
   } catch (error) {

@@ -1,4 +1,4 @@
-import { config } from "@/lib/config";
+import { getServerConfig } from "@/lib/config";
 import { helper } from "@/helpers";
 import Axios from "axios";
 
@@ -9,6 +9,7 @@ import Axios from "axios";
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function saveAgencyPreference(formData, showMessage = true) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/agency-preference`,
     method: "PUT",
@@ -28,6 +29,7 @@ export async function saveAgencyPreference(formData, showMessage = true) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function getAgencyPreference(agencyId, showMessage = true) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/agency-preference/${agencyId}`,
     method: "GET",

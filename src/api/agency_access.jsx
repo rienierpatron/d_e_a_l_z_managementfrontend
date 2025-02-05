@@ -1,4 +1,4 @@
-import { config } from "@/lib/config";
+import { getServerConfig } from "@/lib/config";
 import { helper } from "@/helpers";
 import Axios from "axios";
 
@@ -13,6 +13,7 @@ import Axios from "axios";
  * @returns {Promise<{data: {}, status: string}>} - The API response with `data` and `status`.
  */
 export async function getUserListAgencies(showMessage = false) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/user/agencies`,
     method: "GET",
@@ -35,6 +36,7 @@ export async function getUserListAgencies(showMessage = false) {
  * @returns {Promise<{data: {}, status: string}>} - The API response with `data` and `status`.
  */
 export async function switchAgency(agency_id, showMessage = false) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/agency/switch/${agency_id}`,
     method: "PUT",

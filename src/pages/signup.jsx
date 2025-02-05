@@ -15,7 +15,7 @@ import { helper } from "@/helpers";
 import CustomGoogleLogin from "@/components/GoogleSignIn";
 import { useUser } from "@/context/UserContext";
 
-export default function Signup() {
+export default function Signup({ googleClientId }) {
   const currentUser = useUser();
   const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
   const intialData = {
@@ -128,7 +128,7 @@ export default function Signup() {
   }
 
   return (
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={googleClientId}>
       <div className="w-full">
         <div className="flex h-full md:h-screen">
           {/* Left Section */}
@@ -309,4 +309,12 @@ export default function Signup() {
       </div>
     </GoogleOAuthProvider>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      googleClientId: process.env.GOOGLE_CLIENT_ID || "", // Ensure runtime retrieval
+    },
+  };
 }

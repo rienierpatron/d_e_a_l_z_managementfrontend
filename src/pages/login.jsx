@@ -11,7 +11,7 @@ import Link from "next/link";
 import FormLabel from "@/components/Common/FormLabel";
 import { useUser } from "@/context/UserContext";
 
-export default function Login() {
+export default function Login({ googleClientId }) {
   const currentUser = useUser();
   const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
   const [userData, setUserData] = useState({
@@ -169,7 +169,7 @@ export default function Login() {
               Or Log In using
             </Typography>
 
-            <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+            <GoogleOAuthProvider clientId={googleClientId}>
               <CustomGoogleLogin onLoginSuccess={onGoogleSignInSuccess} />
             </GoogleOAuthProvider>
           </form>
@@ -177,4 +177,12 @@ export default function Login() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      googleClientId: process.env.GOOGLE_CLIENT_ID || "", // Ensure runtime retrieval
+    },
+  };
 }

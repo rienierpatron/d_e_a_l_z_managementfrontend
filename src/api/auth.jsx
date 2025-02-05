@@ -1,8 +1,9 @@
-import { config } from '../lib/config';
+import { getServerConfig } from '../lib/config';
 import { helper } from '@/helpers';
 import Axios from 'axios';
 
 export async function getCsrfToken(showMessage = false) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/auth/csrf`,
     method: 'GET',
@@ -17,6 +18,7 @@ export async function getCsrfToken(showMessage = false) {
 }
 
 export async function register(data, showMessage) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/auth/register`,
     withCredentials: true,
@@ -39,6 +41,7 @@ export async function register(data, showMessage) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function verifyUserEmail(data, showMessage) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/auth/register/verify`,
     method: 'post',
@@ -58,6 +61,7 @@ export async function verifyUserEmail(data, showMessage) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function loginEmail(data, auth_type) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/auth/login/${auth_type}`,
     withCredentials: true,
@@ -79,6 +83,7 @@ export async function loginEmail(data, auth_type) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function verifyLoginEmail(data, showMessage) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/auth/login/verify`,
     method: 'post',
@@ -98,6 +103,7 @@ export async function verifyLoginEmail(data, showMessage) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function verifyInvitedEmail(data, showMessage) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/auth/invite/accept`,
     method: 'post',
@@ -117,6 +123,7 @@ export async function verifyInvitedEmail(data, showMessage) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function logout(showMessage) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/auth/logout`,
     method: 'post',

@@ -1,5 +1,5 @@
 import { helper } from "@/helpers";
-import { config } from "@/lib/config";
+import { getServerConfig } from "@/lib/config";
 import Axios from "axios";
 
 /**
@@ -10,6 +10,7 @@ import Axios from "axios";
  */
 export async function createDeal(payload, showMessage = true) {
   try {
+    const config = await getServerConfig();
     const response = await Axios({
       url: `${config.apiUrl}/dealz`,
       method: "POST",
@@ -46,6 +47,7 @@ export async function createDeal(payload, showMessage = true) {
  */
 export async function getDealRecords(params = {}, showMessage = true) {
   try {
+    const config = await getServerConfig();
     const {
       limit = 10,
       offset = 0,
@@ -99,6 +101,7 @@ export async function getDealRecords(params = {}, showMessage = true) {
  */
 export async function viewDealById(dealzId, showMessage = false) {
   try {
+    const config = await getServerConfig();
     const response = await Axios({
       url: `${config.apiUrl}/dealz/${dealzId}`,
       method: "GET",
@@ -126,6 +129,7 @@ export async function editDeal(dealzId, payload, showMessage = true) {
   }
 
   try {
+    const config = await getServerConfig();
     const response = await Axios({
       url: `${config.apiUrl}/dealz/${dealzId}`,
       method: "PUT",
@@ -156,7 +160,7 @@ export async function deleteDeal({ dealzId, isStaff }, showMessage = true) {
   if (!dealzId) {
     throw new Error("Invalid dealzId provided.");
   }
-
+  const config = await getServerConfig();
   let url = `${config.apiUrl}/dealz/${dealzId}`;
   if (isStaff) {
     url = `${config.apiUrl}/staff/dealz/${dealzId}`;
@@ -188,6 +192,7 @@ export async function deleteDeal({ dealzId, isStaff }, showMessage = true) {
  */
 export async function createCouponCode(length = 10, showMessage = false) {
   try {
+    const config = await getServerConfig();
     const response = await Axios({
       url: `${config.apiUrl}/dealz/coupon/${length}`,
       method: "POST",
@@ -212,6 +217,7 @@ export async function createCouponCode(length = 10, showMessage = false) {
  */
 export async function getReachCount(showMessage = true) {
   try {
+    const config = await getServerConfig();
     const response = await Axios({
       url: `${config.apiUrl}/dealz/reach_count`,
       method: "GET",
@@ -249,6 +255,7 @@ export async function getAllSuperAdminDealzRecords(
   showMessage = true
 ) {
   try {
+    const config = await getServerConfig();
     const {
       limit = 10,
       offset = 0,
@@ -311,6 +318,7 @@ export async function getDealzSuperAdminRecordDetail(
   dealz_id,
   showMessage = false
 ) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/staff/dealz/${dealz_id}`,
     method: "GET",
@@ -339,6 +347,7 @@ export async function updateSuperAdminDealzRecord(
   dealz_id,
   showMessage = true
 ) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/staff/dealz/${dealz_id}`,
     method: "PUT",
@@ -369,6 +378,7 @@ export async function updateSuperAdminStatusDealzRecord(
   dealz_id,
   showMessage = true
 ) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/staff/dealz/status/${dealz_id}`,
     method: "PUT",

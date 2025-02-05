@@ -242,7 +242,7 @@ export default function DealzList({
     {
       id: "agency_name",
       type: "input",
-      placeholder: "AGENCY",
+      placeholder: "Agency",
       icon: <IconBuilding />,
       className: "!pl-10 py-3 !h-auto xl:w-[140px] 3xl:w-[200px]",
       iconClassName: "!left-3",

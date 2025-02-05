@@ -1,10 +1,7 @@
 let cachedConfig = null;
 
-export const config = {
-  env: process.env.NEXT_PUBLIC_APP_ENV,
-  appName: 'DEALZ Management',
-  apiUrl: process.env.NEXT_PUBLIC_API_URL,
-};
+// config variable will be use to store app global config
+export const config = {};
 
 /**
  * Get server config

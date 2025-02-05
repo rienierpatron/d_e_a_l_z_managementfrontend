@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 /**
  * Internal dependencies
  */
+import { useUser } from "@/context/UserContext";
+import { USER } from "@/lib/constants";
 import Button from "@/components/Common/Button";
 import Typography from "@/components/Common/Typography";
 import { ROUTES_HEADING_MAPPER } from "@/lib/routes";
@@ -14,6 +16,11 @@ import ManagePreference from "@/components/ManagePreference";
 import { useSubscription } from "@/components/Subscriptions/GetSubscriptionDetails";
 
 const Header = () => {
+  const currentUser = useUser();
+  const isSuperAdminorStaffUserRole =
+  currentUser?.user?.user_role?.role_name === USER.ROLES.SUPERADMIN ||
+  currentUser?.user?.user_role?.role_name === USER.ROLES.STAFF;
+
   const router = useRouter();
   const { pathname } = router;
   const { currentSubscription } = useSubscription();
@@ -35,7 +42,7 @@ const Header = () => {
         )}
       </div>
       <div className="flex gap-4 items-center">
-        <ManagePreference />
+      {!isSuperAdminorStaffUserRole && <ManagePreference /> }
         {/* <Button
           className="border-none relative shadow-custom-black !p-[14px]"
           isRound

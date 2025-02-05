@@ -6,8 +6,10 @@ import Image from "next/image";
 import { forwardRef } from "react";
 import IconCrown from "@/components/Icons/IconCrown";
 
-const UserSettingsMenu = forwardRef(({ isSuperAdmin }, ref) => {
+const UserSettingsMenu = forwardRef(({}, ref) => {
   const currentUser = useUser();
+  const isSuperAdmin = currentUser?.user?.is_super_admin;
+  const isStaff = currentUser?.user?.is_staff;
 
   return (
     <div
@@ -36,7 +38,11 @@ const UserSettingsMenu = forwardRef(({ isSuperAdmin }, ref) => {
         </li>
         <li className="pt-3">
           <Link
-            href={isSuperAdmin ? "/admin/userManagement" : "/userManagement"}
+            href={
+              isSuperAdmin || isStaff
+                ? "/admin/userManagement"
+                : "/userManagement"
+            }
             className="flex items-center gap-2"
             aria-label="User Management"
           >
@@ -46,7 +52,7 @@ const UserSettingsMenu = forwardRef(({ isSuperAdmin }, ref) => {
             </Typography>
           </Link>
         </li>
-        {!isSuperAdmin && (
+        {!isSuperAdmin && !isStaff && (
           <li className="pt-3">
             <Link
               href="/subscriptions"

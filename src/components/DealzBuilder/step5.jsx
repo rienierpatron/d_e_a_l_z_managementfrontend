@@ -253,7 +253,10 @@ const DealzBuilderStep5 = ({
               <Typography variant="caption" className="text-xs mb-4">
                 Wording for their deal
               </Typography>
-              <Typography variant="caption" className="text-midnight-blue">
+              <Typography
+                variant="caption"
+                className="text-midnight-blue whitespace-pre-wrap"
+              >
                 {initial_message}
               </Typography>
             </div>
@@ -261,7 +264,10 @@ const DealzBuilderStep5 = ({
               <Typography variant="caption" className="text-xs mb-4">
                 Wording for the follow up message
               </Typography>
-              <Typography variant="caption" className="text-midnight-blue">
+              <Typography
+                variant="caption"
+                className="text-midnight-blue whitespace-pre-wrap"
+              >
                 {followup_message}
               </Typography>
             </div>

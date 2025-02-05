@@ -18,6 +18,8 @@ import Image from "next/image";
 import SlotNotAvailableDialog from "@/components/Admin/SlotNotAvailableDialog";
 import RequestToReviseDialog from "@/components/Admin/RequestToReviseDialog";
 import SaveDetailsDialog from "@/components/Admin/SaveDetailsDialog";
+import classNames from "classnames";
+import IconCloseCircle from "@/components/Icons/IconCloseCircle";
 
 // Options for Slot Time Selection
 export const SLOT_TIME_OPTIONS = [
@@ -174,8 +176,9 @@ export default function DealzEdit() {
   const handleApprove = () => {
     if (dealzId) {
       const data = {
-        "status": "approved"
-      }
+        status:
+          dealzDetails?.dealz?.status === "approved" ? "pending" : "approved",
+      };
       updateDealzRecordStatus(data, dealzId);
     } else {
       console.log("dealzId not available, please wait.");
@@ -225,13 +228,22 @@ export default function DealzEdit() {
             Request to Revise
           </Button>
           <Button
-            icon="/icons/tick-circle-icon.svg"
-            className={`px-[16px] py-[0] border-0 !bg-green-60 ${dealzDetails.dealz?.status !== "pending" ? "opacity-50 cursor-not-allowed" : ""}`}
+            icon={
+              dealzDetails?.dealz?.status === "approved" ? (
+                <IconCloseCircle className="text-red" />
+              ) : (
+                "/icons/tick-circle-icon.svg"
+              )
+            }
+            className={classNames(`px-[16px] py-[0] border-0 !bg-green-60`, {
+              "!bg-red-40": dealzDetails?.dealz?.status === "approved",
+            })}
             isRound
             onClick={handleApprove}
-            disabled={dealzDetails.dealz?.status !== "pending"}
           >
-            Approve
+            {dealzDetails?.dealz?.status === "approved"
+              ? "Reject Approval"
+              : "Approve"}
           </Button>
           <Button
             icon="/icons/save-icon.svg"

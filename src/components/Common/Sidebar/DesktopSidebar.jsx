@@ -18,6 +18,7 @@ import { SUBSCRIPTIONS } from "@/lib/constants";
 const DesktopSidebar = () => {
   const currentUser = useUser();
   const isSuperAdmin = currentUser?.user?.is_super_admin;
+  const isStaff = currentUser?.user?.is_staff;
   const isSuperAdminOrStaff = currentUser?.user?.is_super_or_staff;
   const { currentSubscription } = useSubscription();
   const router = useRouter();
@@ -69,7 +70,8 @@ const DesktopSidebar = () => {
   };
 
   // Helper to map over NAV_ITEMS or ADMIN_NAV_ITEMS based on user role
-  const getNavItems = () => (isSuperAdmin ? ADMIN_NAV_ITEMS : NAV_ITEMS);
+  const getNavItems = () =>
+    isSuperAdmin || isStaff ? ADMIN_NAV_ITEMS : NAV_ITEMS;
 
   return (
     <nav
@@ -82,7 +84,7 @@ const DesktopSidebar = () => {
           className="text-center cursor-pointer flex flex-col items-center"
           onClick={isSuperAdminOrStaff ? openSwitchAgencyPopup : undefined}
         >
-          {isSuperAdmin ? (
+          {isSuperAdmin || isStaff ? (
             <Image
               src="/dealz-logo.svg"
               width={67}
@@ -137,6 +139,7 @@ const DesktopSidebar = () => {
           ))}
           {/* Display SidbarUpgradeCta only for non-superadmin or staff users with specific subscription */}
           {!isSuperAdmin &&
+            !isStaff &&
             currentSubscription?.subscription?.subscription_name?.toLowerCase() !==
               SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && <SidbarUpgradeCta />}
         </ul>
@@ -183,7 +186,7 @@ const DesktopSidebar = () => {
       </ul>
       {/* Popup Menu */}
       {isUserPopupOpen && (
-        <UserSettingsMenu ref={userPopupRef} isSuperAdmin={isSuperAdmin} />
+        <UserSettingsMenu ref={userPopupRef} />
       )}
     </nav>
   );

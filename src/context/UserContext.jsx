@@ -26,7 +26,9 @@ export const UserProvider = ({ children }) => {
       if (userData.status === "ok") {
         const is_super_admin =
           userData.data.user?.user_role?.role_name === USER.ROLES.SUPERADMIN;
-        setUser({ ...userData.data.user, is_super_admin });
+        const is_staff =
+          userData.data.user?.user_role?.role_name === USER.ROLES.STAFF;
+        setUser({ ...userData.data.user, is_super_admin, is_staff });
         if (
           (router.pathname.includes("/admin") ||
             PUBLIC_ROUTES.includes(router.pathname)) &&

@@ -57,7 +57,8 @@ const SwitchAgencyMenu = forwardRef((_, ref) => {
           helper.cookie.setAccessToken(accessToken);
           const userData = await fetchUserData();
           if (userData && userData?.data?.user) {
-            userData.data.user.user_role.role_name === USER.ROLES.SUPERADMIN
+            userData.data.user.user_role.role_name === USER.ROLES.SUPERADMIN ||
+            userData.data.user.user_role.role_name === USER.ROLES.STAFF
               ? (window.location.href = "/admin/dashboard")
               : (window.location.href = "/dashboard");
           }

@@ -43,7 +43,7 @@ const MobilePreview = ({ message = "", image = "" }) => {
         {(message || image) && (
           <div className="bg-white rounded-[10px] p-[10px]">
             {image && <img src={image} className="mb-2" />}
-            {message && <span className="break-all">{message}</span>}
+            {message && <span className="break-all whitespace-pre-wrap">{message}</span>}
           </div>
         )}
       </div>

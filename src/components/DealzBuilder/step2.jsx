@@ -30,14 +30,14 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
   } = formData;
 
   const validationSchema = Yup.object().shape({
-    followup_message: validations.stringRequiredWithMaxLength(200),
+    followup_message: validations.stringRequiredWithMaxLength(500),
     title: validations.stringRequiredField,
     amount: validations.dealzAmount,
     link: validations.optionalLink,
   });
 
   const handleChange = (name, value) => {
-    if (name === "followup_message" && value.length > 200) {
+    if (name === "followup_message" && value.length > 500) {
       return;
     }
     setFormData({
@@ -92,7 +92,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
             <FormInputValidation isError text={error["followup_message"]} />
           )}
           <Typography variant="caption" className="text-right mt-4">
-            Character: {followup_message?.length ?? 0}/200
+            Character: {followup_message?.length ?? 0}/500
           </Typography>
         </FormFieldset>
         <FormFieldset className="!mb-0">

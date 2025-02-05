@@ -14,7 +14,7 @@ const AddOnsCard = ({
   dealDescription,
   availabilityNote,
   buttonText = "Purchase Now",
-  stripeProductPriceId
+  stripeProductPriceId,
 }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -33,6 +33,8 @@ const AddOnsCard = ({
       ) {
         setLoading(false);
         router.push(response.data.stripe_payment_link_url);
+      } else {
+        setLoading(false);
       }
     } catch (error) {
       setLoading(false);

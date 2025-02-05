@@ -1,4 +1,4 @@
-import { config } from "@/lib/config";
+import { getServerConfig } from "@/lib/config";
 import { helper } from "@/helpers";
 import Axios from "axios";
 
@@ -11,6 +11,7 @@ export async function getPaymentLink(
   { stripeProductPriceId },
   showMessage = true
 ) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/subscription/payment-link/${stripeProductPriceId}`,
     method: "GET",
@@ -28,6 +29,7 @@ export async function getPaymentLink(
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function getCustomerPortalLink() {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/subscription/customer-portal-link`,
     method: "GET",
@@ -44,6 +46,7 @@ export async function getCustomerPortalLink() {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function getSubscriptionDetails(showMessage = true) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/subscription`,
     method: "GET",
@@ -65,6 +68,7 @@ export async function getAddonPaymentLink(
   { stripeProductPriceId, quantity },
   showMessage = true
 ) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/subscription/addon-payment-link/${stripeProductPriceId}/${quantity}`,
     method: "GET",
@@ -81,6 +85,7 @@ export async function getAddonPaymentLink(
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function getSubscriptionPlans(showMessage = false) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/subscription/plans`,
     method: "GET",

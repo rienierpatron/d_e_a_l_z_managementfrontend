@@ -1,4 +1,4 @@
-import { config } from "@/lib/config";
+import { getServerConfig } from "@/lib/config";
 import { helper } from "@/helpers";
 import Axios from "axios";
 
@@ -8,6 +8,7 @@ import Axios from "axios";
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function getCurrentUser(showMessage = true) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/user/profile`,
     method: "GET",
@@ -40,6 +41,7 @@ export async function getAllAgencyUsers(params = {}, showMessage = true) {
   if (offset) requestParams.offset = offset;
   if (orderColumn) requestParams.orderColumn = orderColumn;
   if (orderDirection) requestParams.orderDirection = orderDirection;
+  const config = await getServerConfig();
 
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/list`,
@@ -61,6 +63,7 @@ export async function getAllAgencyUsers(params = {}, showMessage = true) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function inviteAgencyUser(data, showMessage = true) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/invite`,
     method: "post",
@@ -82,6 +85,7 @@ export async function inviteAgencyUser(data, showMessage = true) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function inviteAllPendingAgencyUser(showMessage = true) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/agency/users/invite/resend/all`,
     method: "post",
@@ -101,6 +105,7 @@ export async function inviteAllPendingAgencyUser(showMessage = true) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function inviteSelectedPendingAgencyUser(data, showMessage) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/invite/resend/selected`,
     method: "post",
@@ -121,6 +126,7 @@ export async function inviteSelectedPendingAgencyUser(data, showMessage) {
  * @returns {Promise<{data: {}, status: string}>}
  */
 export async function deleteAgencyUser(AgencyUserId, showMessage = true) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/agency/user/${AgencyUserId}`,
     method: "delete",

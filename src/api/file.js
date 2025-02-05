@@ -1,4 +1,4 @@
-import { config } from "../lib/config";
+import { getServerConfig } from "../lib/config";
 import { helper } from "@/helpers";
 import { removeDomain } from "@/lib/utils";
 import Axios from "axios";
@@ -25,6 +25,7 @@ export async function uploadFile(
     showMessage = true,
   } = {}
 ) {
+  const config = await getServerConfig();
   const params = new URLSearchParams();
 
   if (dealzId) params.append("dealz_id", dealzId);
@@ -61,6 +62,7 @@ export async function uploadFile(
  */
 export async function deleteUploadedFile(fileUrl, showMessage = false) {
   try {
+    const config = await getServerConfig();
     const response = await Axios({
       url: `${config.apiUrl}/upload`,
       method: "DELETE",

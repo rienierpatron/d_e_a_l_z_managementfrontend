@@ -1,4 +1,4 @@
-import { config } from "@/lib/config";
+import { getServerConfig } from "@/lib/config";
 import { helper } from "@/helpers";
 import Axios from "axios";
 
@@ -12,6 +12,7 @@ import Axios from "axios";
  * @returns {Promise<Object>} - A promise that resolves to the API response, processed by `helper.api.handleApiResponse`.
  */
 export async function fetchLocationAddress(params, showMessage = true) {
+  const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/location-address`,
     method: "GET",

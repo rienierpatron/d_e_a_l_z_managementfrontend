@@ -17,6 +17,7 @@ export default function Login({ googleClientId }) {
   const [userData, setUserData] = useState({
       email: "",
     });
+  const [isLoading, setIsLoading] = useState(false)
   
   const [errors, setErrors] = useState({
     email: false,
@@ -47,11 +48,14 @@ export default function Login({ googleClientId }) {
     const data = { email: email };
 
     try {
+      setIsLoading(true)
       const response = await api.auth.loginEmail(data, auth_type);
       if (response && helper.cmpStr(response.status, 'ok')) {
         window.location.href = '/confirmation'
       }
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
       return helper.general.alert("error", {
         message: "Something went wrong.",
       });
@@ -146,6 +150,8 @@ export default function Login({ googleClientId }) {
               fullWidth
               isRound
               type="submit"
+              isLoading={isLoading}
+              disabled={isLoading}
             >
               Log In
             </Button>

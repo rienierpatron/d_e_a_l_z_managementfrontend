@@ -149,7 +149,7 @@ export default function Subscriptions() {
           <Typography variant="heading" className="mb-[24px]">
             Add ons
           </Typography>
-          <div className="grid grid-cols-2 gap-5 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 4xl:grid-cols-2 gap-5 w-full">
             {SUBSCRIPTIONS.ADD_ONS.map((item, index) => {
               return (
                 <AddOnsCard

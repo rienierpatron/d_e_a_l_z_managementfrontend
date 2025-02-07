@@ -78,7 +78,7 @@ export default function DealzEdit() {
   };
 
   // Update Dealz Record
-  const updateDealzRecord = async(dealzId) => {
+  const updateDealzRecord = async(dealzId, showMessage) => {
     const data = {
       "slot_date": selectedDate,
       "slot_time": selectedSlotTime.value,
@@ -86,7 +86,7 @@ export default function DealzEdit() {
     }
 
     try {
-      const response = await updateSuperAdminDealzRecord(data, dealzId);
+      const response = await updateSuperAdminDealzRecord(data, dealzId, showMessage);
       if (response && helper.cmpStr(response.status, "ok")) {
         setShowSaveDetailsWarningDialog(false)
       }
@@ -167,7 +167,7 @@ export default function DealzEdit() {
 
   const handleSaveSubmit = () => {
     if (dealzId) {
-      updateDealzRecord(dealzId);
+      updateDealzRecord(dealzId, true);
     } else {
       console.log("dealzId not available, please wait.");
     }
@@ -179,7 +179,11 @@ export default function DealzEdit() {
         status:
           dealzDetails?.dealz?.status === "approved" ? "pending" : "approved",
       };
-      updateDealzRecordStatus(data, dealzId);
+      updateDealzRecordStatus(data, dealzId)
+      .then(() => {
+        // After the status is updated, re-fetch the deal details to refresh the page content
+        getDealzRecordDetails(dealzId);
+      })
     } else {
       console.log("dealzId not available, please wait.");
     }

@@ -30,7 +30,7 @@ export const NAV_ITEMS = [
   // },
   {
     icon: <IconChaaatLogo />,
-    path: "https://www.chaaat.io/",
+    path: "https://www.chaaat.io/home?utm_medium=referral&utm_source=dealz&utm_campaign=portal",
     label: "Retarget",
     target: "_blank"
   },

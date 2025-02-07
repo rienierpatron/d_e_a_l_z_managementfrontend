@@ -1,3 +1,6 @@
+import IconCrown from "@/components/Icons/IconCrown";
+import IconStar from "@/components/Icons/IconStar";
+
 export const PAGINATION = {
   DEFAULT_PAGE_SIZE: 10,
   PAGE_SIZES: [5, 10, 20, 50], // Available page sizes
@@ -87,6 +90,19 @@ export const USER_MANAGEMENT_STATUS_COLOR_MAPPING = {
 export const SUBSCRIPTIONS = {
   PLANS: [
     {
+      icon: <IconStar/>,
+      planTitle: "Basic",
+      promotionText: "One Time Purchase",
+      priceCurrency: "HKD",
+      priceAmount: "$499",
+      benefits: [
+        "1 Slot",
+        "Day only selection for deal",
+        "Email Support",
+      ],
+    },
+    {
+      icon: <IconStar/>,
       planTitle: "Starter",
       promotionText: "Early Bird Special",
       priceCurrency: "HKD",
@@ -99,6 +115,7 @@ export const SUBSCRIPTIONS = {
       ],
     },
     {
+      icon: <IconCrown />,
       planTitle: "Pro",
       promotionText: "Early Bird Special",
       priceCurrency: "HKD",

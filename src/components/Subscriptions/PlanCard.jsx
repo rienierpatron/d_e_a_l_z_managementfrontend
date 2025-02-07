@@ -26,6 +26,7 @@ const PlanCard = ({
   stripeProductPriceId,
   disabled,
   currentSubscription,
+  icon
 }) => {
   const currentPlan =
     currentSubscription?.subscription?.subscription_name || "";
@@ -34,7 +35,7 @@ const PlanCard = ({
   const [loading, setLoading] = useState(false);
 
   const className = classNames(
-    "relative max-w-[393px] border rounded-2xl p-[24px] pt-[56px] w-full text-center flex flex-col gap-8 items-center flex-wrap z-0",
+    "relative border rounded-2xl p-[24px] pt-[56px] w-full text-center flex flex-col gap-8 items-center flex-wrap z-0",
     {
       "border-2 border-transparent rounded-3xl shadow-[0px_4px_48px_0px_rgba(96,112,233,0.10)]":
         isActivePlan,
@@ -88,18 +89,18 @@ const PlanCard = ({
           "!absolute -top-[30px] border-none uppercase bg-gradient-primary text-white font-bold shadow-[0px_4px_24px_0px_rgba(96,112,233,0.40)]"
         }
         isRound
-        icon={
-          planTitle.toLowerCase() === "starter" ? <IconStar /> : <IconCrown />
-        }
+        icon={icon}
       >
         {planTitle}
       </Button>
-      <Typography
-        variant="caption"
-        className="p-3 border text-center rounded-3xl w-max"
-      >
-        {promotionText}
-      </Typography>
+      {promotionText && (
+        <Typography
+          variant="caption"
+          className="p-3 border text-center rounded-3xl w-max"
+        >
+          {promotionText}
+        </Typography>
+      )}
       <div className="flex gap-2 items-baseline">
         <div className="flex items-baseline">
           <Typography variant="body" className="!text-green !font-semibold">
@@ -108,9 +109,11 @@ const PlanCard = ({
           <Typography variant="title" className="!text-green !font-semibold">
             {priceAmount}
           </Typography>
-          <Typography className="!text-dark-gray !font-medium">
-            /{pricePeriod}
-          </Typography>
+          {pricePeriod && (
+            <Typography className="!text-dark-gray !font-medium">
+              /{pricePeriod}
+            </Typography>
+          )}
         </div>
         <Typography className="!text-midnight-blue !font-medium !text-[18px] line-through">
           {priceOldAmount}
@@ -123,7 +126,7 @@ const PlanCard = ({
       </ul>
       {isActivePlan ? (
         <Button
-          className="w-full mt-auto z-10"
+          className="w-full mt-auto z-10 !cursor-not-allowed"
           variant="primary"
           isRound
           disabled={true}

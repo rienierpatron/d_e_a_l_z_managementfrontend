@@ -222,7 +222,7 @@ export default function DealzEdit() {
         <div className="flex gap-3">
           <Button
             icon="/icons/refresh-circle-icon.svg"
-            className={`px-[16px] py-[10] border-0 !bg-light-gray 
+            className={`px-[16px] py-[10] border-0 !bg-light-gray
               ${dealzDetails.dealz?.status !== "pending" ? "opacity-50 cursor-not-allowed" : ""}`}
             isRound
             onClick={() => setShowRequestReviseWarningDialog(true)}

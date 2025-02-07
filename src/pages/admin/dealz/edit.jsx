@@ -42,7 +42,7 @@ export default function DealzEdit() {
   const [dealzId, setDealzId] = useState(null);
   const [dealzDetails, setDealzDetails] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedSlotTime, setSelectedSlotTime] = useState({ label: '', value: '' });
+  const [selectedSlotTime, setSelectedSlotTime] = useState(null);
   const [dealzReached, setDealzReached] = useState(0);
   const [showSlotNotAvailableWarningDialog, setShowSlotNotAvailableDialog] = useState(false);
   const [showSaveDetailsWarningDialog, setShowSaveDetailsWarningDialog] = useState(false);
@@ -179,6 +179,8 @@ export default function DealzEdit() {
         status:
           dealzDetails?.dealz?.status === "approved" ? "pending" : "approved",
       };
+
+      updateDealzRecord(dealzId, false);
       updateDealzRecordStatus(data, dealzId)
       .then(() => {
         // After the status is updated, re-fetch the deal details to refresh the page content

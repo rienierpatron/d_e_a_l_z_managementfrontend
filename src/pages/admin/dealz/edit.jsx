@@ -221,9 +221,10 @@ export default function DealzEdit() {
         <div className="flex gap-3">
           <Button
             icon="/icons/refresh-circle-icon.svg"
-            className="px-[16px] py-[10] border-0 !bg-light-gray"
+            className={`px-[16px] py-[10] border-0 !bg-light-gray ${dealzDetails.dealz?.status !== "revision" ? "opacity-50 cursor-not-allowed" : ""}`}
             isRound
             onClick={() => setShowRequestReviseWarningDialog(true)}
+            disabled={dealzDetails.dealz?.status !== "pending"}
           >
             Request to Revise
           </Button>
@@ -237,9 +238,11 @@ export default function DealzEdit() {
             }
             className={classNames(`px-[16px] py-[0] border-0 !bg-green-60`, {
               "!bg-red-40": dealzDetails?.dealz?.status === "approved",
+              "opacity-50 cursor-not-allowed": dealzDetails?.dealz?.status === "draft"
             })}
             isRound
             onClick={handleApprove}
+            disabled={dealzDetails?.dealz?.status === "draft"}
           >
             {dealzDetails?.dealz?.status === "approved"
               ? "Reject Approval"

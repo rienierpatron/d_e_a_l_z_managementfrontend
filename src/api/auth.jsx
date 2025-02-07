@@ -17,7 +17,7 @@ export async function getCsrfToken(showMessage = false) {
   });
 }
 
-export async function register(data, showMessage) {
+export async function register(data, showMessage = true) {
   const config = await getServerConfig();
   const response = await Axios({
     url: `${config.apiUrl}/auth/register`,

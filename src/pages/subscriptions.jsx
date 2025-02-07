@@ -118,30 +118,33 @@ export default function Subscriptions() {
           </Button>
         </div>
       </div>
-      <div className="flex flex-1 justify-between gap-5 mt-[64px]">
-        {SUBSCRIPTIONS.PLANS.map((plan, index) => {
-          return (
-            <PlanCard
-              key={index}
-              planTitle={plan.planTitle}
-              promotionText={plan.promotionText}
-              priceCurrency={plan.priceCurrency}
-              priceAmount={plan.priceAmount}
-              priceOldAmount={plan.priceOldAmount}
-              pricePeriod={plan.pricePeriod}
-              benefits={plan.benefits}
-              disabled={fetchingList}
-              stripeProductPriceId={
-                planList?.find(
-                  (ele) =>
-                    ele.product_name.toLowerCase() ===
-                    plan.planTitle.toLowerCase()
-                )?.stripe_product_price_id
-              }
-              currentSubscription={currentSubscription}
-            />
-          );
-        })}
+      <div className="grid grid-cols-1 4xl:grid-cols-[2fr_1fr] gap-10">
+        <div className="flex-1 justify-between gap-5 mt-[64px] grid grid-cols-1 lg:grid-cols-3">
+          {SUBSCRIPTIONS.PLANS.map((plan, index) => {
+            return (
+              <PlanCard
+                key={index}
+                icon={plan.icon}
+                planTitle={plan.planTitle}
+                promotionText={plan.promotionText}
+                priceCurrency={plan.priceCurrency}
+                priceAmount={plan.priceAmount}
+                priceOldAmount={plan.priceOldAmount}
+                pricePeriod={plan.pricePeriod}
+                benefits={plan.benefits}
+                disabled={fetchingList}
+                stripeProductPriceId={
+                  planList?.find(
+                    (ele) =>
+                      ele.product_name.toLowerCase() ===
+                      plan.planTitle.toLowerCase()
+                  )?.stripe_product_price_id
+                }
+                currentSubscription={currentSubscription}
+              />
+            );
+          })}
+        </div>
         <div className="w-full">
           <Typography variant="heading" className="mb-[24px]">
             Add ons

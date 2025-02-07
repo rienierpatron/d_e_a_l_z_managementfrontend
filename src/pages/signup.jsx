@@ -95,7 +95,7 @@ export default function Signup({ googleClientId }) {
       };
     }
     setIsLoading(true);
-    const response = await api.auth.register(data, false);
+    const response = await api.auth.register(data);
     setIsLoading(false);
     if (response && helper.cmpStr(response.status, 'ok')) {
       if (authType === "email") {

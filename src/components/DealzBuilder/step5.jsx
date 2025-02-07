@@ -65,11 +65,11 @@ const DealzBuilderStep5 = ({
     });
   };
 
-  const handleSubmit = async (status) => {
+  const handleSubmit = async (status, redirect = "") => {
     setIsLoading(status);
     const payload = {
       ...formData,
-      status: status,
+      status: status === "one-time-purchase" ? "draft" : status,
       amount:
         !formData.amount || formData.offer_type === DEALZ.OFFER_TYPE.Other
           ? 0
@@ -99,7 +99,11 @@ const DealzBuilderStep5 = ({
       }
       if (res.status === "ok") {
         setIsLoading(null);
-        return router.push("/calendar");
+        if (redirect) {
+          return router.push(redirect);
+        } else {
+          return router.push("/calendar");
+        }
       } else {
         setIsLoading(null);
         if (
@@ -123,6 +127,30 @@ const DealzBuilderStep5 = ({
       setIsLoading(null);
     } catch (error) {
       setIsLoading(null);
+      console.log(error);
+    }
+  };
+
+  const showOneTimePurchaseButton = () => {
+    // Condition: No subscription
+    if (!currentSubscription?.subscription) {
+      return true;
+    }
+    // Get available slot count
+    const availableSlots = currentSubscription?.available_inventory?.slot ?? 0;
+
+    // Condition: If available slot count is 0
+    if (availableSlots === 0) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleOneTimePurchase = async () => {
+    try {
+      const status = "one-time-purchase";
+      await handleSubmit(status, "/subscriptions");
+    } catch (error) {
       console.log(error);
     }
   };
@@ -275,30 +303,45 @@ const DealzBuilderStep5 = ({
         </div>
 
         {!isViewMode && (
-          <div className="flex items-center gap-4 mt-5">
-            <Button
-              icon={<IconSave />}
-              variant="primary"
-              isRound
-              outlined
-              className="w-full shadow-custom-primary font-bold"
-              onClick={() => handleSubmit("draft")}
-              isLoading={isLoading === "draft"}
-              disabled={!!isLoading}
-            >
-              Save as Draft
-            </Button>
-            <Button
-              icon={<IconClipboardClick />}
-              variant="primary"
-              isRound
-              className="w-full shadow-custom-primary font-bold"
-              onClick={() => handleSubmit("pending")}
-              isLoading={isLoading === "pending"}
-              disabled={!!isLoading}
-            >
-              Submit for Review
-            </Button>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-4 mt-5">
+              <Button
+                icon={<IconSave />}
+                variant="primary"
+                isRound
+                outlined
+                className="w-full shadow-custom-primary font-bold"
+                onClick={() => handleSubmit("draft")}
+                isLoading={isLoading === "draft"}
+                disabled={!!isLoading}
+              >
+                Save as Draft
+              </Button>
+              <Button
+                icon={<IconClipboardClick />}
+                variant="primary"
+                isRound
+                className="w-full shadow-custom-primary font-bold"
+                onClick={() => handleSubmit("pending")}
+                isLoading={isLoading === "pending"}
+                disabled={!!isLoading}
+              >
+                Submit for Review
+              </Button>
+            </div>
+            {showOneTimePurchaseButton() && (
+              <Button
+                outlined
+                // variant="primary"
+                isRound
+                className="mt-4 !text-secondary !border-secondary hover:!border-secondary hover:!text-secondary"
+                onClick={() => handleOneTimePurchase()}
+                isLoading={isLoading === "one-time-purchase"}
+                disabled={!!isLoading}
+              >
+                Save as Draft & make one-time purchase
+              </Button>
+            )}
           </div>
         )}
       </div>

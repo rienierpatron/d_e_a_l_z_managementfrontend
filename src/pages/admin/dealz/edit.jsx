@@ -183,6 +183,9 @@ export default function DealzEdit() {
       updateDealzRecord(dealzId, false);
       updateDealzRecordStatus(data, dealzId)
       .then(() => {
+        if (dealzDetails?.dealz?.status === "approved") {
+          router.push("/admin/dashboard");
+        }
         // After the status is updated, re-fetch the deal details to refresh the page content
         getDealzRecordDetails(dealzId);
       })

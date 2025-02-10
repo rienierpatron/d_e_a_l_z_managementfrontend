@@ -31,6 +31,7 @@ export const UserProvider = ({ children }) => {
         setUser({ ...userData.data.user, is_super_admin, is_staff });
         if (
           (router.pathname.includes("/admin") ||
+            router.pathname.includes("/") ||
             PUBLIC_ROUTES.includes(router.pathname)) &&
           userData.data.user?.user_role?.role_name !== USER.ROLES.SUPERADMIN &&
           userData.data.user?.user_role?.role_name !== USER.ROLES.STAFF
@@ -38,7 +39,7 @@ export const UserProvider = ({ children }) => {
           return router.replace("/dashboard");
         }
         if (
-          PUBLIC_ROUTES.includes(router.pathname) &&
+          [...PUBLIC_ROUTES, "/"].includes(router.pathname) &&
           (userData.data.user?.user_role?.role_name === USER.ROLES.SUPERADMIN ||
             userData.data.user?.user_role?.role_name === USER.ROLES.STAFF)
         ) {

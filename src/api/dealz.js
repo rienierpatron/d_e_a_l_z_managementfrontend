@@ -25,7 +25,7 @@ export async function createDeal(payload, showMessage = true) {
       response &&
       response?.data?.status === "error" &&
       response.data.message ===
-        "Please subscribe to the subscription plan in order to submit DEALZ for review."
+        "Please subscribe to a plan to submit DEALZ for review."
     ) {
       showMessage = false;
     }
@@ -154,7 +154,7 @@ export async function editDeal(dealzId, payload, showMessage = true) {
       response &&
       response?.data?.status === "error" &&
       response.data.message ===
-        "Please subscribe to the subscription plan in order to submit DEALZ for review."
+        "Please subscribe to a plan to submit DEALZ for review."
     ) {
       showMessage = false;
     }

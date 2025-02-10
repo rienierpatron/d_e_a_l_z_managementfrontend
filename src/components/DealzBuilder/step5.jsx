@@ -112,7 +112,7 @@ const DealzBuilderStep5 = ({
           res &&
           res?.data?.status === "error" &&
           res.data.message ===
-            "Please subscribe to the subscription plan in order to submit DEALZ for review."
+            "Please subscribe to a plan to submit DEALZ for review."
         ) {
           helper.general.alert("error", {
             message: (

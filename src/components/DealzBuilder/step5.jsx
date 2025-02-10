@@ -32,6 +32,7 @@ const DealzBuilderStep5 = ({
   dealzId = "",
   initialState,
   currentSubscription,
+  setIsFormDirty
 }) => {
   const {
     title,
@@ -67,6 +68,7 @@ const DealzBuilderStep5 = ({
 
   const handleSubmit = async (status, redirect = "") => {
     setIsLoading(status);
+    setIsFormDirty(false)
     const payload = {
       ...formData,
       status: status === "one-time-purchase" ? "draft" : status,

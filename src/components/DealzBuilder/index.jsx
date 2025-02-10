@@ -154,6 +154,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             dealzId={dealzId}
             initialState={initialState}
             currentSubscription={currentSubscription}
+            setIsFormDirty={setIsFormDirty}
           />
         )}
       </div>

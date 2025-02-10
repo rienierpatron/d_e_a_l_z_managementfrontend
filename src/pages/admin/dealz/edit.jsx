@@ -202,7 +202,14 @@ export default function DealzEdit() {
         "subject": "Revision Request",
         "message": reviseFields.reviseReason
       }
-      updateDealzRecordStatus(data, dealzId);
+      updateDealzRecordStatus(data, dealzId)
+      .then(() => {
+        getDealzRecordDetails(dealzId);
+        router.push("/admin/dashboard");
+      })
+      .catch((error) => {
+        console.error('Update failed:', error);
+      });
       setShowRequestReviseWarningDialog(false);
     } else {
       console.log("dealzId not available, please wait.");

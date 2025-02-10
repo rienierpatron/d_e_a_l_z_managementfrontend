@@ -18,7 +18,7 @@ import IconPercentage from "@/components/Icons/IconPercentage";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
 
-const DealzBuilderStep2 = ({ formData, setFormData }) => {
+const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
   const [error, setError] = useState(null);
   const {
     followup_message,
@@ -37,6 +37,7 @@ const DealzBuilderStep2 = ({ formData, setFormData }) => {
   });
 
   const handleChange = (name, value) => {
+    setIsFormDirty(true);
     if (name === "followup_message" && value.length > 500) {
       return;
     }

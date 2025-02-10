@@ -32,6 +32,7 @@ const DealzBuilderStep1 = ({
   setFormData,
   dealzId,
   currentSubscription,
+  setIsFormDirty
 }) => {
   const { initial_message, offer_type, coupon_creation_type, code } = formData;
   const [error, setError] = useState(null);
@@ -59,6 +60,7 @@ const DealzBuilderStep1 = ({
   };
 
   const handleChange = (name, value) => {
+    setIsFormDirty(true);
     if (name === "initial_message" && value.length > 115) {
       return;
     }
@@ -73,6 +75,7 @@ const DealzBuilderStep1 = ({
       ...formData,
       offer_type: offerType,
     });
+    setIsFormDirty(true);
   };
 
   const handleNext = async () => {
@@ -235,12 +238,13 @@ const DealzBuilderStep1 = ({
               checked={
                 DEALZ.COUPON_CREATION_TYPE.automatic === coupon_creation_type
               }
-              onChange={(e) =>
+              onChange={(e) => {
                 setFormData({
                   ...formData,
                   coupon_creation_type: DEALZ.COUPON_CREATION_TYPE.automatic,
-                })
-              }
+                });
+                setIsFormDirty(true);
+              }}
             />
             <FormRadio
               id="upload"
@@ -250,12 +254,13 @@ const DealzBuilderStep1 = ({
               checked={
                 DEALZ.COUPON_CREATION_TYPE.upload === coupon_creation_type
               }
-              onChange={(e) =>
+              onChange={(e) => {
                 handleChange(
                   "coupon_creation_type",
                   DEALZ.COUPON_CREATION_TYPE.upload
-                )
-              }
+                );
+                setIsFormDirty(true);
+              }}
             />
           </div>
           {error && error["coupon_creation_type"] && (

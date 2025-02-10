@@ -17,7 +17,12 @@ import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
 import FormLabel from "@/components/Common/FormLabel";
 
-const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
+const DealzBuilderStep4 = ({
+  formData,
+  setFormData,
+  currentSubscription,
+  setIsFormDirty,
+}) => {
   const [error, setError] = useState(null);
   const { valid_date_from, valid_date_to } = formData;
 
@@ -97,12 +102,13 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
               placeholder="Start date"
               inputClassName="!bg-light-blue !rounded-[32px]"
               value={valid_date_from ? new Date(valid_date_from) : null}
-              onChange={(date) =>
+              onChange={(date) => {
+                setIsFormDirty(true);
                 setFormData({
                   ...formData,
                   valid_date_from: formatDateToYYYYMMDD(date),
-                })
-              }
+                });
+              }}
             />
             {error && error["valid_date_from"] && (
               <FormInputValidation isError text={error["valid_date_from"]} />
@@ -116,12 +122,13 @@ const DealzBuilderStep4 = ({ formData, setFormData, currentSubscription }) => {
               className="w-full"
               minDate={valid_date_from ? new Date(valid_date_from) : null}
               value={valid_date_to ? new Date(valid_date_to) : null}
-              onChange={(date) =>
+              onChange={(date) => {
+                setIsFormDirty(true);
                 setFormData({
                   ...formData,
                   valid_date_to: formatDateToYYYYMMDD(date),
-                })
-              }
+                });
+              }}
             />
             {error && error["valid_date_to"] && (
               <FormInputValidation isError text={error["valid_date_to"]} />

@@ -21,7 +21,12 @@ import { DEALZ, SUBSCRIPTIONS } from "@/lib/constants";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
 
-const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
+const DealzBuilderStep3 = ({
+  formData,
+  setFormData,
+  currentSubscription,
+  setIsFormDirty,
+}) => {
   const [error, setError] = useState(null);
   const { slot_date, slot_time, daily_deal, weekly_deal, banner_image } =
     formData;
@@ -120,13 +125,14 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
                 "bg-white text-primary": daily_deal === true,
               }
             )}
-            onClick={() =>
+            onClick={() => {
               setFormData({
                 ...formData,
                 daily_deal: true,
                 weekly_deal: false,
-              })
-            }
+              });
+              setIsFormDirty(true);
+            }}
           >
             <IconStar />
             <Typography variant="small">Create a daily deal</Typography>
@@ -140,13 +146,14 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
                 //   !allowWeeklyDeal(),
               }
             )}
-            onClick={() =>
+            onClick={() => {
+              setIsFormDirty(true);
               setFormData({
                 ...formData,
                 weekly_deal: true,
                 daily_deal: false,
-              })
-            }
+              });
+            }}
           >
             <IconCrown />
             <Typography variant="small" className="">
@@ -173,6 +180,7 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
             value={slot_date ? new Date(slot_date) : null}
             placeholder="Select date"
             onChange={(date) => {
+              setIsFormDirty(true);
               let validateDate = date; // Default to the selected date
 
               // Check if weekly_deal is true and adjust the date to the previous Monday if necessary
@@ -223,12 +231,13 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
                   }
                 )}
                 isRound
-                onClick={() =>
+                onClick={() => {
+                  setIsFormDirty(true);
                   setFormData({
                     ...formData,
                     slot_time: DEALZ.SLOT_TIME.MORNING,
-                  })
-                }
+                  });
+                }}
               >
                 Morning (10am-1pm)
               </Button>
@@ -240,12 +249,13 @@ const DealzBuilderStep3 = ({ formData, setFormData, currentSubscription }) => {
                   }
                 )}
                 isRound
-                onClick={() =>
+                onClick={() => {
+                  setIsFormDirty(true);
                   setFormData({
                     ...formData,
                     slot_time: DEALZ.SLOT_TIME.EVENING,
-                  })
-                }
+                  });
+                }}
               >
                 Evening (5pm-10pm)
               </Button>

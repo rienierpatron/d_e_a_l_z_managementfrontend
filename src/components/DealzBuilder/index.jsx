@@ -14,10 +14,12 @@ import DealzBuilderStep2 from "@/components/DealzBuilder/step2";
 import DealzBuilderStep3 from "@/components/DealzBuilder/step3";
 import DealzBuilderStep4 from "@/components/DealzBuilder/step4";
 import DealzBuilderStep5 from "@/components/DealzBuilder/step5";
-import { DEALZ, DEALZ_STATUS, DEALZ_STATUS_VALUE } from "@/lib/constants";
+import { DEALZ, DEALZ_STATUS_VALUE } from "@/lib/constants";
 import { api } from "@/api";
 import { getDealzFormattedData } from "./utils";
 import { useSubscription } from "../Subscriptions/GetSubscriptionDetails";
+import SaveWarningDialog from "../SaveWarningDialog";
+import useUnsavedChanges from "@/hooks/useUnsavedChanges";
 
 const DealzBuilder = ({ dealzId = "", mode = "" }) => {
   const router = useRouter();
@@ -43,6 +45,12 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
     coupon_creation_type: null,
     code: null,
   };
+  const [isFormDirty, setIsFormDirty] = useState(false);
+  const {
+    showDialog: saveWarningDialog,
+    setShowDialog: setSaveWarningDialog,
+    confirmLeave,
+  } = useUnsavedChanges(isFormDirty);
   const [formData, setFormData] = useState(initialState);
   const { currentSubscription } = useSubscription();
   const { step } = formData;
@@ -112,16 +120,22 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             setFormData={setFormData}
             dealzId={dealzId}
             currentSubscription={currentSubscription}
+            setIsFormDirty={setIsFormDirty}
           />
         )}
         {step === 2 && (
-          <DealzBuilderStep2 formData={formData} setFormData={setFormData} />
+          <DealzBuilderStep2
+            formData={formData}
+            setFormData={setFormData}
+            setIsFormDirty={setIsFormDirty}
+          />
         )}
         {step === 3 && (
           <DealzBuilderStep3
             formData={formData}
             setFormData={setFormData}
             currentSubscription={currentSubscription}
+            setIsFormDirty={setIsFormDirty}
           />
         )}
         {step === 4 && (
@@ -129,6 +143,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             formData={formData}
             setFormData={setFormData}
             currentSubscription={currentSubscription}
+            setIsFormDirty={setIsFormDirty}
           />
         )}
         {step === 5 && (
@@ -149,6 +164,13 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             : formData?.followup_message
         }
         image={formData?.banner_image}
+      />
+      <SaveWarningDialog
+        open={saveWarningDialog}
+        onClose={() => setSaveWarningDialog(false)}
+        onSubmit={() => {
+          confirmLeave();
+        }}
       />
     </div>
   );

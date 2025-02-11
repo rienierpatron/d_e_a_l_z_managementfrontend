@@ -56,11 +56,11 @@ const EmailVerification = ({ verifyApiMethod, successMessage }) => {
 
   // Handle the loading state
   if (currentUser === null || !userLoaded) {
-    return <div>Loading user data...</div>; // Show loading message while waiting for `currentUser`
+    return <div className="flex items-center justify-center min-h-screen">Loading user data...</div>; // Show loading message while waiting for `currentUser`
   }
 
   return (
-    <div>
+    <div className="flex items-center justify-center min-h-screen">
       <h1>Verifying Your Email...</h1>
       {loading && <p>Loading...</p>}
       {message && <p>{message}</p>}

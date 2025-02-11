@@ -247,7 +247,7 @@ export default function CommonUserManagement({
 
         {/* Conditional rendering: Show loading or error state */}
         {loading ? (
-          <div>Loading...</div>
+          <div className="flex items-center justify-center min-h-[300px]">Loading...</div>
         ) : error ? (
           <div className="text-red-600">{error}</div>
         ) : (

@@ -19,7 +19,7 @@ export default function Logout() {
   });
 
   return (
-    <div>
+    <div className="flex items-center justify-center min-h-screen">
       <h1>Signing out ...</h1>
       {loading && <p>Loading...</p>}
       {message && <p>{message}</p>}

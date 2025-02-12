@@ -24,7 +24,7 @@ export default function Confiramtion() {
             alt="Big D Confirmation"
             width={512}
             height={512}
-            className="rounded-lg transform animate-scale-rotate"
+            className="rounded-lg animate-scale-rotate"
           />
         </div>
 

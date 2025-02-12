@@ -152,6 +152,7 @@ const DealzBuilderStep3 = ({
                 ...formData,
                 weekly_deal: true,
                 daily_deal: false,
+                slot_date: null
               });
             }}
           >
@@ -177,6 +178,7 @@ const DealzBuilderStep3 = ({
             name="slot_date"
             className="w-full"
             inputClassName="!bg-light-blue !rounded-[32px]"
+            key={Date.now()}
             value={slot_date ? new Date(slot_date) : null}
             placeholder="Select date"
             onChange={(date) => {

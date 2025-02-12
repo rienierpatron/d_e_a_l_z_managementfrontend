@@ -20,11 +20,11 @@ export default function Confiramtion() {
             />
           </div>
           <Image
-            src="/images/onboarding/mail_confirmation.svg"
-            alt="Mail Confirmation Illustration"
-            width={667}
-            height={570}
-            className="rounded-lg"
+            src="/images/onboarding/big_d_computer.png"
+            alt="Big D Confirmation"
+            width={512}
+            height={512}
+            className="rounded-lg transform animate-scale-rotate"
           />
         </div>
 

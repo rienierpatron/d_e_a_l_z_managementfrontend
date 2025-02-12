@@ -67,6 +67,31 @@ export default {
       width: {
         main: "calc(100% - 115px)",
       },
+      animation: {
+        'scale-rotate': 'scaleRotate 3s ease-in-out infinite',
+        'move-left-right': 'moveLeftRight 3s ease-in-out infinite',
+      },
+      keyframes: {
+        scaleRotate: {
+          '0%': {
+            transform: 'scale(1) rotate(0deg)',  // Initial state: no scale or rotation
+          },
+          '50%': {
+            transform: 'scale(1.05) rotate(3deg)',  // Slightly scale up and rotate
+          },
+          '100%': {
+            transform: 'scale(1) rotate(0deg)',  // Return to original size and rotation
+          },
+        },
+        moveLeftRight: {
+          '0%, 100%': {
+            transform: 'translateX(0)', // Starting position and end position (no movement)
+          },
+          '50%': {
+            transform: 'translateX(30px)', // Move 10px to the right at the halfway point
+          },
+        },
+      },
     },
   },
   plugins: [

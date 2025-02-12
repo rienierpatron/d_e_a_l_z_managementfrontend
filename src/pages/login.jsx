@@ -96,11 +96,11 @@ export default function Login({ googleClientId }) {
             />
           </div>
           <Image
-            src="/images/onboarding/login.svg"
-            alt="Login Illustration"
-            width={667}
-            height={570}
-            className="rounded-lg"
+            src="/images/onboarding/big_d_point.png"
+            alt="Big D Login"
+            width={512}
+            height={512}
+            className="rounded-lg animate-move-left-right"
           />
         </div>
 

@@ -147,11 +147,11 @@ export default function Signup({ googleClientId }) {
             {/* Centered Image */}
             <div className="flex items-center justify-center h-full">
               <Image
-                src="/images/onboarding/signup.svg" // Path to the image in the public folder
-                alt="Signup"
-                width={667}
-                height={570}
-                className="rounded-lg"
+                src="/images/onboarding/big_d_lightBulb.png" // Path to the image in the public folder
+                alt="Big D Signup"
+                width={512}
+                height={512}
+                className="rounded-lg animate-scale-rotate"
               />
             </div>
           </div>

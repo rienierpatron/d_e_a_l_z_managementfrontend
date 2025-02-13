@@ -181,7 +181,7 @@ const CommonTable = ({
       setPagination({
         ...pagination,
         pageIndex: currentPage - 1,
-        pageSize
+        pageSize,
       });
     }
   }, [currentPage, pageSize]);
@@ -299,7 +299,10 @@ const CommonTable = ({
                   return (
                     <td
                       key={cell.id}
-                      className={classNames(`px-4 whitespace-normal py-4 text-sm text-midnight-blue`, cell.column.columnDef?.className)}
+                      className={classNames(
+                        `px-4 whitespace-normal py-4 text-sm text-midnight-blue`,
+                        cell.column.columnDef?.className
+                      )}
                       style={{
                         maxWidth: cell.column.columnDef.headerWidth,
                         width: cell.column.columnDef.headerWidth,
@@ -314,6 +317,13 @@ const CommonTable = ({
                 })}
               </tr>
             ))}
+            <tr>
+              <td colSpan={columns?.length ?? 1}>
+                {table.getRowModel()?.rows?.length === 0 && (
+                  <div className="p-4 text-center">No record found</div>
+                )}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

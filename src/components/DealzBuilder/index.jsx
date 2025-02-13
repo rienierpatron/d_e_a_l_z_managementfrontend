@@ -164,7 +164,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             ? formData?.initial_message
             : formData?.followup_message
         }
-        image={formData?.banner_image}
+        image={step === 1 || mode === "view" ? formData?.banner_image : ""}
       />
       <SaveWarningDialog
         open={saveWarningDialog}

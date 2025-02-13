@@ -118,7 +118,7 @@ export function alert(
 ) {
   type = type || 'success';
   const toastOptions = {
-    className: 'toast-' + type,
+    className: 'toast-' + type + ' max-w-[800px] w-full',
     position: 'top-center',
     autoClose: options.autoCloseInSecs * 1000,
   };

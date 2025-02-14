@@ -118,7 +118,7 @@ export default function Subscriptions() {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 4xl:grid-cols-[2fr_1fr] gap-10">
+      <div className="grid grid-cols-1 gap-10">
         <div className="flex-1 justify-between gap-5 mt-[64px] grid grid-cols-1 lg:grid-cols-3">
           {SUBSCRIPTIONS.PLANS.map((plan, index) => {
             return (
@@ -145,7 +145,7 @@ export default function Subscriptions() {
             );
           })}
         </div>
-        <div className="w-full">
+        {/* <div className="w-full">
           <Typography variant="heading" className="mb-[24px]">
             Add ons
           </Typography>
@@ -168,7 +168,7 @@ export default function Subscriptions() {
               );
             })}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

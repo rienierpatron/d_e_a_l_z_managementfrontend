@@ -132,32 +132,32 @@ export const SUBSCRIPTIONS = {
       ],
     },
   ],
-  ADD_ONS: [
-    {
-      title: "Dealz of the Week Slot",
-      priceText: "HKD$2499",
-      dealDescription: "DEALZ of the week slot (Reaches free users)",
-      availabilityNote: "*This product will be available in next month",
-    },
-    {
-      title: "Dealz of the Week Banner Image Slot",
-      priceText: "HKD$2499",
-      dealDescription: "DEALZ of the Week Banner Image Slots",
-      availabilityNote: "*This product will be available in next month",
-    },
-    {
-      title: "Dealz Banner",
-      priceText: "HKD$2499",
-      dealDescription: "Daily banner image slots",
-      availabilityNote: "*This product will be available in next month",
-    },
-    {
-      title: "Additional Slot",
-      priceText: "HKD$499",
-      dealDescription: "Additional slots",
-      availabilityNote: "*This product will be available in next month",
-    },
-  ],
+  // ADD_ONS: [
+  //   {
+  //     title: "Dealz of the Week Slot",
+  //     priceText: "HKD$2499",
+  //     dealDescription: "DEALZ of the week slot (Reaches free users)",
+  //     availabilityNote: "*This product will be available in next month",
+  //   },
+  //   {
+  //     title: "Dealz of the Week Banner Image Slot",
+  //     priceText: "HKD$2499",
+  //     dealDescription: "DEALZ of the Week Banner Image Slots",
+  //     availabilityNote: "*This product will be available in next month",
+  //   },
+  //   {
+  //     title: "Dealz Banner",
+  //     priceText: "HKD$2499",
+  //     dealDescription: "Daily banner image slots",
+  //     availabilityNote: "*This product will be available in next month",
+  //   },
+  //   {
+  //     title: "Additional Slot",
+  //     priceText: "HKD$499",
+  //     dealDescription: "Additional slots",
+  //     availabilityNote: "*This product will be available in next month",
+  //   },
+  // ],
   SUBSCRIPTION_TYPES: {
     Pro: "pro",
     Starter: "starter",

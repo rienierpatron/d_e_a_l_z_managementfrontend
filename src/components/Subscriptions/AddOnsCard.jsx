@@ -47,7 +47,7 @@ const AddOnsCard = ({
   return (
     <div className="bg-white border border-light-gray rounded-3xl p-6 flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-4 items-center text-center">
-        <Typography variant="body" className="font-semibold !text-green">
+        <Typography variant="body" className="font-semibold !text-primary">
           {priceText}
         </Typography>
         <Typography variant="small" className="text-dark-gray">

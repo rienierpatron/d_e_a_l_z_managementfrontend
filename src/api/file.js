@@ -29,13 +29,14 @@ export async function uploadFile(
   const params = new URLSearchParams();
 
   if (dealzId) params.append("dealz_id", dealzId);
-  if (couponCreationType) params.append("coupon_creation_type", couponCreationType);
+  if (couponCreationType)
+    params.append("coupon_creation_type", couponCreationType);
   if (couponCodeType) params.append("coupon_code_type", couponCodeType);
 
   let url = `${config.apiUrl}/upload/${uploadType}`;
 
   if (params.toString()?.length) {
-    url = url + `?${params.toString()}`
+    url = url + `?${params.toString()}`;
   }
 
   const formData = new FormData();
@@ -79,4 +80,43 @@ export async function deleteUploadedFile(fileUrl, showMessage = false) {
   } catch (error) {
     throw error;
   }
+}
+
+/**
+ * Upload a agency_logo
+ * @param {string} uploadType - The type of upload (e.g., agency_logo_image)
+ * @param {File} file - The file to upload
+ * @param {Object} options - Additional options for the upload
+ * @param {boolean} [options.showMessage=true] - Whether to show a success or error message
+ * @returns {Promise<{data: {}, status: string}>}
+ */
+
+export async function publicUpload(
+  uploadType,
+  file,
+  { showMessage = true } = {}
+) {
+  const config = await getServerConfig();
+  const params = new URLSearchParams();
+
+  let url = `${config.apiUrl}/public/upload/${uploadType}`;
+
+  if (params.toString()?.length) {
+    url = url + `?${params.toString()}`;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await Axios({
+    url,
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "multipart/form-data",
+    },
+    data: formData,
+  });
+
+  return helper.api.handleApiResponse(response, showMessage);
 }

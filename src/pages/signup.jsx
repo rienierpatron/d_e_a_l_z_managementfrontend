@@ -9,11 +9,12 @@ import Button from "@/components/Common/Button";
 import Typography from "@/components/Common/Typography";
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
-import { BUSINESS_TYPE_OPTIONS } from "@/lib/constants";
+import { BUSINESS_TYPE_OPTIONS, UPLOAD_TYPES } from "@/lib/constants";
 import FormSelect from "@/components/Common/FormSelect";
 import { helper } from "@/helpers";
 import CustomGoogleLogin from "@/components/GoogleSignIn";
 import { useUser } from "@/context/UserContext";
+import UploadBusinessLogo from "@/components/UploadBusinessLogo";
 
 export default function Signup({ googleClientId }) {
   const currentUser = useUser();
@@ -28,6 +29,7 @@ export default function Signup({ googleClientId }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userData, setUserData] = useState(intialData);
   const [isLoading, setIsLoading] = useState(false);
+  const [agencyLogo, setAgencyLogo] = useState(null);
   const [errors, setErrors] = useState({
     firstName: false,
     lastName: false,
@@ -61,7 +63,7 @@ export default function Signup({ googleClientId }) {
       businessType: !businessType,
     };
     setErrors(newErrors);
-    return Object.values(newErrors).every(value => !value);
+    return Object.values(newErrors).every((value) => !value);
   }, [userData]);
 
   const handleSubmit = async (event) => {
@@ -71,8 +73,26 @@ export default function Signup({ googleClientId }) {
 
     const { firstName, lastName, email, companyName, businessType } = userData;
 
-    let data;
-    
+    let data, agency_logo;
+    setIsLoading(true);
+
+    if (agencyLogo) {
+      const logoRes = await api.file.publicUpload(
+        UPLOAD_TYPES.agency_logo_image,
+        agencyLogo,
+        {showMessage: false}
+      );
+      if (
+        logoRes &&
+        logoRes.status === "ok" &&
+        logoRes.data?.file?.full_file_url
+      ) {
+        agency_logo = logoRes.data?.file?.full_file_url;
+      } else {
+        setIsLoading(false);
+      }
+    }
+
     if (authType === "email") {
       data = {
         first_name: firstName,
@@ -80,7 +100,8 @@ export default function Signup({ googleClientId }) {
         email: email,
         company_name: companyName,
         business_type: businessType,
-        auth_type: "email"
+        auth_type: "email",
+        agency_logo,
       };
     } else if (authType === "google") {
       data = {
@@ -92,21 +113,24 @@ export default function Signup({ googleClientId }) {
         business_type: businessType,
         token: socialPayload.social_payload.profileObj.id,
         social_payload: socialPayload.social_payload,
+        agency_logo,
       };
     }
-    setIsLoading(true);
     const response = await api.auth.register(data);
     setIsLoading(false);
-    if (response && helper.cmpStr(response.status, 'ok')) {
+    if (response && helper.cmpStr(response.status, "ok")) {
       if (authType === "email") {
         setIsPopupOpen(!isPopupOpen);
         setUserData({ ...intialData }); // Reset form data
         setFormKey(Date.now()); // Change key to force re-render
+        setAgencyLogo(null)
       } else {
         const accessToken = response.data.access_token;
         if (accessToken) {
           helper.cookie.setAccessToken(accessToken);
-          window.location.href = isSuperAdminOrStaff ? '/admin/dashboard' : '/dashboard';
+          window.location.href = isSuperAdminOrStaff
+            ? "/admin/dashboard"
+            : "/dashboard";
         }
       }
     }
@@ -125,7 +149,7 @@ export default function Signup({ googleClientId }) {
     // Set social payload and switch to google auth type
     setSocialPayload(response);
     setAuthType("google");
-  }
+  };
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
@@ -163,19 +187,23 @@ export default function Signup({ googleClientId }) {
               onSubmit={handleSubmit}
               className="w-full max-w-md py-8 px-4 h-full flex flex-col justify-center overflow-auto scrollbar-hide md:block"
             >
-              <Typography variant="title" className="mb-[8px] text-center md:text-left">
+              <Typography
+                variant="title"
+                className="mb-[8px] text-center md:text-left"
+              >
                 Sign Up
               </Typography>
-              <Typography variant="body" className="!text-dark-gray mb-[32px] text-center md:text-left">
+              <Typography
+                variant="body"
+                className="!text-dark-gray mb-[32px] text-center md:text-left"
+              >
                 Sign up to stay connected!
               </Typography>
 
               <div className="flex flex-col gap-6">
                 <div className="flex gap-4 flex-col md:flex-row">
                   <FormFieldset className="!mb-0">
-                    <FormLabel htmlFor="first-name">
-                      First name
-                    </FormLabel>
+                    <FormLabel htmlFor="first-name">First name</FormLabel>
                     <FormInput
                       type="text"
                       id="first-name"
@@ -193,9 +221,7 @@ export default function Signup({ googleClientId }) {
                     />
                   </FormFieldset>
                   <FormFieldset className="!mb-0">
-                    <FormLabel htmlFor="last-name">
-                      Last name
-                    </FormLabel>
+                    <FormLabel htmlFor="last-name">Last name</FormLabel>
                     <FormInput
                       type="text"
                       placeholder="Last name"
@@ -214,9 +240,7 @@ export default function Signup({ googleClientId }) {
                   </FormFieldset>
                 </div>
                 <FormFieldset className="!mb-0">
-                  <FormLabel htmlFor="company-name">
-                    Company name
-                  </FormLabel>
+                  <FormLabel htmlFor="company-name">Company name</FormLabel>
                   <FormInput
                     type="text"
                     placeholder="Enter your company name"
@@ -234,27 +258,35 @@ export default function Signup({ googleClientId }) {
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
-                  <FormLabel htmlFor="business-type">
-                    Business type
-                  </FormLabel>
+                  <FormLabel htmlFor="company-name">Business Logo</FormLabel>
+                  <UploadBusinessLogo
+                    setAgencyLogo={setAgencyLogo}
+                    agencyLogo={agencyLogo}
+                  />
+                </FormFieldset>
+                <FormFieldset className="!mb-0">
+                  <FormLabel htmlFor="business-type">Business type</FormLabel>
                   <FormSelect
                     id="business-type"
                     name="business-type"
                     placeholder="Select business type"
                     options={BUSINESS_TYPE_OPTIONS}
                     onChange={(selectedOption) =>
-                      setUserData({ ...userData, businessType: selectedOption.value })
+                      setUserData({
+                        ...userData,
+                        businessType: selectedOption.value,
+                      })
                     }
                     rounded
                     icon="/icons/company-icon.svg"
                     isError={errors.businessType}
-                    value={BUSINESS_TYPE_OPTIONS.find((e) => e.value === userData.businessType)}
+                    value={BUSINESS_TYPE_OPTIONS.find(
+                      (e) => e.value === userData.businessType
+                    )}
                   />
                 </FormFieldset>
                 <FormFieldset className="!mb-0">
-                  <FormLabel htmlFor="email">
-                    Email
-                  </FormLabel>
+                  <FormLabel htmlFor="email">Email</FormLabel>
                   <FormInput
                     type="text"
                     placeholder="Enter your email"
@@ -277,7 +309,7 @@ export default function Signup({ googleClientId }) {
               <Button
                 className="font-bold mt-10"
                 variant="primary"
-                fullWidth  
+                fullWidth
                 isRound
                 type="submit"
                 isLoading={isLoading}
@@ -287,16 +319,21 @@ export default function Signup({ googleClientId }) {
               </Button>
 
               {/* Already Have Account */}
-              <Typography variant="caption" className="font-normal text-center mt-4">
+              <Typography
+                variant="caption"
+                className="font-normal text-center mt-4"
+              >
                 Already have an account?{" "}
-                <Link href="/login" className="text-secondary underline">Log In</Link>
+                <Link href="/login" className="text-secondary underline">
+                  Log In
+                </Link>
               </Typography>
 
               {/* Social Signup */}
               <Typography variant="caption" className="py-10 text-center">
                 Or Sign Up using
               </Typography>
-              <CustomGoogleLogin onLoginSuccess={onGoogleSignupSuccess}/>
+              <CustomGoogleLogin onLoginSuccess={onGoogleSignupSuccess} />
             </form>
           </div>
         </div>

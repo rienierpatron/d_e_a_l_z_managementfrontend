@@ -13,6 +13,9 @@ export const validations = {
     .nullable()
     .url("Please enter a valid http or https URL")
     .optional(),
+  requiredLink: Yup.string()
+    .url("Please enter a valid http or https URL")
+    .required("Required field can not be left blank."),
   audienceGender: Yup.array().min(1, "At least one gender is required"),
   audienceLocation: Yup.array().min(1, "At least one location is required"),
   audienceAgeRange: Yup.array().min(1, "At least one age range is required"),

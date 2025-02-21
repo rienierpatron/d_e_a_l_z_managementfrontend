@@ -190,6 +190,7 @@ export const UPLOAD_TYPES = {
   agency_logo_image: "agency_logo_image",
   dealz_banner: "dealz_banner",
   dealz_codes: "dealz_codes",
+  dealz_image: "dealz_image"
 };
 
 export const USER = {

@@ -10,15 +10,14 @@ import { useEffect, useState } from "react";
 import FormFieldset from "@/components/Common/FormFieldset";
 import FormLabel from "@/components/Common/FormLabel";
 import Typography from "@/components/Common/Typography";
-import FormTextArea from "@/components/Common/FormTextArea";
 import Button from "@/components/Common/Button";
 import IconDollar from "@/components/Icons/IconDollar";
 import IconPercentage from "@/components/Icons/IconPercentage";
 import IconDownload from "@/components/Icons/IconDownload";
 import FormRadio from "@/components/Common/FormRadio";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
-import { DEALZ } from "@/lib/constants";
-import UploadHeroImage from "./UploadHeroImage";
+import { DEALZ, SUBSCRIPTIONS } from "@/lib/constants";
+import UploadHeroImage from "./UploadDealzImage";
 import UploadDealzCodes from "./UploadDealzCodes";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
@@ -26,23 +25,41 @@ import { helper } from "@/helpers";
 import { api } from "@/api";
 import FormInput from "../Common/FormInput";
 import IconCoupon from "../Icons/IconCoupon";
+import IconBuildings from "../Icons/IconBuildings";
+import IconStar from "../Icons/IconStar";
+import IconCrown from "../Icons/IconCrown";
+import CustomDatePicker from "../Common/DatePicker";
+import { formatDateToYYYYMMDD } from "@/lib/date";
 
 const DealzBuilderStep1 = ({
   formData,
   setFormData,
   dealzId,
   currentSubscription,
-  setIsFormDirty
+  setIsFormDirty,
 }) => {
-  const { initial_message, offer_type, coupon_creation_type, code } = formData;
+  const {
+    initial_cta_text,
+    slot_date,
+    slot_time,
+    daily_deal,
+    weekly_deal,
+  } = formData;
   const [error, setError] = useState(null);
 
   const validationSchema = Yup.object().shape({
-    initial_message: validations.stringRequiredWithMaxLength(115),
-    offer_type: validations.stringRequiredField,
-    coupon_creation_type: validations.stringRequiredField,
-    coupon_code_file_url: validations.coupon_code_file_url,
-    code: validations.code,
+    initial_cta_text: validations.stringRequiredWithMaxLength(20),
+    slot_date: validations.stringRequiredField.test(
+      "is-future-date",
+      "Cannot select a past date.",
+      (value) => {
+        if (!value) return false;
+        const selectedDate = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate >= today;
+      }
+    ),
   });
 
   const createCouponCode = async () => {
@@ -61,7 +78,7 @@ const DealzBuilderStep1 = ({
 
   const handleChange = (name, value) => {
     setIsFormDirty(true);
-    if (name === "initial_message" && value.length > 115) {
+    if (name === "initial_cta_text" && value.length > 20) {
       return;
     }
     setFormData({
@@ -101,6 +118,47 @@ const DealzBuilderStep1 = ({
     link.click();
   };
 
+  // const allowWeeklyDeal = () => {
+  //   if (
+  //     currentSubscription?.subscription &&
+  //     !banner_image &&
+  //     currentSubscription?.available_inventory?.weekly_dealz > 0
+  //   ) {
+  //     return true;
+  //   }
+  //   if (
+  //     banner_image &&
+  //     currentSubscription?.subscription &&
+  //     currentSubscription?.available_inventory?.weekly_banner_dealz > 0
+  //   ) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
+
+  const getValidMondayDate = (date) => {
+    if (!date || isNaN(date.getTime())) {
+      // If date is null or invalid, return the current date or handle it accordingly
+      return new Date();
+    }
+
+    // Function to check if the date is Monday
+    const isMonday = (date) => date.getDay() === 1;
+
+    // If the selected date is not a Monday, adjust it to the previous Monday
+    if (!isMonday(date)) {
+      const getPreviousMonday = (date) => {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = day === 0 ? -6 : 1 - day; // If Sunday, go back 6 days to the previous Monday
+        d.setDate(d.getDate() + diff);
+        return d;
+      };
+      return getPreviousMonday(date);
+    }
+    return date;
+  };
+
   return (
     <div>
       <Typography variant="heading" className="my-8">
@@ -108,213 +166,182 @@ const DealzBuilderStep1 = ({
       </Typography>
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">
-          <FormLabel>Enter deal one liner for broadcast</FormLabel>
-          <FormTextArea
-            className="bg-light-blue !text-dark-gray text-sm font-normal"
-            icon="/icons/tag-2-icon.svg"
-            name="initial_message"
-            id="initial_message"
-            value={initial_message}
-            onChange={(e) => handleChange("initial_message", e.target.value)}
-            isError={error && error["initial_message"]}
+          <FormLabel>Initial button text</FormLabel>
+          <FormInput
+            className="bg-light-blue"
+            icon={<IconBuildings />}
+            placeholder="e.g. Acme"
+            fullWidth
+            rounded
+            name="initial_cta_text"
+            id="initial_cta_text"
+            value={initial_cta_text}
+            onChange={(e) => handleChange("initial_cta_text", e.target.value)}
+            isError={error && error["initial_cta_text"]}
           />
-          {error && error["initial_message"] && (
-            <FormInputValidation isError text={error["initial_message"]} />
+          {error && error["initial_cta_text"] && (
+            <FormInputValidation isError text={error["initial_cta_text"]} />
           )}
           <Typography variant="caption" className="text-right mt-4">
-            Character: {initial_message?.length ?? 0}/115
+            Character: {initial_cta_text?.length ?? 0}/20
           </Typography>
         </FormFieldset>
-        <FormFieldset className="!mb-0">
-          <FormLabel
-            info={
-              <div className="p-2 text-midnight-blue max-w-[300px]">
-                Choose the type of deal to offer, such as a discount in dollars,
-                percentage, or other (e.g., buy-one-get-one deal)
-              </div>
-            }
-          >
-            Deal
-          </FormLabel>
-          <div className="flex gap-4">
-            <Button
+        <div className="flex flex-col gap-6">
+          <div className="bg-[#F1F3F6] rounded-[32px] flex items-center justify-between p-1">
+            <div
               className={classNames(
-                "hover:text-secondary font-medium hover:border-secondary",
+                "flex items-center gap-1 cursor-pointer w-full justify-center p-2 hover:bg-white hover:text-primary rounded-[32px]",
                 {
-                  "text-secondary border-secondary":
-                    DEALZ.OFFER_TYPE.Dollar === offer_type,
+                  "bg-white text-primary": daily_deal === true,
                 }
               )}
-              icon={<IconDollar />}
-              isRound
-              onClick={() => handleClickOfferType(DEALZ.OFFER_TYPE.Dollar)}
-            >
-              Dollars
-            </Button>
-            <Button
-              className={classNames(
-                "hover:text-secondary font-medium hover:border-secondary",
-                {
-                  "text-secondary border-secondary":
-                    DEALZ.OFFER_TYPE.Percentage === offer_type,
-                }
-              )}
-              icon={<IconPercentage />}
-              isRound
-              onClick={() => handleClickOfferType(DEALZ.OFFER_TYPE.Percentage)}
-            >
-              Percentage
-            </Button>
-            <Button
-              className={classNames(
-                "hover:text-secondary font-medium hover:border-secondary",
-                {
-                  "text-secondary border-secondary":
-                    DEALZ.OFFER_TYPE.Other === offer_type,
-                }
-              )}
-              isRound
-              onClick={() => handleClickOfferType(DEALZ.OFFER_TYPE.Other)}
-            >
-              Other
-            </Button>
-          </div>
-          {error && error["offer_type"] && (
-            <FormInputValidation isError text={error["offer_type"]} />
-          )}
-        </FormFieldset>
-        {helper.notEmpty(currentSubscription?.subscription) &&
-          currentSubscription?.available_inventory?.banner > 0 && (
-            <div className="bg-primary-40 rounded-2xl px-6 py-4">
-              <div className="flex items-center justify-between mb-4">
-                <FormLabel
-                  className="!mb-0"
-                  info={
-                    <div className="p-2 text-midnight-blue max-w-[300px]">
-                      Upload an image for the deal
-                    </div>
-                  }
-                >
-                  Hero deal
-                </FormLabel>
-                <Typography className="!text-gold text-sm bg-white p-2 rounded-md w-max">
-                  Add-on
-                </Typography>
-              </div>
-              <UploadHeroImage formData={formData} setFormData={setFormData} />
-            </div>
-          )}
-        <FormFieldset className="mb-0">
-          <div className="flex items-center justify-between">
-            <FormLabel
-              className="!mb-0"
-              info={
-                <div className="p-2 text-midnight-blue max-w-[300px]">
-                  Choose the type of coupon: generate a new coupon or upload an
-                  existing one.
-                </div>
-              }
-            >
-              Type of coupon
-            </FormLabel>
-            <Button
-              className="underline !p-0"
-              icon={<IconDownload />}
-              iconPosition="right"
-              borderless
-              variant="primary"
-              outlined
-              onClick={downloadFile}
-            >
-              Download coupon template
-            </Button>
-          </div>
-          <div className="flex gap-4 mt-6">
-            <FormRadio
-              id="automatic"
-              name="coupon_creation_type"
-              label="Create DEALZ codes"
-              labelClassName="text-midnight-blue !text-base"
-              checked={
-                DEALZ.COUPON_CREATION_TYPE.automatic === coupon_creation_type
-              }
-              onChange={(e) => {
+              onClick={() => {
                 setFormData({
                   ...formData,
-                  coupon_creation_type: DEALZ.COUPON_CREATION_TYPE.automatic,
+                  daily_deal: true,
+                  weekly_deal: false,
                 });
                 setIsFormDirty(true);
               }}
-            />
-            <FormRadio
-              id="upload"
-              name="coupon_creation_type"
-              label="Upload your own codes"
-              labelClassName="text-midnight-blue !text-base"
-              checked={
-                DEALZ.COUPON_CREATION_TYPE.upload === coupon_creation_type
-              }
-              onChange={(e) => {
-                handleChange(
-                  "coupon_creation_type",
-                  DEALZ.COUPON_CREATION_TYPE.upload
-                );
+            >
+              <IconStar />
+              <Typography variant="small">Create a daily deal</Typography>
+            </div>
+            <div
+              className={classNames(
+                "flex items-center gap-1 cursor-pointer w-full justify-center p-2 hover:bg-white hover:text-primary rounded-[32px]",
+                {
+                  "bg-white text-primary": weekly_deal === true,
+                  // "!cursor-not-allowed hover:text-midnight-blue hover:bg-[#F1F3F6]":
+                  //   !allowWeeklyDeal(),
+                }
+              )}
+              onClick={() => {
                 setIsFormDirty(true);
+                setFormData({
+                  ...formData,
+                  weekly_deal: true,
+                  daily_deal: false,
+                  slot_date: null,
+                });
+              }}
+            >
+              <IconCrown />
+              <Typography variant="small" className="">
+                Create a weekly deal (Premium)
+              </Typography>
+            </div>
+          </div>
+          {weekly_deal === true && (
+            <div>
+              <Typography
+                variant="caption"
+                className="bg-[linear-gradient(-80deg,#4177F4_11.43%,#F945B1_82.92%)] bg-clip-text text-transparent !font-bold"
+              >
+                Slot date for weekly DEALZ can only be set on mondays.
+              </Typography>
+            </div>
+          )}
+          <FormFieldset className="!mb-0">
+            <CustomDatePicker
+              id="slot_date"
+              name="slot_date"
+              className="w-full"
+              inputClassName="!bg-light-blue !rounded-[32px]"
+              key={Date.now()}
+              value={slot_date ? new Date(slot_date) : null}
+              placeholder="Select slot date"
+              onChange={(date) => {
+                setIsFormDirty(true);
+                let validateDate = date; // Default to the selected date
+
+                // Check if weekly_deal is true and adjust the date to the previous Monday if necessary
+                if (weekly_deal === true) {
+                  validateDate = getValidMondayDate(date);
+                }
+                setFormData({
+                  ...formData,
+                  slot_date: formatDateToYYYYMMDD(validateDate),
+                });
               }}
             />
-          </div>
-          {error && error["coupon_creation_type"] && (
-            <FormInputValidation isError text={error["coupon_creation_type"]} />
-          )}
-        </FormFieldset>
-        {coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.upload && (
-          <FormFieldset className="flex flex-col justify-end gap-2">
-            <UploadDealzCodes
-              formData={formData}
-              setFormData={setFormData}
-              dealzId={dealzId}
-            />
-            {error && error["coupon_code_file_url"] && (
-              <FormInputValidation
-                isError
-                text={error["coupon_code_file_url"]}
-              />
+            {error && error["slot_date"] && (
+              <FormInputValidation isError text={error["slot_date"]} />
             )}
           </FormFieldset>
-        )}
-        {coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.automatic && (
-          <div className="flex items-center">
-            <FormFieldset className="mb-0">
-              <FormLabel>Coupon code</FormLabel>
-              <FormInput
-                className="bg-light-blue"
-                icon={<IconCoupon />}
-                placeholder="Coupon code"
-                fullWidth
-                rounded
-                name="code"
-                id="code"
-                value={code}
-                onChange={(e) => handleChange("code", e.target.value)}
-                isError={error && error["code"]}
-              />
-              {error && error["code"] && (
-                <FormInputValidation isError text={error["code"]} />
-              )}
-            </FormFieldset>
+          {currentSubscription?.subscription?.subscription_name?.toLowerCase() !==
+            SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && (
             <Button
-              borderless
-              outlined
-              className="text-secondary underline"
-              onClick={() => createCouponCode()}
+              icon="/icons/crown-gradient.svg"
+              className="w-max text-sm font-semibold bg-[linear-gradient(104deg,rgba(65,119,244,0.08)_11.43%,rgba(249,69,177,0.08)_82.92%)] border-none rounded-3xl !p-[10px]"
             >
-              Generete coupon code
+              <span className="bg-[linear-gradient(104deg,#4177F4_11.43%,#F945B1_82.92%)] bg-clip-text text-transparent">
+                Upgrade to premium to select time of day
+              </span>
             </Button>
-          </div>
-        )}
+          )}
+          {currentSubscription?.subscription?.subscription_name?.toLowerCase() ===
+            SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && (
+            <FormFieldset className="!mb-0">
+              <FormLabel
+                className="!mb-6"
+                info={
+                  <div className="p-2 text-midnight-blue max-w-[300px]">
+                    Select the time of day for the deal to be sent as a
+                    broadcast.
+                  </div>
+                }
+              >
+                Pick time of day
+              </FormLabel>
+              <div className="flex items-center gap-3">
+                <Button
+                  className={classNames(
+                    "!bg-[#F1F3F6] text-dark-gray text-sm font-semibold",
+                    {
+                      "border-dark-gray": slot_time === DEALZ.SLOT_TIME.MORNING,
+                    }
+                  )}
+                  isRound
+                  onClick={() => {
+                    setIsFormDirty(true);
+                    setFormData({
+                      ...formData,
+                      slot_time: DEALZ.SLOT_TIME.MORNING,
+                    });
+                  }}
+                >
+                  Morning (10am-1pm)
+                </Button>
+                <Button
+                  className={classNames(
+                    "!bg-[#F1F3F6] text-dark-gray text-sm font-semibold",
+                    {
+                      "border-dark-gray": slot_time === DEALZ.SLOT_TIME.EVENING,
+                    }
+                  )}
+                  isRound
+                  onClick={() => {
+                    setIsFormDirty(true);
+                    setFormData({
+                      ...formData,
+                      slot_time: DEALZ.SLOT_TIME.EVENING,
+                    });
+                  }}
+                >
+                  Evening (5pm-10pm)
+                </Button>
+              </div>
+            </FormFieldset>
+          )}
+        </div>
+        <Typography className="!text-xs italic !font-medium !text-dark-gray my-4">
+          ** Your registered logo will be used for this promotion. If you need to
+          update your logo, contact DEALZ support. **
+        </Typography>
       </div>
       <Button
-        className="uppercase shadow-custom-primary"
+        className="uppercase shadow-custom-primary !mt-4"
         variant="primary"
         iconPosition="right"
         icon={<IconArrowRight />}

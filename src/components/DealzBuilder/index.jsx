@@ -23,17 +23,17 @@ import useUnsavedChanges from "@/hooks/useUnsavedChanges";
 
 const DealzBuilder = ({ dealzId = "", mode = "" }) => {
   const router = useRouter();
-  const TOTAL_STEPS = 5;
+  const TOTAL_STEPS = 4;
   const initialState = {
     step: 1,
     title: null,
-    initial_message: null,
-    offer_type: null,
-    amount: null,
-    banner_image: null,
-    coupon_code_file_url: null,
-    followup_message: null,
+    initial_cta_text: "Acme",
+    dealz_text: `Hi! 😊\n\nWe’re excited to welcome you to Bistro Delight for a memorable evening! 🎉
+Get 25% Off Your Dinner 🍽️ at Bistro Delight, located at 123 Main Street, Downtown.
+Valid on February 20th, 2025, from 6 PM to 10 PM.\n\nDon’t miss out on this special offer – reserve your table today! 📲\n\nLooking forward to seeing you!`,
+    cta_link_text: null,
     link: null,
+    dealz_image: null,
     coupon_code_type: DEALZ.COUPON_CODE_TYPE.universal,
     slot_date: null,
     slot_time: null,
@@ -41,9 +41,6 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
     valid_date_to: null,
     daily_deal: true,
     weekly_deal: false,
-    csv_file_name: null,
-    coupon_creation_type: null,
-    code: null,
   };
   const [isFormDirty, setIsFormDirty] = useState(false);
   const {
@@ -68,7 +65,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
           return;
         }
         if (mode === "view") {
-          formattedData.step = 5;
+          formattedData.step = 4;
         }
         setFormData(formattedData);
       }
@@ -82,6 +79,26 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
       fetchDealzData();
     }
   }, [dealzId]);
+
+  const getPreviewCTAText = () => {
+    if (step === 1 && formData?.initial_cta_text) {
+      return [
+        {
+          type: "quick_reply",
+          text: formData.initial_cta_text,
+        },
+      ];
+    }
+    if (step > 1 && formData?.cta_link_text) {
+      return [
+        {
+          type: "cta",
+          text: formData.cta_link_text,
+        },
+      ];
+    }
+    return [];
+  };
 
   return (
     <div className="flex justify-center pt-8 pb-[38px] m-auto gap-6">
@@ -130,15 +147,15 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             setIsFormDirty={setIsFormDirty}
           />
         )}
-        {step === 3 && (
+        {/* {step === 3 && (
           <DealzBuilderStep3
             formData={formData}
             setFormData={setFormData}
             currentSubscription={currentSubscription}
             setIsFormDirty={setIsFormDirty}
           />
-        )}
-        {step === 4 && (
+        )} */}
+        {step === 3 && (
           <DealzBuilderStep4
             formData={formData}
             setFormData={setFormData}
@@ -146,7 +163,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
             setIsFormDirty={setIsFormDirty}
           />
         )}
-        {step === 5 && (
+        {step === 4 && (
           <DealzBuilderStep5
             formData={formData}
             setFormData={setFormData}
@@ -160,11 +177,12 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
       </div>
       <MobilePreview
         message={
-          step === 1 || mode === "view"
-            ? formData?.initial_message
-            : formData?.followup_message
+          step === 1
+            ? "your order for today’s *DEALZ* is here!\n\nClick the button below to reveal"
+            : formData?.dealz_text
         }
-        image={step === 1 || mode === "view" ? formData?.banner_image : ""}
+        ctaList={getPreviewCTAText()}
+        image={step > 1 || mode === "view" ? formData?.dealz_image : ""}
       />
       <SaveWarningDialog
         open={saveWarningDialog}

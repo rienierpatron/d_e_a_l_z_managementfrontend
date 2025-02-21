@@ -103,10 +103,10 @@ const PlanCard = ({
       )}
       <div className="flex gap-2 items-baseline">
         <div className="flex items-baseline">
-          <Typography variant="body" className="!text-green !font-semibold">
+          <Typography variant="body" className="!text-primary !font-semibold pr-0.5">
             {priceCurrency}
           </Typography>
-          <Typography variant="title" className="!text-green !font-semibold">
+          <Typography variant="title" className="!text-primary !font-semibold">
             {priceAmount}
           </Typography>
           {pricePeriod && (

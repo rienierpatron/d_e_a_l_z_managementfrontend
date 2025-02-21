@@ -94,11 +94,12 @@ export const SUBSCRIPTIONS = {
       planTitle: "Basic",
       promotionText: "One Time Purchase",
       priceCurrency: "HKD",
-      priceAmount: "$499",
+      priceAmount: "1999",
       benefits: [
         "1 Slot",
         "Day only selection for deal",
         "Email Support",
+        "Social media feature",
       ],
     },
     {
@@ -106,7 +107,7 @@ export const SUBSCRIPTIONS = {
       planTitle: "Starter",
       promotionText: "Early Bird Special",
       priceCurrency: "HKD",
-      priceAmount: "$3888",
+      priceAmount: "3888",
       pricePeriod: "Per month",
       benefits: [
         "5 Slots per month",
@@ -119,7 +120,7 @@ export const SUBSCRIPTIONS = {
       planTitle: "Pro",
       promotionText: "Early Bird Special",
       priceCurrency: "HKD",
-      priceAmount: "$5999",
+      priceAmount: "5999",
       pricePeriod: "Per month",
       benefits: [
         "10 Slots per month",

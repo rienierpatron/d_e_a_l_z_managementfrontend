@@ -182,7 +182,11 @@ Valid on February 20th, 2025, from 6 PM to 10 PM.\n\nDon’t miss out on this sp
             : formData?.dealz_text
         }
         ctaList={getPreviewCTAText()}
-        image={step > 1 || mode === "view" ? formData?.dealz_image : ""}
+        image={
+          step > 1 || mode === "view"
+            ? formData?.dealz_image
+            : "/images/create-deal-preview.JPG"
+        }
       />
       <SaveWarningDialog
         open={saveWarningDialog}

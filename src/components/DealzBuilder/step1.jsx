@@ -38,13 +38,8 @@ const DealzBuilderStep1 = ({
   currentSubscription,
   setIsFormDirty,
 }) => {
-  const {
-    initial_cta_text,
-    slot_date,
-    slot_time,
-    daily_deal,
-    weekly_deal,
-  } = formData;
+  const { initial_cta_text, slot_date, slot_time, daily_deal, weekly_deal } =
+    formData;
   const [error, setError] = useState(null);
 
   const validationSchema = Yup.object().shape({
@@ -166,7 +161,7 @@ const DealzBuilderStep1 = ({
       </Typography>
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">
-          <FormLabel>Initial button text</FormLabel>
+          <FormLabel>Restaurant name</FormLabel>
           <FormInput
             className="bg-light-blue"
             icon={<IconBuildings />}
@@ -187,7 +182,7 @@ const DealzBuilderStep1 = ({
           </Typography>
         </FormFieldset>
         <div className="flex flex-col gap-6">
-          <div className="bg-[#F1F3F6] rounded-[32px] flex items-center justify-between p-1">
+          {/* <div className="bg-[#F1F3F6] rounded-[32px] flex items-center justify-between p-1">
             <div
               className={classNames(
                 "flex items-center gap-1 cursor-pointer w-full justify-center p-2 hover:bg-white hover:text-primary rounded-[32px]",
@@ -241,8 +236,9 @@ const DealzBuilderStep1 = ({
                 Slot date for weekly DEALZ can only be set on mondays.
               </Typography>
             </div>
-          )}
+          )} */}
           <FormFieldset className="!mb-0">
+            <FormLabel>Select DEAL broadcast date</FormLabel>
             <CustomDatePicker
               id="slot_date"
               name="slot_date"
@@ -250,7 +246,7 @@ const DealzBuilderStep1 = ({
               inputClassName="!bg-light-blue !rounded-[32px]"
               key={Date.now()}
               value={slot_date ? new Date(slot_date) : null}
-              placeholder="Select slot date"
+              placeholder="Select date"
               onChange={(date) => {
                 setIsFormDirty(true);
                 let validateDate = date; // Default to the selected date
@@ -268,6 +264,10 @@ const DealzBuilderStep1 = ({
             {error && error["slot_date"] && (
               <FormInputValidation isError text={error["slot_date"]} />
             )}
+            <div className="text-dark-gray font-medium text-xs italic mt-2">
+              Select the day you want your deal to be sent out. Subject to
+              availability
+            </div>
           </FormFieldset>
           {currentSubscription?.subscription?.subscription_name?.toLowerCase() !==
             SUBSCRIPTIONS.SUBSCRIPTION_TYPES.Pro && (
@@ -336,8 +336,8 @@ const DealzBuilderStep1 = ({
           )}
         </div>
         <Typography className="!text-xs italic !font-medium !text-dark-gray my-4">
-          ** Your registered logo will be used for this promotion. If you need to
-          update your logo, contact DEALZ support. **
+          ** Your registered logo will be used for this promotion. If you need
+          to update your logo, contact DEALZ support. **
         </Typography>
       </div>
       <Button

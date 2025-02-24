@@ -93,7 +93,7 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
             </a>{" "}
             to avoid rejection
           </div>
-          <FormLabel>Add deal Text </FormLabel>
+          <FormLabel>Add deal text</FormLabel>
           <FormTextArea
             ref={textareaRef}
             className="bg-light-blue !text-dark-gray text-sm font-normal"

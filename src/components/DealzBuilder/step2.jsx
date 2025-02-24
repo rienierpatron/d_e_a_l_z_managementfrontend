@@ -75,13 +75,24 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
   return (
     <div>
       <BackNavigation
-        text="Follow up message and unique DEALZ code"
+        text="Create your DEAL"
         className="text-xl"
         baseClassName="my-8"
         onClick={handlBack}
       />
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">
+          <div className="!text-xs font-medium italic !text-dark-gray my-5">
+            Ensure your deal complies with DEALZ{" "}
+            <a
+              className="text-secondary cursor-pointer underline"
+              href="https://www.dealz.asia/requirements-101"
+              target="_blank"
+            >
+              requirements and guidelines
+            </a>{" "}
+            to avoid rejection
+          </div>
           <FormLabel>Add deal Text </FormLabel>
           <FormTextArea
             ref={textareaRef}
@@ -175,20 +186,6 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
             setFormData={setFormData}
             error={error}
           />
-        </FormFieldset>
-        <FormFieldset className="!mb-0">
-          <FormLabel>Guidelines</FormLabel>
-          <div className="!text-xs font-medium italic !text-dark-gray my-4">
-            Ensure your deal complies with DEALZ{" "}
-            <a
-              className="text-secondary cursor-pointer underline"
-              href="https://www.dealz.asia/requirements-101"
-              target="_blank"
-            >
-              requirements and guidelines
-            </a>{" "}
-            to avoid rejection
-          </div>
         </FormFieldset>
       </div>
       <Button

@@ -162,7 +162,7 @@ const DealzBuilderStep1 = ({
   return (
     <div>
       <Typography variant="heading" className="my-8">
-        Add DEALZ text
+        Schedule your DEAL
       </Typography>
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">

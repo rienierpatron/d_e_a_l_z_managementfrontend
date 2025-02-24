@@ -153,7 +153,7 @@ const DealzBuilderStep5 = ({
       <div className="mt-8">
         <div className="flex items-center justify-between">
           <BackNavigation
-            text="Preview the DEALZ"
+            text="Review your DEAL"
             className="text-xl"
             baseClassName="!m-0"
             onClick={handlBack}

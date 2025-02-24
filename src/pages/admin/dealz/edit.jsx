@@ -20,6 +20,7 @@ import RequestToReviseDialog from "@/components/Admin/RequestToReviseDialog";
 import SaveDetailsDialog from "@/components/Admin/SaveDetailsDialog";
 import classNames from "classnames";
 import IconCloseCircle from "@/components/Icons/IconCloseCircle";
+import IconTextBlock from "@/components/Icons/IconTextBlock";
 
 // Options for Slot Time Selection
 export const SLOT_TIME_OPTIONS = [
@@ -29,11 +30,11 @@ export const SLOT_TIME_OPTIONS = [
 ];
 
 // Reusable Deal Information Card Component
-const DealInfoCard = ({ icon: Icon, label, children }) => (
+const DealInfoCard = ({ icon: Icon, label, children, valueClassName='' }) => (
   <div className="flex gap-2 items-center">
-    <Icon className="text-dark-gray" />
+    <Icon className="text-dark-gray flex-shrink-0" />
     <Typography variant="caption">{label}</Typography>
-    <div className="capitalize">{children}</div>
+    <div className={valueClassName}>{children}</div>
   </div>
 );
 
@@ -288,9 +289,11 @@ export default function DealzEdit() {
             ? "Weekly Deal"
             : "No Deal Type"}
         </DealInfoCard>
-        <DealInfoCard icon={IconCoupon} label="DEALZ code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
-        <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
-        <DealInfoCard icon={IconGlobe} label="Website or booking link">{dealzDetails.dealz?.link}</DealInfoCard>
+        {/* <DealInfoCard icon={IconCoupon} label="DEALZ code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard> */}
+        {/* <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard> */}
+        <DealInfoCard icon={IconTextBlock} label="Initial button text">{dealzDetails.dealz?.initial_cta_text}</DealInfoCard>
+        <DealInfoCard icon={IconTextBlock} label="Button link text" >{dealzDetails.dealz?.cta_link_text}</DealInfoCard>
+        <DealInfoCard icon={IconGlobe} label="Website or booking link" valueClassName="max-w-[300px] break-all">{dealzDetails.dealz?.link}</DealInfoCard>
 
         {/* Validity */}
         <div className="flex gap-2 items-center">
@@ -299,7 +302,7 @@ export default function DealzEdit() {
           <div>{dealzDetails.dealz?.validity_date}</div>
         </div>
 
-        <DealInfoCard icon={IconCoupon} label="Coupon created method">{dealzDetails.dealz?.coupon_creation_type}</DealInfoCard>
+        {/* <DealInfoCard icon={IconCoupon} label="Coupon created method">{dealzDetails.dealz?.coupon_creation_type}</DealInfoCard> */}
 
         {/* Slot Selection */}
         <div className="flex gap-2 items-center w-full">
@@ -329,21 +332,26 @@ export default function DealzEdit() {
       </div>
       <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
 
-      {/* Deal Wording Section */}
       <div className="p-4 border border-light-gray rounded-xl my-6">
-        <Typography variant="caption" className="pb-2">Wording for the deal</Typography>
-        <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.initial_message}</Typography>
+        <Typography variant="caption" className="pb-2">Deal text</Typography>
+        <Typography variant="caption" className="!text-black whitespace-pre-wrap">{dealzDetails.dealz?.dealz_text}</Typography>
       </div>
 
+      {/* Deal Wording Section */}
+      {/* <div className="p-4 border border-light-gray rounded-xl my-6">
+        <Typography variant="caption" className="pb-2">Wording for the deal</Typography>
+        <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.initial_message}</Typography>
+      </div> */}
+
       {/* Follow-Up Wording Section */}
-      <div className="p-4 border border-light-gray rounded-xl my-6">
+      {/* <div className="p-4 border border-light-gray rounded-xl my-6">
         <Typography variant="caption" className="pb-2">Wording for the follow-up message</Typography>
         <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.followup_message}</Typography>
-      </div>
+      </div> */}
 
       {/* Customer Reach and File Upload Section */}
       <div className="flex justify-between">
-        <div>
+        {/* <div>
           {dealzDetails.coupons?.[0]?.code.startsWith('http') ? (
             <a href={dealzDetails.coupons?.[0]?.code} download>
               <div className="relative p-4 mt-2 rounded-2xl border border-light-gray w-max">
@@ -362,8 +370,8 @@ export default function DealzEdit() {
               <Typography>{dealzDetails.coupons?.[0]?.code}</Typography>
             </div>
           )}
-        </div>
-        <div>
+        </div> */}
+        <div className="ml-auto">
           <Typography variant="caption" className="pb-2">Total number of customers reached for this DEALZ broadcast</Typography>
           <FormInput
             type="text"

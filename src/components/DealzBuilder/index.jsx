@@ -31,7 +31,7 @@ const DealzBuilder = ({ dealzId = "", mode = "" }) => {
     dealz_text: `Hi! 😊\n\nWe’re excited to welcome you to Bistro Delight for a memorable evening! 🎉
 Get 25% Off Your Dinner 🍽️ at Bistro Delight, located at 123 Main Street, Downtown.
 Valid on February 20th, 2025, from 6 PM to 10 PM.\n\nDon’t miss out on this special offer – reserve your table today! 📲\n\nLooking forward to seeing you!`,
-    cta_link_text: null,
+    cta_link_text: "Reserve your spot!",
     link: null,
     dealz_image: null,
     coupon_code_type: DEALZ.COUPON_CODE_TYPE.universal,

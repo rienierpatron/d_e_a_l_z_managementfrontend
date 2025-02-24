@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 /**
  * Internal dependencies
@@ -8,11 +8,9 @@ import FormLabel from "@/components/Common/FormLabel";
 import Typography from "@/components/Common/Typography";
 import FormTextArea from "@/components/Common/FormTextArea";
 import Button from "@/components/Common/Button";
-import FormRadio from "@/components/Common/FormRadio";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
 import BackNavigation from "@/components/Common/BackNavigation";
 import FormInput from "@/components/Common/FormInput";
-import { DEALZ } from "@/lib/constants";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
 import UploadDealzImage from "./UploadDealzImage";
@@ -20,7 +18,8 @@ import IconTextBlock from "../Icons/IconTextBlock";
 
 const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
   const [error, setError] = useState(null);
-  const { dealz_text, cta_link_text, link, title, coupon_code_type } = formData;
+  const { dealz_text, cta_link_text, link, title } = formData;
+  const textareaRef = useRef(null);
 
   const validationSchema = Yup.object().shape({
     dealz_text: validations.stringRequiredWithMaxLength(500),
@@ -29,6 +28,13 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
     title: validations.stringRequiredField,
     dealz_image: validations.stringRequiredField,
   });
+
+  useEffect(() => {
+    if (dealz_text?.length) {
+      textareaRef.current.style.height = "auto"; // Reset height to recalculate
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set to new height
+    }
+  }, [dealz_text]);
 
   const handleChange = (name, value) => {
     setIsFormDirty(true);
@@ -78,6 +84,7 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
         <FormFieldset className="!mb-0">
           <FormLabel>Add deal Text </FormLabel>
           <FormTextArea
+            ref={textareaRef}
             className="bg-light-blue !text-dark-gray text-sm font-normal"
             icon="/icons/tag-2-icon.svg"
             name="dealz_text"
@@ -181,23 +188,6 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
               requirements and guidelines
             </a>{" "}
             to avoid rejection
-          </div>
-        </FormFieldset>
-        <FormFieldset className="!mb-0">
-          <div className="flex gap-4">
-            <FormRadio
-              id={DEALZ.COUPON_CODE_TYPE.universal}
-              name="coupon_code_type"
-              label="Universal code"
-              labelClassName="!text-sm"
-              checked={DEALZ.COUPON_CODE_TYPE.universal === coupon_code_type}
-              value={coupon_code_type}
-              info={
-                <div className="p-2 text-midnight-blue max-w-[300px]">
-                  Enter code that can be used by all users for this deal.
-                </div>
-              }
-            />
           </div>
         </FormFieldset>
       </div>

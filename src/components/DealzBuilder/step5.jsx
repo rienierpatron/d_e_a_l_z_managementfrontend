@@ -83,7 +83,6 @@ const DealzBuilderStep5 = ({
     ) {
       delete payload.slot_time;
     }
-    debugger;
     try {
       let res;
       if (dealzId) {
@@ -215,12 +214,12 @@ const DealzBuilderStep5 = ({
             )}
             {slot_time && (
               <div className="flex justify-between items-center">
-                <div className="flex gap-[6px]">
+                <div className="flex gap-[6px] items-center">
                   <IconClock />
                   <Typography variant="caption">Slot time</Typography>
                 </div>
                 <Typography className="!font-medium" variant="body">
-                  {slot_date}
+                  {slot_time.charAt(0) + slot_time.slice(1).toLowerCase()}
                 </Typography>
               </div>
             )}

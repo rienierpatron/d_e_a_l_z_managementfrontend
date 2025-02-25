@@ -94,7 +94,7 @@ export default function DealzView() {
         
         <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
         <DealInfoCard icon={IconGlobe} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard> */}
-        <DealInfoCard icon={IconTextBlock} label="Initial button text">{dealzDetails.dealz?.initial_cta_text}</DealInfoCard>
+        <DealInfoCard icon={IconTextBlock} label="Restuarant name">{dealzDetails.dealz?.initial_cta_text}</DealInfoCard>
         <DealInfoCard icon={IconTextBlock} label="Button link text" >{dealzDetails.dealz?.cta_link_text}</DealInfoCard>
         <DealInfoCard icon={IconGlobe} label="Website or booking link" valueClassName="max-w-[300px] break-all">{dealzDetails.dealz?.link}</DealInfoCard>
         
@@ -106,6 +106,7 @@ export default function DealzView() {
         </div>
 
         {/* <DealInfoCard icon={IconCoupon} label="Coupon created method">{dealzDetails.dealz?.coupon_creation_type}</DealInfoCard> */}
+        <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
 
         {/* Slot Selection (Read-only View) */}
         <div className="flex gap-2 items-center w-full">
@@ -119,8 +120,6 @@ export default function DealzView() {
           </div>
         </div>
       </div>
-
-      <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
 
       <div className="p-4 border border-light-gray rounded-xl my-6">
         <Typography variant="caption" className="pb-2">Deal text</Typography>

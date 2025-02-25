@@ -105,9 +105,9 @@ Valid on February 20th, 2025, from 6 PM to 10 PM.\n\nDon’t miss out on this sp
       <div className="w-[579px] border border-light-gray p-6 rounded-3xl self-start">
         {step !== 5 && (
           <div className="flex gap-4">
-            <div className="flex-1 bg-[url('/images/create-dealz-banner-1.svg')] bg-contain h-[160px] bg-no-repeat" />
-            <div className="flex-1 bg-[url('/images/create-dealz-banner-2.svg')] bg-contain h-[160px] bg-no-repeat" />
-            <div className="flex-1 bg-[url('/images/create-dealz-banner-3.svg')] bg-contain h-[160px] bg-no-repeat" />
+            <div className="flex-1 bg-[url('/images/create-dealz-banner-1.png')] bg-contain h-[160px] bg-no-repeat" />
+            <div className="flex-1 bg-[url('/images/create-dealz-banner-2.png')] bg-contain h-[160px] bg-no-repeat" />
+            <div className="flex-1 bg-[url('/images/create-dealz-banner-3.png')] bg-contain h-[160px] bg-no-repeat" />
           </div>
         )}
         <div
@@ -185,7 +185,7 @@ Valid on February 20th, 2025, from 6 PM to 10 PM.\n\nDon’t miss out on this sp
         image={
           step > 1 || mode === "view"
             ? formData?.dealz_image
-            : "/images/create-deal-preview.jpeg"
+            : "/images/create-deal-preview.jpg"
         }
       />
       <SaveWarningDialog

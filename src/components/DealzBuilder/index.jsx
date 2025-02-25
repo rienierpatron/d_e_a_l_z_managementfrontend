@@ -178,7 +178,7 @@ Valid on February 20th, 2025, from 6 PM to 10 PM.\n\nDon’t miss out on this sp
       <MobilePreview
         message={
           step === 1
-            ? "your order for today’s *DEALZ* is here!\n\nClick the button below to reveal"
+            ? "Hi!\n\nYour order for today's DEALZ is here!\n\nClick the button below to reveal"
             : formData?.dealz_text
         }
         ctaList={getPreviewCTAText()}

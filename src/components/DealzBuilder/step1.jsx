@@ -247,6 +247,9 @@ const DealzBuilderStep1 = ({
               key={Date.now()}
               value={slot_date ? new Date(slot_date) : null}
               placeholder="Select date"
+              minDate={new Date(Date.now() + 86400000)}
+              showClearButton={false}
+              showTodayButton={false}
               onChange={(date) => {
                 setIsFormDirty(true);
                 let validateDate = date; // Default to the selected date

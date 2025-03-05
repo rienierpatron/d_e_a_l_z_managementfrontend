@@ -9,7 +9,7 @@ import Image from "next/image";
 import Typography from "@/components/Common/Typography";
 import IconAdd from "@/components/Icons/IconAdd";
 
-const MobilePreview = ({ message = "", image = "" }) => {
+const MobilePreview = ({ message = "", image = "", ctaList = [] }) => {
   return (
     <div className="w-[320px] relative h-[830px]">
       <img
@@ -43,7 +43,21 @@ const MobilePreview = ({ message = "", image = "" }) => {
         {(message || image) && (
           <div className="bg-white rounded-[10px] p-[10px]">
             {image && <img src={image} className="mb-2" />}
-            {message && <span className="break-all whitespace-pre-wrap">{message}</span>}
+            {message && (
+              <span className="break-all whitespace-pre-wrap">{message}</span>
+            )}
+          </div>
+        )}
+        {ctaList && ctaList.length > 0 && (
+          <div className="mt-1">
+            {ctaList.map((ele) => {
+              if (ele.text < 1) return null;
+              return (
+                <div className="bg-white text-secondary rounded-lg p-[10px] text-center">
+                  {ele.text}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

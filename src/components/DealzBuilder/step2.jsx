@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 /**
  * Internal dependencies
@@ -8,37 +8,40 @@ import FormLabel from "@/components/Common/FormLabel";
 import Typography from "@/components/Common/Typography";
 import FormTextArea from "@/components/Common/FormTextArea";
 import Button from "@/components/Common/Button";
-import IconDollar from "@/components/Icons/IconDollar";
-import FormRadio from "@/components/Common/FormRadio";
 import IconArrowRight from "@/components/Icons/IconArrowRight";
 import BackNavigation from "@/components/Common/BackNavigation";
 import FormInput from "@/components/Common/FormInput";
-import { DEALZ } from "@/lib/constants";
-import IconPercentage from "@/components/Icons/IconPercentage";
 import { validateFormData, validations } from "@/lib/validations";
 import FormInputValidation from "@/components/Common/FormInputValidation";
+import UploadDealzImage from "./UploadDealzImage";
+import IconTextBlock from "../Icons/IconTextBlock";
 
 const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
   const [error, setError] = useState(null);
-  const {
-    followup_message,
-    link,
-    title,
-    amount,
-    offer_type,
-    coupon_code_type,
-  } = formData;
+  const { dealz_text, cta_link_text, link, title } = formData;
+  const textareaRef = useRef(null);
 
   const validationSchema = Yup.object().shape({
-    followup_message: validations.stringRequiredWithMaxLength(500),
+    dealz_text: validations.stringRequiredWithMaxLength(500),
+    cta_link_text: validations.stringRequiredWithMaxLength(20),
+    link: validations.requiredLink,
     title: validations.stringRequiredField,
-    amount: validations.dealzAmount,
-    link: validations.optionalLink,
+    dealz_image: validations.stringRequiredField,
   });
+
+  useEffect(() => {
+    if (dealz_text?.length) {
+      textareaRef.current.style.height = "auto"; // Reset height to recalculate
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set to new height
+    }
+  }, [dealz_text]);
 
   const handleChange = (name, value) => {
     setIsFormDirty(true);
-    if (name === "followup_message" && value.length > 500) {
+    if (name === "dealz_text" && value.length > 500) {
+      return;
+    }
+    if (name === "cta_link_text" && value.length > 20) {
       return;
     }
     setFormData({
@@ -72,32 +75,44 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
   return (
     <div>
       <BackNavigation
-        text="Follow up message and unique DEALZ code"
+        text="Create your DEAL"
         className="text-xl"
         baseClassName="my-8"
         onClick={handlBack}
       />
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">
-          <FormLabel>Add text for follow up message</FormLabel>
+          <div className="!text-xs font-medium italic !text-dark-gray my-5">
+            Ensure your deal complies with DEALZ{" "}
+            <a
+              className="text-secondary cursor-pointer underline"
+              href="https://www.dealz.asia/requirements-101"
+              target="_blank"
+            >
+              requirements and guidelines
+            </a>{" "}
+            to avoid rejection
+          </div>
+          <FormLabel>Add deal text</FormLabel>
           <FormTextArea
+            ref={textareaRef}
             className="bg-light-blue !text-dark-gray text-sm font-normal"
             icon="/icons/tag-2-icon.svg"
-            name="followup_message"
-            id="followup_message"
-            value={followup_message}
-            onChange={(e) => handleChange("followup_message", e.target.value)}
-            isError={error && error["followup_message"]}
+            name="dealz_text"
+            id="dealz_text"
+            value={dealz_text}
+            onChange={(e) => handleChange("dealz_text", e.target.value)}
+            isError={error && error["dealz_text"]}
           />
-          {error && error["followup_message"] && (
-            <FormInputValidation isError text={error["followup_message"]} />
+          {error && error["dealz_text"] && (
+            <FormInputValidation isError text={error["dealz_text"]} />
           )}
           <Typography variant="caption" className="text-right mt-4">
-            Character: {followup_message?.length ?? 0}/500
+            Character: {dealz_text?.length ?? 0}/500
           </Typography>
         </FormFieldset>
         <FormFieldset className="!mb-0">
-          <FormLabel>Add link to follow up message</FormLabel>
+          <FormLabel>Button link</FormLabel>
           <FormInput
             className="bg-light-blue"
             icon="/icons/global.svg"
@@ -113,6 +128,27 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
           {error && error["link"] && (
             <FormInputValidation isError text={error["link"]} />
           )}
+        </FormFieldset>
+        <FormFieldset className="!mb-0 w-full">
+          <FormLabel>Button link text</FormLabel>
+          <FormInput
+            className="bg-light-blue"
+            icon={<IconTextBlock />}
+            fullWidth
+            placeholder="Enter button link text"
+            rounded
+            name="cta_link_text"
+            id="cta_link_text"
+            value={cta_link_text}
+            onChange={(e) => handleChange("cta_link_text", e.target.value)}
+            isError={error && error["cta_link_text"]}
+          />
+          {error && error["cta_link_text"] && (
+            <FormInputValidation isError text={error["cta_link_text"]} />
+          )}
+          <Typography variant="caption" className="text-right mt-4">
+            Character: {cta_link_text?.length ?? 0}/20
+          </Typography>
         </FormFieldset>
         <div className="flex gap-6">
           <FormFieldset className="!mb-0 w-full">
@@ -142,74 +178,14 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
               <FormInputValidation isError text={error["title"]} />
             )}
           </FormFieldset>
-          {offer_type && offer_type !== DEALZ.OFFER_TYPE.Other && (
-            <FormFieldset className="!mb-0 w-full">
-              <FormLabel
-                info={
-                  <div className="p-2 text-midnight-blue max-w-[300px]">
-                    Enter the discount value
-                  </div>
-                }
-              >
-                Deal
-              </FormLabel>
-              <FormInput
-                className="bg-light-blue"
-                icon={
-                  offer_type === DEALZ.OFFER_TYPE.Dollar ? (
-                    <IconDollar />
-                  ) : (
-                    <IconPercentage />
-                  )
-                }
-                fullWidth
-                placeholder={
-                  offer_type === DEALZ.OFFER_TYPE.Dollar
-                    ? "Dollar"
-                    : "Percentage"
-                }
-                rounded
-                name="amount"
-                id="amount"
-                type="number"
-                value={amount}
-                min={0}
-                onChange={(e) => handleChange("amount", e.target.value)}
-                isError={error && error["amount"]}
-              />
-              {error && error["amount"] && (
-                <FormInputValidation isError text={error["amount"]} />
-              )}
-            </FormFieldset>
-          )}
         </div>
-        <FormFieldset className="!mb-0">
-          <div className="flex gap-4">
-            <FormRadio
-              id={DEALZ.COUPON_CODE_TYPE.universal}
-              name="coupon_code_type"
-              label="Universal code"
-              labelClassName="!text-sm"
-              checked={DEALZ.COUPON_CODE_TYPE.universal === coupon_code_type}
-              value={coupon_code_type}
-              info={
-                <div className="p-2 text-midnight-blue max-w-[300px]">
-                  Enter code that can be used by all users for this deal.
-                </div>
-              }
-            />
-            {/* <FormRadio
-              id="personalized-code"
-              name="code-type"
-              label="Personalized code"
-              labelClassName="uppercase !text-sm"
-              info={
-                <div className="text-dark-gray p-2">
-                  Limit one coupon to one person
-                </div>
-              }
-            /> */}
-          </div>
+        <FormFieldset className="!mb-0 w-full">
+          <FormLabel>DEALZ image</FormLabel>
+          <UploadDealzImage
+            formData={formData}
+            setFormData={setFormData}
+            error={error}
+          />
         </FormFieldset>
       </div>
       <Button

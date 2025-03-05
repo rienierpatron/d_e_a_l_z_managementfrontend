@@ -91,6 +91,14 @@ const DesktopSidebar = () => {
               height={26}
               alt="Dealz Logo"
             />
+          ) : currentUser?.user?.agency_logo ? (
+            <Image
+              src={currentUser?.user?.agency_logo}
+              width={50}
+              height={50}
+              alt="Agency Logo"
+              className="mb-2"
+            />
           ) : (
             <div className="p-1 mb-2 bg-black text-white w-6 h-6 flex items-center justify-center rounded">
               {currentUser?.user?.agency_name
@@ -185,9 +193,7 @@ const DesktopSidebar = () => {
         </li>
       </ul>
       {/* Popup Menu */}
-      {isUserPopupOpen && (
-        <UserSettingsMenu ref={userPopupRef} />
-      )}
+      {isUserPopupOpen && <UserSettingsMenu ref={userPopupRef} />}
     </nav>
   );
 };

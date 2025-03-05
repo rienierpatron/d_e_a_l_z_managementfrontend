@@ -12,18 +12,17 @@ import BackNavigation from "@/components/Common/BackNavigation";
 import Button from "@/components/Common/Button";
 import IconCloseOutlined from "@/components/Icons/IconCloseOutlined";
 import Typography from "@/components/Common/Typography";
-import IconCoupon from "@/components/Icons/IconCoupon";
-import IconDollar from "@/components/Icons/IconDollar";
 import IconSave from "@/components/Icons/IconSave";
 import IconClipboardClick from "@/components/Icons/IconClipboardClick";
-import { DEALZ, SUBSCRIPTIONS } from "@/lib/constants";
-import IconPercentage from "@/components/Icons/IconPercentage";
+import { SUBSCRIPTIONS } from "@/lib/constants";
 import { previewDealzDateRange, previewSlotDate } from "@/lib/date";
-import { previewFileName } from "@/lib/utils";
 import { api } from "@/api";
 import SaveWarningDialog from "@/components/SaveWarningDialog";
 import IconCalendar from "../Icons/IconCalendar";
 import { helper } from "@/helpers";
+import IconClock from "../Icons/IconClock";
+import IconTextBlock from "../Icons/IconTextBlock";
+import IconLink from "../Icons/IconLink";
 
 const DealzBuilderStep5 = ({
   formData,
@@ -32,21 +31,19 @@ const DealzBuilderStep5 = ({
   dealzId = "",
   initialState,
   currentSubscription,
-  setIsFormDirty
+  setIsFormDirty,
 }) => {
   const {
     title,
-    initial_message,
-    offer_type,
-    amount,
     valid_date_from,
     valid_date_to,
     link,
-    followup_message,
-    csv_file_name,
-    coupon_code_file_url,
-    coupon_creation_type,
     slot_date,
+    slot_time,
+    cta_link_text,
+    initial_cta_text,
+    dealz_text,
+    dealz_image,
   } = formData;
 
   const isViewMode = mode === "view";
@@ -68,20 +65,14 @@ const DealzBuilderStep5 = ({
 
   const handleSubmit = async (status, redirect = "") => {
     setIsLoading(status);
-    setIsFormDirty(false)
+    setIsFormDirty(false);
     const payload = {
       ...formData,
       status: status === "one-time-purchase" ? "draft" : status,
-      amount:
-        !formData.amount || formData.offer_type === DEALZ.OFFER_TYPE.Other
-          ? 0
-          : Number(formData.amount),
-      link: formData.link ? formData.link : null,
-      banner_image: formData.banner_image ? formData.banner_image : null,
-      code:
-        coupon_creation_type === DEALZ.COUPON_CREATION_TYPE.upload
-          ? formData.coupon_code_file_url
-          : formData.code,
+      link: formData.link,
+      banner_image: null,
+      code: null,
+      amount: null,
     };
     delete payload.csv_file_name;
     delete payload.coupon_code_file_url;
@@ -162,7 +153,7 @@ const DealzBuilderStep5 = ({
       <div className="mt-8">
         <div className="flex items-center justify-between">
           <BackNavigation
-            text="Preview the DEALZ"
+            text="Review your DEAL"
             className="text-xl"
             baseClassName="!m-0"
             onClick={handlBack}
@@ -194,69 +185,21 @@ const DealzBuilderStep5 = ({
                 Your next favorite deal awaits
               </Typography>
             </div>
-            {coupon_code_file_url &&
-              DEALZ.COUPON_CREATION_TYPE.upload === coupon_creation_type && (
-                <div className="flex flex-col gap-[6px] items-center w-max">
-                  <div className="p-2 bg-white w-max rounded-lg">
-                    <Image
-                      src="/icons/csv-preview.svg"
-                      width={30}
-                      height={30}
-                    />
-                  </div>
-                  {csv_file_name && (
-                    <Typography variant="small" className="text-dark-gray">
-                      {previewFileName(csv_file_name)}
-                    </Typography>
-                  )}
+            {dealz_image && (
+              <div className="flex flex-col gap-[6px] items-center w-max">
+                <div className="bg-white w-max">
+                  <Image
+                    src={dealz_image}
+                    width={100}
+                    height={100}
+                    objectFit="contain"
+                  />
                 </div>
-              )}
+              </div>
+            )}
           </div>
           <div className="h-[1px] border border-dashed border-#[D0C4D0] my-4"></div>
           <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-center">
-              <div className="flex gap-[6px]">
-                <IconCoupon />
-                <Typography variant="caption">DEALZ type</Typography>
-              </div>
-              <Typography className="!font-medium" variant="body">
-                Unique codes
-              </Typography>
-            </div>
-            {offer_type !== DEALZ.OFFER_TYPE.Other && (
-              <div className="flex justify-between items-center">
-                <div className="flex gap-[6px]">
-                  {offer_type === DEALZ.OFFER_TYPE.Percentage ? (
-                    <IconPercentage />
-                  ) : (
-                    <IconDollar />
-                  )}
-                  <Typography variant="caption">
-                    {offer_type === DEALZ.OFFER_TYPE.Percentage
-                      ? "Discount"
-                      : "Dollar"}
-                  </Typography>
-                </div>
-                <Typography className="!font-medium" variant="body">
-                  {offer_type === DEALZ.OFFER_TYPE.Percentage
-                    ? `${amount}%`
-                    : `$${amount}`}
-                </Typography>
-              </div>
-            )}
-            {link && (
-              <div className="flex justify-between items-center">
-                <div className="flex gap-[6px]">
-                  <Image src="/icons/global.svg" width={20} height={20} />
-                  <Typography variant="caption">
-                    Website or booking link
-                  </Typography>
-                </div>
-                <Typography className="!font-medium" variant="body">
-                  {link}
-                </Typography>
-              </div>
-            )}
             {slot_date && (
               <div className="flex justify-between items-center">
                 <div className="flex gap-[6px]">
@@ -265,6 +208,18 @@ const DealzBuilderStep5 = ({
                 </div>
                 <Typography className="!font-medium" variant="body">
                   {previewSlotDate(slot_date)}
+                  {""}
+                </Typography>
+              </div>
+            )}
+            {slot_time && (
+              <div className="flex justify-between items-center">
+                <div className="flex gap-[6px] items-center">
+                  <IconClock />
+                  <Typography variant="caption">Slot time</Typography>
+                </div>
+                <Typography className="!font-medium" variant="body">
+                  {slot_time.charAt(0) + slot_time.slice(1).toLowerCase()}
                 </Typography>
               </div>
             )}
@@ -279,27 +234,82 @@ const DealzBuilderStep5 = ({
                 </Typography>
               </div>
             )}
+            {initial_cta_text && (
+              <div className="flex justify-between items-center">
+                <div className="flex gap-[6px] items-center">
+                  <Image src="/icons/tag-icon.svg" width={20} height={20} />
+                  <Typography variant="caption">Restuarant name</Typography>
+                </div>
+                <Typography className="!font-medium" variant="body">
+                  {initial_cta_text}
+                </Typography>
+              </div>
+            )}
+            {cta_link_text && (
+              <div className="flex justify-between items-center">
+                <div className="flex gap-[6px] items-center">
+                  <IconTextBlock />
+                  <Typography variant="caption">Button link text</Typography>
+                </div>
+                <Typography className="!font-medium" variant="body">
+                  {cta_link_text}
+                </Typography>
+              </div>
+            )}
+            {link && (
+              <div className="flex justify-between items-center">
+                <div className="flex gap-[6px] items-center">
+                  <IconLink />
+                  <Typography variant="caption">Link</Typography>
+                </div>
+                <Typography
+                  className="!font-medium break-all max-w-[200px]"
+                  variant="body"
+                >
+                  {link}
+                </Typography>
+              </div>
+            )}
             <div className="bg-white rounded-2xl p-6">
               <Typography variant="caption" className="text-xs mb-4">
-                Wording for their deal
+                Dealz text
               </Typography>
               <Typography
                 variant="caption"
                 className="text-midnight-blue whitespace-pre-wrap"
               >
-                {initial_message}
+                {dealz_text}
               </Typography>
             </div>
-            <div className="bg-white rounded-2xl p-6">
-              <Typography variant="caption" className="text-xs mb-4">
-                Wording for the follow up message
-              </Typography>
-              <Typography
-                variant="caption"
-                className="text-midnight-blue whitespace-pre-wrap"
-              >
-                {followup_message}
-              </Typography>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-start gap-2">
+                <div className="mt-2 w-[5px] h-[5px] bg-dark-gray rounded-full flex-shrink-0"></div>
+                <span className="text-xs text-dark-gray font-medium">
+                  <a
+                    className="text-secondary underline"
+                    href="/files/redemption-flow-guide.pdf"
+                    target="_blank"
+                  >
+                    Click here
+                  </a>{" "}
+                  to review the redemption flow and notify your staff about the
+                  active deal.
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="mt-2 w-[5px] h-[5px] bg-dark-gray rounded-full flex-shrink-0"></div>
+                <span className="text-xs text-dark-gray font-medium">
+                  By submitting, you agree that your deal will be reviewed by
+                  the DEALZ team to ensure compliance with guidelines.
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="mt-2 w-[5px] h-[5px] bg-dark-gray rounded-full flex-shrink-0"></div>
+                <span className="text-xs text-dark-gray font-medium">
+                  You will receive a notification once your deal has been
+                  approved.
+                </span>
+              </div>
             </div>
           </div>
         </div>

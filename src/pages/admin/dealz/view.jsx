@@ -10,6 +10,7 @@ import IconCompany from "@/components/Icons/IconCompany";
 import IconGlobe from "@/components/Icons/IconGlobe";
 import Image from "next/image";
 import { getDealzSuperAdminRecordDetail } from "@/api/dealz";
+import IconTextBlock from "@/components/Icons/IconTextBlock";
 
 // Options for Slot Time Selection
 export const SLOT_TIME_OPTIONS = [
@@ -19,11 +20,11 @@ export const SLOT_TIME_OPTIONS = [
 ];
 
 // Reusable Deal Information Card Component
-const DealInfoCard = ({ icon: Icon, label, children }) => (
+const DealInfoCard = ({ icon: Icon, label, children,  valueClassName='' }) => (
   <div className="flex gap-2 items-center">
     <Icon className="text-dark-gray" />
-    <Typography variant="caption" className="uppercase">{label}</Typography>
-    <div>{children}</div>
+    <Typography variant="caption">{label}</Typography>
+    <div className={valueClassName}>{children}</div>
   </div>
 );
 
@@ -89,24 +90,28 @@ export default function DealzView() {
             ? "Weekly Deal"
             : "No Deal Type"}
         </DealInfoCard>
-        <DealInfoCard icon={IconCoupon} label="DEALZ Code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
+        {/* <DealInfoCard icon={IconCoupon} label="DEALZ Code">{dealzDetails.dealz?.coupon_code_type}</DealInfoCard>
         
         <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
-        <DealInfoCard icon={IconGlobe} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard>
+        <DealInfoCard icon={IconGlobe} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard> */}
+        <DealInfoCard icon={IconTextBlock} label="Restuarant name">{dealzDetails.dealz?.initial_cta_text}</DealInfoCard>
+        <DealInfoCard icon={IconTextBlock} label="Button link text" >{dealzDetails.dealz?.cta_link_text}</DealInfoCard>
+        <DealInfoCard icon={IconGlobe} label="Website or booking link" valueClassName="max-w-[300px] break-all">{dealzDetails.dealz?.link}</DealInfoCard>
         
         {/* Validity */}
         <div className="flex gap-2 items-center">
           <IconCalendar className="text-dark-gray" />
-          <Typography variant="caption" className="uppercase">Validity</Typography>
+          <Typography variant="caption">Validity</Typography>
           <div>{dealzDetails.dealz?.validity_date}</div>
         </div>
 
-        <DealInfoCard icon={IconCoupon} label="Coupon created method">{dealzDetails.dealz?.coupon_creation_type}</DealInfoCard>
+        {/* <DealInfoCard icon={IconCoupon} label="Coupon created method">{dealzDetails.dealz?.coupon_creation_type}</DealInfoCard> */}
+        <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
 
         {/* Slot Selection (Read-only View) */}
         <div className="flex gap-2 items-center w-full">
           <IconCouponWide className="text-dark-gray" />
-          <Typography variant="caption" className="uppercase">Slot</Typography>
+          <Typography variant="caption" >Slot</Typography>
           <div className="flex flex-nowrap items-center">
             {/* Display Date as text, no interaction */}
             <div className="text-gray-700">
@@ -116,23 +121,26 @@ export default function DealzView() {
         </div>
       </div>
 
-      <DealInfoCard icon={IconCalendar} label="Created date">{dealzDetails.dealz?.created_date_time_ago}</DealInfoCard>
+      <div className="p-4 border border-light-gray rounded-xl my-6">
+        <Typography variant="caption" className="pb-2">Deal text</Typography>
+        <Typography variant="caption" className="!text-black whitespace-pre-wrap">{dealzDetails.dealz?.dealz_text}</Typography>
+      </div>
 
       {/* Deal Wording Section */}
-      <div className="p-4 border border-light-gray rounded-xl my-6">
+      {/* <div className="p-4 border border-light-gray rounded-xl my-6">
         <Typography variant="caption" className="uppercase pb-2">Wording for the Deal</Typography>
         <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.initial_message}</Typography>
-      </div>
+      </div> */}
 
       {/* Follow-Up Wording Section */}
-      <div className="p-4 border border-light-gray rounded-xl my-6">
+      {/* <div className="p-4 border border-light-gray rounded-xl my-6">
         <Typography variant="caption" className="uppercase pb-2">Wording for the follow-up message</Typography>
         <Typography variant="caption" className="!text-black">{dealzDetails.dealz?.followup_message}</Typography>
-      </div>
+      </div> */}
 
       {/* Customer Reach and File Upload Section */}
       <div className="flex justify-between">
-        <div>
+        {/* <div>
           {dealzDetails.coupons?.[0]?.code.startsWith('http') ? (
             <a href={dealzDetails.coupons?.[0]?.code} download>
               <div className="relative p-4 mt-2 rounded-2xl border border-light-gray w-max">
@@ -151,9 +159,9 @@ export default function DealzView() {
               <Typography>{dealzDetails.coupons?.[0]?.code}</Typography>
             </div>
           )}
-        </div>
-        <div>
-          <Typography variant="caption" className="uppercase pb-2">Total Number of Customers Reached for This DEALZ Broadcast</Typography>
+        </div> */}
+        <div className="ml-auto">
+          <Typography variant="caption" className="pb-2">Total Number of Customers Reached for This DEALZ Broadcast</Typography>
           <div className="bg-light-gray text-black p-2 rounded w-full">
             {/* Display value instead of input */}
             {dealzDetails.dealz?.reach_count || "0"}

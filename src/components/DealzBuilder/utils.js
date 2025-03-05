@@ -10,14 +10,8 @@ export const getDealzFormattedData = (data) => {
   const dealzData = {
     step: 1,
     title: formData.title,
-    initial_message: formData.initial_message,
-    offer_type: formData.offer_type,
-    amount: formData.amount ?? null,
+    initial_cta_text: formData.initial_cta_text,
     coupon_code_type: formData.coupon_code_type,
-    banner_image: formData.banner_image ?? null,
-    coupon_code_file_url:
-      couponData?.[0]?.code && isCsvFile ? couponData?.[0]?.code : null,
-    followup_message: formData.followup_message,
     link: formData.link ?? null,
     slot_date: formatDateToYYYYMMDD(formData.slot_date),
     slot_time: formData.slot_time ?? null,
@@ -25,9 +19,9 @@ export const getDealzFormattedData = (data) => {
     valid_date_to: formatDateToYYYYMMDD(formData.valid_date_to),
     daily_deal: formData.daily_deal ?? false,
     weekly_deal: formData.weekly_deal ?? false,
-    csv_file_name: null,
-    coupon_creation_type: formData.coupon_creation_type,
-    code: couponData?.[0]?.code && !isCsvFile ? couponData?.[0]?.code : null,
+    dealz_text: formData.dealz_text ?? null,
+    cta_link_text: formData.cta_link_text ?? null,
+    dealz_image: formData.dealz_image ?? null
   };
   return dealzData;
 };

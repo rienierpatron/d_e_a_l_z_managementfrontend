@@ -22,9 +22,14 @@ WORKDIR /app
 
 # Copy only necessary build artifacts from the previous stage
 COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/yarn.lock ./yarn.lock
+COPY --from=build /app/next.config.mjs ./next.config.mjs
+COPY --from=build /app/jsconfig.json ./jsconfig.json
+COPY --from=build /app/postcss.config.mjs ./postcss.config.mjs
+COPY --from=build /app/tailwind.config.mjs ./tailwind.config.mjs
 
 # Expose the port the app runs on
 EXPOSE 3000

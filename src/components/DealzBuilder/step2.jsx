@@ -32,7 +32,7 @@ const DealzBuilderStep2 = ({ formData, setFormData, setIsFormDirty }) => {
   useEffect(() => {
     if (dealz_text?.length) {
       textareaRef.current.style.height = "auto"; // Reset height to recalculate
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set to new height
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 5}px`; // Set to new height
     }
   }, [dealz_text]);
 

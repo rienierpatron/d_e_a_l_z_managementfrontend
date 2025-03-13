@@ -49,7 +49,7 @@ const RemainingDealz = ({ totalDealz, remainingDealz = 0 }) => {
       </div>
       <Button
         variant="primary"
-        className="pl-2 pr-4 py-[10px] w-max z-10"
+        className="pl-2 pr-4 py-[10px] w-max z-9"
         outlined
         icon={<IconAdd />}
         isRound

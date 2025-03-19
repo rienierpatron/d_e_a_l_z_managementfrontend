@@ -161,7 +161,7 @@ const DealzBuilderStep1 = ({
       </Typography>
       <div className="flex flex-col gap-6">
         <FormFieldset className="!mb-0">
-          <FormLabel>Restaurant name</FormLabel>
+          <FormLabel>Business name</FormLabel>
           <FormInput
             className="bg-light-blue"
             icon={<IconBuildings />}

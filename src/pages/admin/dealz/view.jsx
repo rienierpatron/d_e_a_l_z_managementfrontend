@@ -94,7 +94,7 @@ export default function DealzView() {
         
         <DealInfoCard icon={IconDollar} label="Discount">${dealzDetails.dealz?.amount}</DealInfoCard>
         <DealInfoCard icon={IconGlobe} label="Website or Booking link">{dealzDetails.dealz?.link}</DealInfoCard> */}
-        <DealInfoCard icon={IconTextBlock} label="Restuarant name">{dealzDetails.dealz?.initial_cta_text}</DealInfoCard>
+        <DealInfoCard icon={IconTextBlock} label="Business name">{dealzDetails.dealz?.initial_cta_text}</DealInfoCard>
         <DealInfoCard icon={IconTextBlock} label="Button link text" >{dealzDetails.dealz?.cta_link_text}</DealInfoCard>
         <DealInfoCard icon={IconGlobe} label="Website or booking link" valueClassName="max-w-[300px] break-all">{dealzDetails.dealz?.link}</DealInfoCard>
         

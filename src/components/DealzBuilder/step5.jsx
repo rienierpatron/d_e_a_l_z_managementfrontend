@@ -238,7 +238,7 @@ const DealzBuilderStep5 = ({
               <div className="flex justify-between items-center">
                 <div className="flex gap-[6px] items-center">
                   <Image src="/icons/tag-icon.svg" width={20} height={20} />
-                  <Typography variant="caption">Restuarant name</Typography>
+                  <Typography variant="caption">Business name</Typography>
                 </div>
                 <Typography className="!font-medium" variant="body">
                   {initial_cta_text}
